@@ -1,0 +1,18 @@
+# 監視対象と実行状態は公開リポジトリへ置かない
+watchlist.json
+state.json
+activity_state.json
+private-data/
+
+# 認証情報
+.env
+*.pem
+*.key
+*service-account*.json
+
+# 実行時ファイル
+run_metrics.jsonl
+__pycache__/
+*.py[cod]
+.pytest_cache/
+

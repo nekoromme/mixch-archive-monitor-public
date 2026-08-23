@@ -1,0 +1,186 @@
+name: MixChannel Archive Monitor (temporary public runner)
+
+run-name: >-
+  Archive Monitor / ${{ github.event_name == 'schedule' && format('cron {0}', github.event.schedule) || format('manual by {0}', github.actor) }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      replay_base:
+        description: '取りこぼし再送の開始側・非公開データコミットSHA（通常実行は空欄）'
+        required: false
+        type: string
+      replay_head:
+        description: '取りこぼし再送の終了側・非公開データコミットSHA'
+        required: false
+        type: string
+      replay_label:
+        description: 'Discord通知に表示する区間名'
+        required: false
+        type: string
+  schedule:
+    # GitHub Actions の schedule は UTC 基準です。
+    # 毎日 JST 06:07（UTC前日21:07）
+    - cron: '7 21 * * *'
+    # 毎日 JST 17:07, 19:07（UTC同日08:07,10:07）
+    - cron: '7 8,10 * * *'
+    # 毎日 JST 21:07（UTC同日12:07）
+    - cron: '7 12 * * *'
+    # 土日のみ JST 08:07（UTC前日23:07）
+    - cron: '7 23 * * 5,6'
+    # 土日のみ JST 14:07（UTC同日05:07）
+    - cron: '7 5 * * 6,0'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: mixch-archive-public-runner
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check temporary offload period
+        id: temporary
+        shell: bash
+        run: |
+          today_jst="$(TZ=Asia/Tokyo date '+%Y-%m-%d')"
+          echo "today_jst=${today_jst}"
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" || "${today_jst}" < "2026-09-01" ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "run=false" >> "${GITHUB_OUTPUT}"
+            echo "Temporary public offload ended on 2026-09-01 JST."
+          fi
+
+      - name: Checkout public code
+        if: steps.temporary.outputs.run == 'true'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Checkout private data
+        if: steps.temporary.outputs.run == 'true'
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.repository_owner }}/mixch
+          ssh-key: ${{ secrets.PRIVATE_DATA_SSH_KEY }}
+          ssh-strict: true
+          path: private-data
+          sparse-checkout: |
+            watchlist.json
+            state.json
+            activity_state.json
+          sparse-checkout-cone-mode: false
+          fetch-depth: ${{ inputs.replay_base != '' && 0 || 1 }}
+
+      - name: Setup Python
+        if: steps.temporary.outputs.run == 'true'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        if: steps.temporary.outputs.run == 'true'
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Ensure Chrome is available
+        if: steps.temporary.outputs.run == 'true' && inputs.replay_base == ''
+        run: |
+          if ! command -v google-chrome >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y wget gnupg
+            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub \
+              | sudo gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
+            echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+              | sudo tee /etc/apt/sources.list.d/google-chrome.list
+            sudo apt-get update
+            sudo apt-get install -y google-chrome-stable
+          fi
+          google-chrome --version
+
+      - name: Validate private JSON files
+        if: steps.temporary.outputs.run == 'true'
+        run: |
+          python -m json.tool private-data/watchlist.json >/dev/null
+          python -m json.tool private-data/state.json >/dev/null
+          python -m json.tool private-data/activity_state.json >/dev/null
+
+      - name: Prepare sanitized run metrics
+        if: steps.temporary.outputs.run == 'true'
+        run: |
+          : > run_metrics.jsonl
+
+      - name: Validate Discord notification secret
+        if: steps.temporary.outputs.run == 'true'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        shell: bash
+        run: |
+          if [[ -z "${DISCORD_WEBHOOK_URL}" ]]; then
+            echo "::error::DISCORD_WEBHOOK_URL is not configured for this repository."
+            exit 1
+          fi
+
+      - name: Run watcher
+        if: steps.temporary.outputs.run == 'true' && inputs.replay_base == ''
+        env:
+          MIXCH_DATA_DIR: private-data
+          PUBLIC_LOGS: 'true'
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: python mixcha_watcher.py
+
+      - name: Replay missed notifications
+        if: steps.temporary.outputs.run == 'true' && inputs.replay_base != ''
+        env:
+          MIXCH_DATA_DIR: private-data
+          PUBLIC_LOGS: 'true'
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPLAY_BASE: ${{ inputs.replay_base }}
+          REPLAY_HEAD: ${{ inputs.replay_head }}
+          REPLAY_LABEL: ${{ inputs.replay_label }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: python replay_notifications.py
+
+      - name: Commit updated private data
+        if: steps.temporary.outputs.run == 'true' && inputs.replay_base == '' && success()
+        working-directory: private-data
+        shell: bash
+        run: |
+          git config user.name "mixch-bot"
+          git config user.email "bot@example.com"
+          git add -- state.json activity_state.json watchlist.json
+
+          if git diff --cached --quiet; then
+            echo "No private data changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore(bot): update archive monitor state [skip ci]"
+
+          # スマホ管理画面や名前取得処理が同時に更新した場合に、
+          # その変更を上書きせず取り込んでから送信します。
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload sanitized run metrics
+        if: steps.temporary.outputs.run == 'true' && always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: sanitized-run-metrics-${{ github.run_id }}
+          path: run_metrics.jsonl
+          if-no-files-found: warn
+          retention-days: 3
