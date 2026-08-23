@@ -1,0 +1,84 @@
+name: Resolve MixChannel Profile Names
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - watchlist.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mixch-archive-data-writer
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ github.token }}
+          persist-credentials: true
+
+      - name: Check pending names
+        id: pending
+        shell: bash
+        run: |
+          if python resolve_pending_names.py --check; then
+            echo "found=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "found=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Setup Python
+        if: steps.pending.outputs.found == 'true'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        if: steps.pending.outputs.found == 'true'
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Ensure Chrome is available
+        if: steps.pending.outputs.found == 'true'
+        run: |
+          if ! command -v google-chrome >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y wget gnupg
+            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub \
+              | sudo gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
+            echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+              | sudo tee /etc/apt/sources.list.d/google-chrome.list
+            sudo apt-get update
+            sudo apt-get install -y google-chrome-stable
+          fi
+          google-chrome --version
+
+      - name: Resolve pending profile names
+        if: steps.pending.outputs.found == 'true'
+        run: python resolve_pending_names.py
+
+      - name: Commit resolved names
+        if: steps.pending.outputs.found == 'true'
+        run: |
+          git config user.name "mixch-name-bot"
+          git config user.email "bot@example.com"
+          git add watchlist.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(bot): resolve MixChannel profile names [skip ci]"
+            git pull --rebase origin main
+          git push origin HEAD:main
+          else
+            echo "No profile-name changes to commit."
+          fi
