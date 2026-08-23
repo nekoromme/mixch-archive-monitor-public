@@ -1,4 +1,4 @@
-name: MixChannel Archive Monitor (temporary public runner)
+name: MixChannel Archive Monitor
 
 run-name: >-
   Archive Monitor / ${{ github.event_name == 'schedule' && format('cron {0}', github.event.schedule) || format('manual by {0}', github.actor) }}
@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       replay_base:
-        description: '取りこぼし再送の開始側・非公開データコミットSHA（通常実行は空欄）'
+        description: '取りこぼし再送の開始側・公開リポジトリのデータコミットSHA（通常実行は空欄）'
         required: false
         type: string
       replay_head:
-        description: '取りこぼし再送の終了側・非公開データコミットSHA'
+        description: '取りこぼし再送の終了側・公開リポジトリのデータコミットSHA'
         required: false
         type: string
       replay_label:
@@ -32,11 +32,11 @@ on:
     - cron: '7 5 * * 6,0'
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 concurrency:
-  group: mixch-archive-public-runner
+  group: mixch-archive-data-writer
   cancel-in-progress: false
 
 jobs:
@@ -45,42 +45,13 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Check temporary offload period
-        id: temporary
-        shell: bash
-        run: |
-          today_jst="$(TZ=Asia/Tokyo date '+%Y-%m-%d')"
-          echo "today_jst=${today_jst}"
-          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" || "${today_jst}" < "2026-09-01" ]]; then
-            echo "run=true" >> "${GITHUB_OUTPUT}"
-          else
-            echo "run=false" >> "${GITHUB_OUTPUT}"
-            echo "Temporary public offload ended on 2026-09-01 JST."
-          fi
-
-      - name: Checkout public code
-        if: steps.temporary.outputs.run == 'true'
+      - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          persist-credentials: false
-
-      - name: Checkout private data
-        if: steps.temporary.outputs.run == 'true'
-        uses: actions/checkout@v6
-        with:
-          repository: ${{ github.repository_owner }}/mixch
-          ssh-key: ${{ secrets.PRIVATE_DATA_SSH_KEY }}
-          ssh-strict: true
-          path: private-data
-          sparse-checkout: |
-            watchlist.json
-            state.json
-            activity_state.json
-          sparse-checkout-cone-mode: false
-          fetch-depth: ${{ inputs.replay_base != '' && 0 || 1 }}
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Setup Python
-        if: steps.temporary.outputs.run == 'true'
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
@@ -88,11 +59,10 @@ jobs:
           cache-dependency-path: requirements.txt
 
       - name: Install dependencies
-        if: steps.temporary.outputs.run == 'true'
         run: python -m pip install --disable-pip-version-check -r requirements.txt
 
       - name: Ensure Chrome is available
-        if: steps.temporary.outputs.run == 'true' && inputs.replay_base == ''
+        if: inputs.replay_base == ''
         run: |
           if ! command -v google-chrome >/dev/null 2>&1; then
             sudo apt-get update
@@ -106,20 +76,17 @@ jobs:
           fi
           google-chrome --version
 
-      - name: Validate private JSON files
-        if: steps.temporary.outputs.run == 'true'
+      - name: Validate archive JSON files
         run: |
-          python -m json.tool private-data/watchlist.json >/dev/null
-          python -m json.tool private-data/state.json >/dev/null
-          python -m json.tool private-data/activity_state.json >/dev/null
+          python -m json.tool watchlist.json >/dev/null
+          python -m json.tool state.json >/dev/null
+          python -m json.tool activity_state.json >/dev/null
 
       - name: Prepare sanitized run metrics
-        if: steps.temporary.outputs.run == 'true'
         run: |
           : > run_metrics.jsonl
 
       - name: Validate Discord notification secret
-        if: steps.temporary.outputs.run == 'true'
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         shell: bash
@@ -130,9 +97,9 @@ jobs:
           fi
 
       - name: Run watcher
-        if: steps.temporary.outputs.run == 'true' && inputs.replay_base == ''
+        if: inputs.replay_base == ''
         env:
-          MIXCH_DATA_DIR: private-data
+          MIXCH_DATA_DIR: .
           PUBLIC_LOGS: 'true'
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           SCHEDULE_CRON: ${{ github.event.schedule }}
@@ -142,9 +109,9 @@ jobs:
         run: python mixcha_watcher.py
 
       - name: Replay missed notifications
-        if: steps.temporary.outputs.run == 'true' && inputs.replay_base != ''
+        if: inputs.replay_base != ''
         env:
-          MIXCH_DATA_DIR: private-data
+          MIXCH_DATA_DIR: .
           PUBLIC_LOGS: 'true'
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPLAY_BASE: ${{ inputs.replay_base }}
@@ -155,9 +122,8 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: python replay_notifications.py
 
-      - name: Commit updated private data
-        if: steps.temporary.outputs.run == 'true' && inputs.replay_base == '' && success()
-        working-directory: private-data
+      - name: Commit updated public data
+        if: inputs.replay_base == '' && success()
         shell: bash
         run: |
           git config user.name "mixch-bot"
@@ -165,7 +131,7 @@ jobs:
           git add -- state.json activity_state.json watchlist.json
 
           if git diff --cached --quiet; then
-            echo "No private data changes to commit."
+            echo "No archive data changes to commit."
             exit 0
           fi
 
@@ -177,7 +143,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Upload sanitized run metrics
-        if: steps.temporary.outputs.run == 'true' && always()
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: sanitized-run-metrics-${{ github.run_id }}
