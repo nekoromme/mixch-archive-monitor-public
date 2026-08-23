@@ -213,7 +213,7 @@ class WorkflowSynchronizationTests(unittest.TestCase):
             workflow,
         )
 
-    def test_private_data_is_checked_out_separately(self):
+    def test_public_repository_is_self_contained(self):
         workflow_path = (
             Path(__file__).resolve().parents[1]
             / ".github"
@@ -222,9 +222,16 @@ class WorkflowSynchronizationTests(unittest.TestCase):
         )
         workflow = workflow_path.read_text(encoding="utf-8")
 
-        self.assertIn("repository: ${{ github.repository_owner }}/mixch", workflow)
-        self.assertIn("MIXCH_DATA_DIR: private-data", workflow)
+        self.assertNotIn("repository: ${{ github.repository_owner }}/mixch", workflow)
+        self.assertNotIn("PRIVATE_DATA_SSH_KEY", workflow)
+        self.assertIn("MIXCH_DATA_DIR: .", workflow)
         self.assertIn("PUBLIC_LOGS: 'true'", workflow)
+        self.assertIn("contents: write", workflow)
+        self.assertIn("persist-credentials: true", workflow)
+
+        repository_root = Path(__file__).resolve().parents[1]
+        for filename in ("watchlist.json", "state.json", "activity_state.json"):
+            self.assertTrue((repository_root / filename).is_file(), filename)
 
     def test_missing_discord_secret_fails_before_watcher_runs(self):
         workflow_path = (
@@ -251,7 +258,7 @@ class WorkflowSynchronizationTests(unittest.TestCase):
         self.assertIn("inputs.replay_base == ''", workflow)
         self.assertIn("inputs.replay_base != ''", workflow)
 
-    def test_public_workflow_has_temporary_cutoff(self):
+    def test_public_workflow_has_no_temporary_cutoff(self):
         workflow_path = (
             Path(__file__).resolve().parents[1]
             / ".github"
@@ -260,7 +267,9 @@ class WorkflowSynchronizationTests(unittest.TestCase):
         )
         workflow = workflow_path.read_text(encoding="utf-8")
 
-        self.assertIn('2026-09-01', workflow)
+        self.assertNotIn('2026-09-01', workflow)
+        self.assertNotIn('steps.temporary', workflow)
+
 
 
 class PublicLogPrivacyTests(unittest.TestCase):

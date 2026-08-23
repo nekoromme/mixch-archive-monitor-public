@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Replay notifications from two historical private-state commits.
+"""Replay notifications from two historical state commits.
 
-The public repository never stores the watchlist or state contents. This tool
-reads both revisions from the separately checked-out private repository, sends
-only the resulting Discord notification, and does not modify current state.
+This tool reads both revisions from this repository, sends only the resulting
+Discord notification, and does not modify the current state.
 """
 
 import json
@@ -72,7 +71,7 @@ def collect_changed_reports(
 
 
 def main() -> None:
-    data_dir = Path(os.getenv("MIXCH_DATA_DIR", "private-data"))
+    data_dir = Path(os.getenv("MIXCH_DATA_DIR", "."))
     base_sha = os.getenv("REPLAY_BASE", "").strip()
     head_sha = os.getenv("REPLAY_HEAD", "").strip()
     label = os.getenv("REPLAY_LABEL", "").strip()

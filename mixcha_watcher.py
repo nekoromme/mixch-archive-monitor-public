@@ -14,9 +14,9 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-# 公開リポジトリ側には、監視対象や状態を保存しません。
-# GitHub Actions では MIXCH_DATA_DIR=private-data を渡し、
-# 非公開データ用リポジトリ内の3ファイルだけを読み書きします。
+# 監視対象と状態は、実行するリポジトリ内の3つのJSONへ保存します。
+# MIXCH_DATA_DIRを指定すれば、ローカルテスト時だけ別ディレクトリへ
+# 切り替えることもできます。未指定時はリポジトリ直下です。
 DATA_DIR = Path(os.getenv("MIXCH_DATA_DIR", "."))
 WATCHLIST_FILE = str(DATA_DIR / "watchlist.json")
 STATE_FILE = str(DATA_DIR / "state.json")
