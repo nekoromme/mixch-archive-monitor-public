@@ -1,5 +1,8 @@
 # MixChannel Archive Monitor
 
+ランキング監視もこのリポジトリへ統合しました。[管理画面](https://mixch-archive-admin.purplepearl-v.workers.dev/)の折りたたみ「監視設定」から、アーカイブとランキングを別々にオン・オフできます。
+ランキングはGitHub内の5分待機で起動し、追加の鍵や画面設定は不要です。詳細は[ランキング監視の説明](ranking/README.md)を参照してください。
+
 MixChannelの公開アーカイブ更新を定期確認し、更新があった監視対象をDiscordへ通知する個人用ツールです。
 
 ## 公開リポジトリ単体で動作

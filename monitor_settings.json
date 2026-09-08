@@ -1,6 +1,7 @@
 {
   "enabled": false,
   "ranking_enabled": true,
-  "ranking_ready": false,
-  "ranking_scheduler_probe": true
+  "ranking_ready": true,
+  "ranking_scheduler_probe": false,
+  "ranking_changed_at": "2026-09-08T13:43:25.640Z"
 }
