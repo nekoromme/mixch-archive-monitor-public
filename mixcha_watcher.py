@@ -545,6 +545,7 @@ def dedupe_watchlist(watchlist: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         seen.add(user_id)
         deduped.append(
             {
+                **user,
                 "id": user_id,
                 "name": user_name,
                 "watchlist_line": user.get("watchlist_line"),
@@ -676,10 +677,10 @@ def build_inactive_lines(inactive_reports: List[Dict[str, Any]]) -> List[str]:
 
 
 def save_watchlist(path: str, watchlist: List[Dict[str, Any]]):
+    # 監視オン・オフ等の設定は残し、読み込み時の補助情報だけを除去します。
     persisted_watchlist = [
         {
-            "id": user["id"],
-            "name": user["name"],
+            key: value for key, value in user.items() if key != "watchlist_line"
         }
         for user in watchlist
     ]
@@ -730,6 +731,13 @@ def main():
     )
     logging.info(f"重複除去後の監視対象数: {len(watchlist)}")
 
+    # 設定がない既存対象はオン。オフの対象も元の一覧には保持します。
+    # 監視と長期未更新の自動削除には、オンの対象だけを渡します。
+    active_watchlist = [user for user in watchlist if user.get("archive_enabled") is not False]
+    log_metric("archive_monitor_selection",
+               enabled_count=len(active_watchlist),
+               disabled_count=len(watchlist) - len(active_watchlist))
+
     today_jst = get_today_jst()
     today_dt = datetime.date.fromisoformat(today_jst)
     report_summary = []
@@ -742,9 +750,10 @@ def main():
 
     driver: Optional[webdriver.Chrome] = None
     try:
-        driver = create_driver()
-        total = len(watchlist)
-        for index, user in enumerate(watchlist, start=1):
+        if active_watchlist:
+            driver = create_driver()
+        total = len(active_watchlist)
+        for index, user in enumerate(active_watchlist, start=1):
             user_start = time.perf_counter()
             user_id = str(user["id"])
             user_name = user["name"]
@@ -892,7 +901,7 @@ def main():
     )
 
     inactive_reports = []
-    for user in watchlist:
+    for user in active_watchlist:
         user_id = str(user["id"])
         user_name = user["name"]
         watchlist_line = user.get("watchlist_line", "不明")
