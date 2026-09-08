@@ -51,8 +51,8 @@ async function validSession(request, key) {
 // 認証済みの場合のみnullを返す。それ以外はここで応答して保存処理へ進ませません。
 export async function authorize(request, env, loginHtml, readBody) {
   if (typeof env.ADMIN_PASSWORD !== 'string' ||
-      env.ADMIN_PASSWORD.length < 16 || env.ADMIN_PASSWORD.length > 256) {
-    return result({ error: '初期設定が未完了です。CloudflareのSecretにADMIN_PASSWORDを16～256文字で登録してください。' }, 503);
+      env.ADMIN_PASSWORD.length < 1 || env.ADMIN_PASSWORD.length > 256) {
+    return result({ error: '初期設定が未完了です。CloudflareのSecretにADMIN_PASSWORDを1～256文字で登録してください。' }, 503);
   }
   const url = new URL(request.url);
   const key = await signingKey(env.ADMIN_PASSWORD);

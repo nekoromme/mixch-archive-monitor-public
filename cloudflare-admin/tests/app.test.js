@@ -158,9 +158,9 @@ test('間違ったパスワード・別サイト送信・連続試行を拒否',
   assert.equal((await app.fetch(request(env.ADMIN_PASSWORD), {...env, LOGIN_LIMITER:null}, {})).status, 503);
 });
 
-test('パスワード未設定や短すぎる設定では保護を解除しない', async () => {
+test('パスワード未設定・空欄・長すぎる設定では保護を解除しない', async () => {
   const {app} = fixture();
-  for (const password of [undefined, '', 'short']) {
+  for (const password of [undefined, '', 'x'.repeat(257)]) {
     assert.equal((await app.fetch(new Request(origin + '/'), {...env, ADMIN_PASSWORD:password}, {})).status, 503);
   }
 });
@@ -197,4 +197,14 @@ test('ログイン画面のJavaScript構文を確認', () => {
   new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
   assert.ok(html.includes('autocomplete="current-password"'));
   assert.ok(!html.includes(env.ADMIN_PASSWORD));
+});
+
+test('1文字のパスワードでもログインできる', async () => {
+  const {app} = fixture();
+  const response = await app.fetch(new Request(origin + '/api/login', {
+    method:'POST', headers:{Origin:origin, 'Content-Type':'application/json'},
+    body:JSON.stringify({password:'a'}),
+  }), {...env, ADMIN_PASSWORD:'a'}, {});
+  assert.equal(response.status, 200);
+  assert.ok(response.headers.get('Set-Cookie'));
 });
