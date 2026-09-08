@@ -3,6 +3,7 @@
  * 個人の名前、認証情報、GitHubの返答本文はログへ出しません。
  */
 import { authorize } from './auth.js';
+import { checkRankingConnection } from './scheduler.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
@@ -166,6 +167,16 @@ async function monitoringSettings(env, fetcher) {
 
 async function api(request, env, fetcher) {
   const path = new URL(request.url).pathname;
+  if (path === '/api/ranking-probe') {
+    if (request.method !== 'POST') throw new UserError(405, '接続確認ボタンを使用してください。');
+    if (request.headers.get('Origin') !== new URL(request.url).origin) throw new UserError(403, '送信元を確認できません。');
+    await readBody(request);
+    const result = await checkRankingConnection(env, fetcher);
+    if (result.result === 'not-staging') throw new UserError(409, '移行準備中だけ使用できる接続確認です。');
+    return json({...result, message:result.ok
+      ? '通知なしの確認実行を受け付けました。結果はこちらで確認できます。'
+      : '接続確認に失敗しました。（確認コード：' + result.result + '）'},result.ok ? 200 : 502);
+  }
   if (path === '/api/monitoring') {
     if (request.method === 'GET') {
       const current = await monitoringSettings(env, fetcher);
@@ -278,4 +289,3 @@ export function createApp(html, fetcher = (...args) => fetch(...args), loginHtml
     },
   };
 }
-

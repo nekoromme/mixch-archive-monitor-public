@@ -1,6 +1,20 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {runSchedule} from '../src/scheduler.js';
+import {runSchedule,checkRankingConnection} from '../src/scheduler.js';
+
+test('接続権限の不足は秘密情報を表示せず診断結果として記録する', async()=>{
+  let written;
+  const result=await checkRankingConnection({GITHUB_TOKEN:'test_key'},async(url,options)=>{
+    if(url.includes('/ranking_connection_health.json')) {
+      if(options.method!=='PUT') return new Response(null,{status:404});
+      written=JSON.parse(Buffer.from(JSON.parse(options.body).content,'base64').toString());
+      return Response.json({ok:true});
+    }
+    return new Response('provider error must not be exposed',{status:403});
+  });
+  assert.deepEqual(result,{ok:false,result:'SCHEDULER_GITHUB_403'});
+  assert.equal(written.result,'SCHEDULER_GITHUB_403');
+});
 
 test('停止中・準備中のランキングは起動しない。アーカイブ停止でもランキングは独立', async () => {
   for (const config of [

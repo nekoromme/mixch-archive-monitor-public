@@ -11,6 +11,43 @@ const env = { GITHUB_TOKEN: 'test_secret_never_print',
 const origin = 'https://admin.example.test';
 const target = { index: 0, id: '123', name: 'テスト' };
 
+test('接続確認は本人の操作で通知なしの実行だけを行い、定期実行と別に記録する', async () => {
+  let ready = false;
+  let calls = 0;
+  let dispatches = 0;
+  let health;
+  const app = createApp('<title>管理</title>',async (url, options) => {
+    calls++;
+    if (url.includes('/contents/monitor_settings.json')) return Response.json({content:Buffer.from(JSON.stringify({ranking_enabled:true,ranking_ready:ready,ranking_scheduler_probe:true})).toString('base64')});
+    if (url.includes('/runs?')) return Response.json({workflow_runs:[]});
+    if (url.endsWith('/dispatches')) {
+      dispatches++;
+      assert.deepEqual(JSON.parse(options.body).inputs,{dry_run:'true',test_webhook:'false'});
+      return new Response(null,{status:204});
+    }
+    assert.ok(url.includes('/contents/ranking_connection_health.json'));
+    if (options.method !== 'PUT') return new Response(null,{status:404});
+    health=JSON.parse(Buffer.from(JSON.parse(options.body).content,'base64').toString());
+    return Response.json({ok:true});
+  });
+  const send = (cookie, requestOrigin=origin) => app.fetch(new Request(origin+'/api/ranking-probe',{
+    method:'POST',headers:{Cookie:cookie,Origin:requestOrigin,'Content-Type':'application/json'},body:'{}',
+  }),env,{});
+  assert.equal((await send('')).status,401);
+  assert.equal(calls,0);
+  const cookie = await login(app);
+  assert.equal((await send(cookie,'https://other.example.test')).status,403);
+  assert.equal(calls,0);
+  const response = await send(cookie);
+  assert.equal(response.status,200);
+  assert.equal((await response.json()).result,'probe-dispatched');
+  assert.equal(dispatches,1);
+  assert.equal(health.result,'probe-dispatched');
+  ready=true;
+  assert.equal((await send(cookie)).status,409);
+  assert.equal(dispatches,1);
+});
+
 // 外部への接続なしで、実際と同じGET→編集→PUTの流れを通します。
 function fixture() {
   let rows = [{ id: '123', name: 'テスト', extra: 'preserve' }];
