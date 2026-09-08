@@ -1,6 +1,6 @@
-// HTMLもWorkerへ同梱します。Static Assetsを使わないため、
-// Cloudflareが検証したログイン情報（ctx.access）を直接受け取れます。
+// 管理画面とログイン画面をWorkerへ同梱します。
 import html from '../public/index.html';
+import loginHtml from '../public/login.html';
 import { createApp } from './app.js';
 
-export default createApp(html);
+export default createApp(html, undefined, loginHtml);

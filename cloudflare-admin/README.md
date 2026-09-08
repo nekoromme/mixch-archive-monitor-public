@@ -4,7 +4,7 @@
 GitHubの同じ `watchlist.json` を読み書きするため、対象一覧の引っ越しは不要です。
 名前の自動取得とアーカイブ監視は、既存のGitHub側の処理が続けて担当します。
 
-**移行用コードは準備済みです。Cloudflareとの初回接続・公開はまだ完了していません。**
+**専用パスワード方式です。Zero Trustへの登録・支払い情報は不要です。**
 以下を一度設定すると、今後はこのフォルダのコードを更新するだけで自動公開できます。
 
 ## 1. GitHubを読み込んで公開する
@@ -28,27 +28,34 @@ GitHubの同じ `watchlist.json` を読み書きするため、対象一覧の�
 依存関係はCloudflare側で自動インストールされます。
 インストール用の欄が表示された場合は `npm ci` を指定します。
 プレビュー用ブランチの公開は無効のままで構いません。
-**この段階で画面が403になっても正常です。次のログイン保護の設定が必要です。**
+**この段階ではADMIN_PASSWORDの初期設定エラーが出ても正常です。次のパスワード登録を行います。**
 
-## 2. 自分だけが開けるようにする
+## 2. 専用パスワードを登録する（Zero Trust不要）
 
-1. 作成した `mixch-archive-admin` を開きます。
-2. 「Access」タブ→「Protect this Worker behind Access」を押します。
-3. 保護対象は **All traffic（すべてのアクセス）** を選びます。
-4. 「Authentication policy」は **Cloudflare account** を選びます。
-   これはCloudflareアカウントのメンバーだけを許可する設定です。
-   個人アカウントにほかのメンバーがいる場合は、Zero TrustのAccess設定で
-   許可するメールアドレスを自分だけに絞ります。
-5. 「Apply Access」で保存します。
+Zero Trustへの登録や支払い情報の入力は不要です。
+既にWorkerを公開してGITHUB_TOKENを登録した場合、追加するのは次の1項目だけです。
 
-Zero Trustの初期登録を求められた場合は、無料プランで初期設定した後、
-このWorkerのAccess画面へ戻ってください。
-「Email domain」に `gmail.com` などを指定すると範囲が広すぎるため、
-自分だけの利用には使いません。
+1. Workerの「Settings」→「Variables and Secrets」→「Add variable」を開きます。
+2. **Key** に `ADMIN_PASSWORD` を入力します。
+3. **Value** に、この管理画面専用のパスワードを16～256文字で入力します。
+   パスワード管理アプリ等で作った、推測されにくい英数字・記号の組み合わせがおすすめです。
+4. **Secret** にチェックを入れます。
+5. 「Add 1 variable」を押し、元の画面に「Deploy」「Save and deploy」があれば押します。
+6. GitHub更新による公開処理が成功した後、Workerの「Visit」から開きます。
+7. 表示されたログイン画面に同じパスワードを入力します。
 
-このアプリはCloudflareが認証した `ctx.access` を確認します。
-保護を設定し忘れた場合や、偽の認証ヘッダーが届いた場合は、
-管理画面も保存処理も開きません。
+パスワードはチャットやGitHubには貼らず、CloudflareのSecretへ直接登録します。
+既に登録したGITHUB_TOKENはそのまま残します。
+
+- ログイン状態は最長30日。ブラウザのCookie削除などで早く切れる場合があります。
+- 管理画面の「ログアウト」でそのブラウザのログイン状態を消せます。
+- ADMIN_PASSWORDを変更して公開すると、既存のログイン証明はすべて無効になります。
+- パスワード未設定・16文字未満の場合は、管理画面も保存も開きません。
+- ログインの連続試行はCloudflareの拠点ごとに約1分10回へ制限します。
+  この制限は全世界共通の厳密な回数制限ではないため、十分に長いパスワードを使います。
+- Zero Trustの初期登録画面は、そのまま戻って構いません。
+  既にAccessでこのWorkerを保護した場合だけ、そのWorkerのAccess保護を解除します。
+  アプリ自身の専用パスワード認証は引き続き有効です。
 
 ## 3. GitHubを書き換える鍵を一度だけ登録する
 
@@ -83,7 +90,7 @@ Worker→「Settings」→「Build」または「Builds」→「Build watch path
 
 ## 5. 最初の動作確認
 
-1. Workerの「Visit」から新しいURLを開き、本人のアカウントでログインします。
+1. Workerの「Visit」から新しいURLを開き、専用パスワードでログインします。
 2. いつもの対象一覧が表示されることを確認します。
 3. 対象を1件「編集」し、アーカイブ監視をオフにして保存します。
 4. ページを開き直し、同じ対象が「オフ（停止中）」のままであることを確認します。
@@ -104,7 +111,9 @@ Google Apps Scriptへのコピペと手動のバージョン更新は不要で�
 
 ## 不具合が起きたら
 
-- 403：Access保護が未設定・認証切れ・本人が許可対象に含まれていない可能性。
+- ログイン画面：専用パスワードを入力。
+- ADMIN_PASSWORDの初期設定エラー：Secret名・文字数と公開処理の完了を確認。
+- 429：ログインの試行回数制限。1分ほど待って再試行。
 - 一覧に「初期設定が未完了」：実行用SecretのGITHUB_TOKENを確認。
 - GitHub接続のエラー：鍵の期限、対象リポジトリ、Contentsの読み書き権限を確認。
 - 「一覧が更新されました」：同時編集や名前自動取得との競合。戻って再読み込み。
@@ -120,9 +129,9 @@ Google Apps Scriptへのコピペと手動のバージョン更新は不要で�
 テストは本物のGitHubへ接続せず、監視対象や通知先を変更しません。
 
 HTMLはWorkerへ文字列として同梱しています。
-**Static Assetsを追加すると内部ルーターがctx.accessを渡さないため、この認証方式では使いません。**
+管理画面・保存処理は署名付きCookieで認証し、保存時は同一サイトからの送信かも確認します。
 
 公式資料：
 - [GitHubからの自動公開](https://developers.cloudflare.com/workers/ci-cd/builds/)
-- [Worker単位のログイン保護とctx.access](https://developers.cloudflare.com/workers/configuration/cloudflare-access/)
+- [ログイン連続試行の制限](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/)
 - [変更を監視するパスの設定](https://developers.cloudflare.com/workers/ci-cd/builds/build-watch-paths/)

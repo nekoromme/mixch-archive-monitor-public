@@ -2,10 +2,11 @@
  * ミクチャの管理画面。監視本体と同じwatchlist.jsonを読み書きします。
  * 個人の名前、認証情報、GitHubの返答本文はログへ出しません。
  */
+import { authorize } from './auth.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-09-08-cloudflare-1';
+const VERSION = '2026-09-08-password-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 
@@ -207,20 +208,18 @@ async function api(request, env, fetcher) {
 }
 
 // fetcherだけ差し替え可能にし、テストから本物のGitHubへ書き込まない構造です。
-export function createApp(html, fetcher = (...args) => fetch(...args)) {
+export function createApp(html, fetcher = (...args) => fetch(...args), loginHtml = '<title>ログイン</title>') {
   return {
     async fetch(request, env, ctx) {
       const requestId = crypto.randomUUID();
       const start = Date.now();
       let response;
       try {
-        // HTTPヘッダーのメールアドレスは信用しません。
-        // Cloudflare自身が検証した実行コンテキストだけを使用します。
-        if (!ctx?.access) throw new UserError(403, 'ログインが必要です。Cloudflare Accessの設定を確認してください。');
-        const identity = await ctx.access.getIdentity();
-        if (!identity?.email) throw new UserError(403, 'ログインを確認できません。開き直してください。');
+        const authResponse = await authorize(request, env, loginHtml, readBody);
         const path = new URL(request.url).pathname;
-        if (path.startsWith('/api/')) {
+        if (authResponse) {
+          response = authResponse;
+        } else if (path.startsWith('/api/')) {
           response = await api(request, env, fetcher);
         } else if ((path === '/' || path === '/index.html') && request.method === 'GET') {
           response = new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });

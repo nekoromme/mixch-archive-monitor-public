@@ -6,10 +6,17 @@
   "workers_dev": true,
   "preview_urls": false,
   // 静的アセット用の内部ルーターを使わず、HTMLを文字列として同梱します。
-  // ctx.accessを受け取るために必要な構成です。
+  // HTMLも認証処理を通して配信します。
   "rules": [{ "type": "Text", "globs": ["**/*.html"], "fallthrough": true }],
+  "ratelimits": [
+    {
+      "name": "LOGIN_LIMITER",
+      "namespace_id": "20840908",
+      "simple": { "limit": 10, "period": 60 }
+    }
+  ],
   "observability": {
     "enabled": true
   }
-  // GITHUB_TOKENはCloudflareの「Secret」に保存。ここには書きません。
+  // GITHUB_TOKENとADMIN_PASSWORDはCloudflareのSecretに保存します。
 }

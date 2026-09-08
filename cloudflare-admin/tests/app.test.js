@@ -5,7 +5,9 @@ import vm from 'node:vm';
 import { createApp } from '../src/app.js';
 
 const context = { access: { getIdentity: async () => ({ email: 'owner@example.test' }) } };
-const env = { GITHUB_TOKEN: 'test-secret-never-print' };
+const env = { GITHUB_TOKEN: 'test-secret-never-print',
+  ADMIN_PASSWORD: 'testing-password-very-long-123',
+  LOGIN_LIMITER: { limit: async () => ({ success: true }) } };
 const origin = 'https://admin.example.test';
 const target = { index: 0, id: '123', name: 'テスト' };
 
@@ -31,23 +33,41 @@ function fixture() {
     return Response.json({ content: { sha: version } });
   };
   const app = createApp('<!doctype html><title>管理</title>', fetcher);
-  const send = (path, body, options = {}) => app.fetch(new Request(origin + path, {
+  let session;
+  const send = async (path, body, options = {}) => {
+    session ||= await login(app);
+    return app.fetch(new Request(origin + path, {
     method: body ? 'POST' : 'GET',
+    headers: { Cookie: session, ...(body ? { Origin: origin, 'Content-Type': 'application/json' } : {}),
+      ...options.headers },
     ...(body ? { body: JSON.stringify({ version, ...body }),
-      headers: { Origin: origin, 'Content-Type': 'application/json', ...options.headers } } : {}),
+       } : {}),
   }), options.env || env, options.context || context);
+  };
   return { app, send, get rows() { return rows; }, get calls() { return calls; },
     get writes() { return writes; }, conflict() { conflictOnWrite = true; } };
 }
 
-test('認証なし・偽の認証ヘッダーは画面も保存も拒否', async () => {
+async function login(app, password = env.ADMIN_PASSWORD) {
+  const response = await app.fetch(new Request(origin + '/api/login', {
+    method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  }), env, {});
+  assert.equal(response.status, 200);
+  const cookie = response.headers.get('Set-Cookie');
+  assert.match(cookie, /HttpOnly; Secure; SameSite=Lax/);
+  return cookie.split(';')[0];
+}
+
+test('認証なし・偽の認証ヘッダーでは保存できずログイン画面になる', async () => {
   const f = fixture();
   for (const path of ['/', '/api/watchlist', '/api/update']) {
     const response = await f.app.fetch(new Request(origin + path, {
       headers: { 'Cf-Access-Authenticated-User-Email': 'owner@example.test',
         'Cf-Access-Jwt-Assertion': 'forged' },
     }), env, {});
-    assert.equal(response.status, 403);
+    assert.equal(response.status, path === '/' ? 200 : 401);
+    if (path === '/') assert.match(await response.text(), /ログイン/);
   }
   assert.equal(f.calls, 0);
 });
@@ -108,9 +128,11 @@ test('他サイトからの送信と不正な設定・重複登録を拒否', as
 
 test('未設定・上流障害では秘密情報を表示しない', async () => {
   const f = fixture();
-  assert.equal((await f.send('/api/watchlist', null, { env: {} })).status, 503);
+  assert.equal((await f.send('/api/watchlist', null, { env: { ...env, GITHUB_TOKEN: '' } })).status, 503);
   const app = createApp('', async () => { throw new Error(env.GITHUB_TOKEN); });
-  const response = await app.fetch(new Request(origin + '/api/watchlist'), env, context);
+  const response = await app.fetch(new Request(origin + '/api/watchlist', {
+    headers: { Cookie: await login(app) },
+  }), env, context);
   assert.equal(response.status, 502);
   assert.ok(!(await response.text()).includes(env.GITHUB_TOKEN));
 });
@@ -121,4 +143,58 @@ test('移行画面にGAS依存や外部スクリプトがなく、JavaScript構�
   assert.ok(!html.includes('<script src='));
   assert.ok(html.includes('id="archiveToggle"'));
   new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
+});
+
+test('間違ったパスワード・別サイト送信・連続試行を拒否', async () => {
+  const { app } = fixture();
+  const request = (password, from = origin) => new Request(origin + '/api/login', {
+    method: 'POST', headers: {Origin: from, 'Content-Type': 'application/json'},
+    body: JSON.stringify({password}),
+  });
+  assert.equal((await app.fetch(request('wrong-password'), env, {})).status, 401);
+  assert.equal((await app.fetch(request(env.ADMIN_PASSWORD, 'https://evil.test'), env, {})).status, 403);
+  const limited = {...env, LOGIN_LIMITER: {limit: async () => ({success:false})}};
+  assert.equal((await app.fetch(request(env.ADMIN_PASSWORD), limited, {})).status, 429);
+  assert.equal((await app.fetch(request(env.ADMIN_PASSWORD), {...env, LOGIN_LIMITER:null}, {})).status, 503);
+});
+
+test('パスワード未設定や短すぎる設定では保護を解除しない', async () => {
+  const {app} = fixture();
+  for (const password of [undefined, '', 'short']) {
+    assert.equal((await app.fetch(new Request(origin + '/'), {...env, ADMIN_PASSWORD:password}, {})).status, 503);
+  }
+});
+
+test('改ざん・期限切れ・別サイトの証明・パスワード変更を検出', async () => {
+  const {app} = fixture();
+  const session = await login(app);
+  const response = async (cookie, settings = env, host = origin) => app.fetch(new Request(host + '/api/watchlist', {
+    headers:{Cookie:cookie},
+  }), settings, {});
+  assert.equal((await response(session + 'x')).status, 401);
+  assert.equal((await response(session, {...env, ADMIN_PASSWORD:'replacement-password-123456'})).status, 401);
+  assert.equal((await response(session, env, 'https://another.test')).status, 401);
+  const originalNow = Date.now;
+  try {
+    Date.now = () => originalNow() + 31 * 24 * 60 * 60 * 1000;
+    assert.equal((await response(session)).status, 401);
+  } finally { Date.now = originalNow; }
+});
+
+test('ログアウトはブラウザの証明を消す', async () => {
+  const {app} = fixture();
+  const session = await login(app);
+  const response = await app.fetch(new Request(origin + '/api/logout', {
+    method:'POST', headers:{Origin:origin, Cookie:session},
+  }), env, {});
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get('Set-Cookie'), /Max-Age=0/);
+  assert.equal((await app.fetch(new Request(origin + '/api/watchlist'), env, {})).status, 401);
+});
+
+test('ログイン画面のJavaScript構文を確認', () => {
+  const html = readFileSync(new URL('../public/login.html', import.meta.url), 'utf8');
+  new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
+  assert.ok(html.includes('autocomplete="current-password"'));
+  assert.ok(!html.includes(env.ADMIN_PASSWORD));
 });

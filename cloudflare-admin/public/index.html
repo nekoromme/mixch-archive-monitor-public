@@ -564,6 +564,7 @@
 
     <div id="status" class="status"></div>
     <div id="meta" class="meta"></div>
+    <button type="button" onclick="logout()" style="margin-top:8px;font-size:14px;padding:6px 12px">ログアウト</button>
   </header>
 
   <main>
@@ -708,6 +709,17 @@
 
     // Cloudflare側の保存処理との通信。GitHubの鍵はブラウザへ渡しません。
     let currentVersion = null;
+    async function logout() {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const response = await fetch('/api/logout', { method: 'POST',
+          credentials: 'same-origin', signal: AbortSignal.timeout(20000) });
+        if (!response.ok) throw new Error('ログアウトできませんでした。再度お試しください。');
+        localStorage.removeItem(CACHE_KEY);
+        location.replace('/');
+      } catch (error) { handleError(error); }
+    }
     function adminApi() {
       let onSuccess = () => {};
       let onFailure = handleError;
@@ -723,9 +735,9 @@
             ...(isRead ? {} : { body: JSON.stringify({ ...data, version: currentVersion }) }),
             signal: AbortSignal.timeout(25000),
           });
-          if (response.type === 'opaqueredirect' || response.status === 403 ||
+          if (response.type === 'opaqueredirect' || response.status === 401 ||
               !response.headers.get('content-type')?.includes('application/json')) {
-            throw new Error('ログインが切れた可能性があります。ページを開き直してください。');
+            throw new Error('ログインが切れた可能性があります。ページを開き直して専用パスワードでログインしてください。');
           }
           const result = await response.json();
           if (!response.ok) {
@@ -1366,4 +1378,3 @@
   </script>
 </body>
 </html>
-
