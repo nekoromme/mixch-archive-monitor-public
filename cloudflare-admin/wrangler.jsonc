@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mixch-archive-admin",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-08",
+  "workers_dev": true,
+  "preview_urls": false,
+  // 静的アセット用の内部ルーターを使わず、HTMLを文字列として同梱します。
+  // ctx.accessを受け取るために必要な構成です。
+  "rules": [{ "type": "Text", "globs": ["**/*.html"], "fallthrough": true }],
+  "observability": {
+    "enabled": true
+  }
+  // GITHUB_TOKENはCloudflareの「Secret」に保存。ここには書きません。
+}
