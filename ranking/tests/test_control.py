@@ -24,3 +24,12 @@ class ControlTests(unittest.TestCase):
                 self.assertFalse(control.ranking_enabled())
                 path.write_text('{"ranking_enabled":"false","ranking_ready":true}')
                 with self.assertRaises(ValueError): control.ranking_enabled()
+
+    def test_resume_grace_only_delays_recovery_not_monitoring(self):
+        from datetime import datetime, timezone
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'settings.json'
+            path.write_text(json.dumps({'ranking_enabled':True,'ranking_ready':True,'ranking_changed_at':datetime.now(timezone.utc).isoformat()}))
+            with patch.object(control,'SETTINGS_FILE',path):
+                self.assertTrue(control.ranking_enabled())
+                self.assertFalse(control.ranking_enabled(for_recovery=True))

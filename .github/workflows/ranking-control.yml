@@ -1,0 +1,44 @@
+name: ランキング再開時の初回起動
+on:
+  push:
+    branches: [main]
+    paths: [monitor_settings.json]
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: ranking-control-change
+  cancel-in-progress: false
+jobs:
+  resume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: ランキングが再開された場合だけ起動
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIOUS_SETTINGS_COMMIT: ${{ github.event.before }}
+        working-directory: ranking
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          from src.github_actions_recovery import GitHubApiClient, dispatch_with_retry
+          from src.control import ranking_enabled
+          if not ranking_enabled():
+              print('停止中または準備中のため起動しません。')
+              raise SystemExit(0)
+          previous = subprocess.run(['git','show',os.environ['PREVIOUS_SETTINGS_COMMIT'] + ':monitor_settings.json'], capture_output=True, text=True)
+          if previous.returncode != 0:
+              raise RuntimeError('直前の監視設定を確認できません。定期起動を待ちます。')
+          old = json.loads(previous.stdout)
+          if old.get('ranking_enabled') is True and old.get('ranking_ready') is True:
+              print('ランキングの再開操作ではないため追加起動しません。')
+              raise SystemExit(0)
+          client = GitHubApiClient(os.environ['GITHUB_REPOSITORY'], os.environ['GH_TOKEN'], 10)
+          dispatch_with_retry(client,'ranking-monitor.yml',inputs={'dry_run':'false','test_webhook':'false'})
+          PY
