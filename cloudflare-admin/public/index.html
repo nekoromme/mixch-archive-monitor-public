@@ -564,12 +564,14 @@
 
     <div id="status" class="status"></div>
     <div id="meta" class="meta"></div>
-    <section style="padding:12px 0">
-      <strong>アーカイブ監視（全体）</strong>
+    <!-- 誤操作を防ぐため、監視設定はページを開くたびに折りたたみます。 -->
+    <details style="padding:8px 0">
+      <summary style="cursor:pointer;font-size:14px;padding:10px 0">監視設定 <span id="monitoringState" style="color:#666">（確認中）</span></summary>
+      <strong style="display:block;font-size:14px;margin-top:8px">アーカイブ監視（全体）</strong>
       <button id="globalMonitor" type="button" disabled onclick="toggleGlobalMonitor()"
-        style="display:block;width:100%;padding:16px;margin-top:8px;border-radius:12px;font:inherit;font-weight:bold">状態を確認中…</button>
+        style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
       <div style="font-size:14px;margin-top:8px">全員の監視をまとめて停止・再開します。対象一覧は残ります。実行中の処理は完了し、次回の監視から反映されます。</div>
-    </section>
+    </details>
     <button type="button" onclick="logout()" style="margin-top:8px;font-size:14px;padding:6px 12px">ログアウト</button>
   </header>
 
@@ -708,6 +710,8 @@
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || '全体監視設定を読み込めませんでした。');
       monitoring = result;
+      // 閉じていても、現在のオン・オフだけは確認できます。
+      document.getElementById('monitoringState').textContent = result.enabled ? '（監視中）' : '（停止中）';
       const button = document.getElementById('globalMonitor');
       button.textContent = result.enabled ? 'オン：全体を停止する' : 'オフ（停止中）：全体を再開する';
       button.style.background = result.enabled ? '#1769d2' : '#e3e6eb';
