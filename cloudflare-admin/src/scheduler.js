@@ -44,6 +44,9 @@ async function recordHealth(env, result) {
   if (!response.ok) console.error('SCHEDULER_HEALTH_WRITE_FAILED');
 }
 export async function scheduled(controller, env) {
+  // 外部との通信前に残し、起動そのものと起動後の接続失敗を区別します。
+  console.log(JSON.stringify({event:'ranking_schedule_started',cron:controller.cron,
+    scheduled_at:new Date(controller.scheduledTime).toISOString()}));
   try {
     const result = await runSchedule(env);
     console.log(JSON.stringify({event:'ranking_schedule',result}));
