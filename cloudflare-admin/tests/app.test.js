@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import { createApp } from '../src/app.js';
 
 const context = { access: { getIdentity: async () => ({ email: 'owner@example.test' }) } };
-const env = { GITHUB_TOKEN: 'test-secret-never-print',
+const env = { GITHUB_TOKEN: 'test_secret_never_print',
   ADMIN_PASSWORD: 'testing-password-very-long-123',
   LOGIN_LIMITER: { limit: async () => ({ success: true }) } };
 const origin = 'https://admin.example.test';

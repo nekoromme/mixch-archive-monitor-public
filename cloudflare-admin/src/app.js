@@ -104,13 +104,18 @@ async function readBody(request) {
 }
 
 async function github(env, fetcher, method, body) {
-  if (!env.GITHUB_TOKEN) throw new UserError(503, '初期設定が未完了です。管理者側の接続設定が必要です。');
+  // コピー時に付いた前後の改行・空白は除去。鍵そのものは表示・記録しません。
+  const token = typeof env.GITHUB_TOKEN === 'string' ? env.GITHUB_TOKEN.trim() : '';
+  if (!token) throw new UserError(503, 'GITHUB_TOKENが未設定です。CloudflareのVariables and Secretsを確認してください。');
+  if (!/^[A-Za-z0-9_]+$/.test(token)) {
+    throw new UserError(503, 'GITHUB_TOKENに鍵として使えない文字が含まれています。値にはGitHubの鍵だけを貼り付けてください。（接続診断: TOKEN_FORMAT）');
+  }
   let response;
   try {
     response = await fetcher(CONTENTS_URL + (method === 'GET' ? '?ref=' + BRANCH : ''), {
       method,
       headers: {
-        Authorization: 'Bearer ' + env.GITHUB_TOKEN,
+        Authorization: 'Bearer ' + token,
         Accept: 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
         'User-Agent': 'mixch-watchlist-admin',
@@ -119,13 +124,18 @@ async function github(env, fetcher, method, body) {
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal: AbortSignal.timeout(15000),
-      redirect: 'error',
+      // 転送先へ秘密の鍵を渡さず、応答を自分で確認します。
+      redirect: 'manual',
     });
-  } catch {
-    throw new UserError(502, method === 'GET'
+  } catch (error) {
+    // 生の例外文は鍵を含む可能性があるため、固定の診断コードだけを出します。
+    const reason = ['TimeoutError', 'AbortError'].includes(error?.name) ? 'TIMEOUT'
+      : error?.name === 'TypeError' ? 'REQUEST_ERROR' : 'NETWORK_ERROR';
+    throw new UserError(502, (method === 'GET'
       ? '保存先との通信に失敗しました。少し待って再読み込みしてください。'
-      : '保存結果を確認できません。連続で保存せず、一度再読み込みして確認してください。');
+      : '保存結果を確認できません。連続で保存せず、一度再読み込みして確認してください。') + '（接続診断: ' + reason + '）');
   }
+  if (response.status >= 300 && response.status < 400) throw new UserError(502, '保存先から別の接続先へ転送されました。管理者へこの画面を送ってください。（接続診断: REDIRECT）');
   if (response.status === 409 || response.status === 422) throw new UserError(409, CONFLICT);
   if ([401, 403, 404].includes(response.status)) {
     throw new UserError(502, 'GitHubとの接続を確認してください。認証の期限・権限・接続先が原因の可能性があります。');
