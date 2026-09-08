@@ -1,3 +1,6 @@
 {
-  "enabled": false
+  "enabled": false,
+  "ranking_enabled": true,
+  "ranking_ready": false,
+  "ranking_scheduler_probe": true
 }

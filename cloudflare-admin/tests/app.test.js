@@ -236,3 +236,26 @@ test('全体を停止・再開し、古い設定や別サイトからの操作�
   assert.equal((await send({enabled:true,version})).status,200);
   assert.equal((await (await send()).json()).enabled,true);
 });
+
+
+test('アーカイブとランキングを独立保存し、未指定の設定も維持する', async () => {
+  let settings={enabled:false,ranking_enabled:true,ranking_ready:true,extra:'keep'}, version='v1';
+  const app=createApp('',async (url,options)=>{
+    if(options.method==='GET') return Response.json({sha:version,content:Buffer.from(JSON.stringify(settings)).toString('base64')});
+    const body=JSON.parse(options.body);assert.equal(body.sha,version);
+    settings=JSON.parse(Buffer.from(body.content,'base64').toString());version+='x';return Response.json({});
+  });
+  const cookie=await login(app);
+  const send=body=>app.fetch(new Request(origin+'/api/monitoring',{
+    method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({...body,version})
+  }),env,{});
+  assert.equal((await send({kind:'ranking',enabled:false})).status,200);
+  assert.deepEqual(settings,{enabled:false,ranking_enabled:false,ranking_ready:true,extra:'keep'});
+  assert.equal((await send({kind:'archive',enabled:true})).status,200);
+  assert.equal(settings.ranking_enabled,false);assert.equal(settings.enabled,true);
+  assert.equal((await send({kind:'ranking',enabled:true})).status,200);
+  assert.equal(settings.enabled,true);assert.equal(settings.ranking_enabled,true);
+  settings.ranking_ready=false;
+  assert.equal((await send({kind:'ranking',enabled:false})).status,409);
+  assert.equal(settings.ranking_enabled,true);
+});

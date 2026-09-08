@@ -169,17 +169,21 @@ async function api(request, env, fetcher) {
   if (path === '/api/monitoring') {
     if (request.method === 'GET') {
       const current = await monitoringSettings(env, fetcher);
-      return json({ enabled: current.settings.enabled, version: current.version });
+      return json({ enabled: current.settings.enabled, rankingEnabled: current.settings.ranking_enabled === true, rankingReady: current.settings.ranking_ready === true, version: current.version });
     }
     if (request.method !== 'POST') throw new UserError(405, '保存ボタンを使用してください。');
     if (request.headers.get('Origin') !== new URL(request.url).origin) throw new UserError(403, '送信元を確認できません。');
     const body = await readBody(request);
+    const kind = body.kind || 'archive';
+    if (!['archive', 'ranking'].includes(kind)) throw new UserError(400, '監視の種類が不正です。');
     if (typeof body.enabled !== 'boolean') throw new UserError(400, '監視設定が不正です。');
     const current = await monitoringSettings(env, fetcher);
     if (body.version !== current.version) throw new UserError(409, CONFLICT);
+    if (kind === 'ranking' && current.settings.ranking_ready !== true) throw new UserError(409, 'ランキング監視は移行準備中です。');
+    const key = kind === 'ranking' ? 'ranking_enabled' : 'enabled';
     await github(env, fetcher, 'PUT', {
-      message: body.enabled ? 'Resume all archive monitoring' : 'Pause all archive monitoring',
-      content: encodeContent(JSON.stringify({ ...current.settings, enabled: body.enabled }, null, 2) + '\n'),
+      message: (body.enabled ? 'Resume ' : 'Pause ') + kind + ' monitoring',
+      content: encodeContent(JSON.stringify({ ...current.settings, [key]: body.enabled }, null, 2) + '\n'),
       sha: current.version, branch: BRANCH,
     }, 'monitor_settings.json');
     return json({ ok: true });
@@ -273,3 +277,4 @@ export function createApp(html, fetcher = (...args) => fetch(...args), loginHtml
     },
   };
 }
+

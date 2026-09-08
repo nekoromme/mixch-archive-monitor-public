@@ -570,6 +570,10 @@
       <strong style="display:block;font-size:14px;margin-top:8px">アーカイブ監視（全体）</strong>
       <button id="globalMonitor" type="button" disabled onclick="toggleGlobalMonitor()"
         style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
+      <strong style="display:block;font-size:14px;margin-top:18px">ランキング監視</strong>
+      <button id="rankingMonitor" type="button" disabled onclick="toggleGlobalMonitor('ranking')"
+        style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
+      <div style="font-size:14px;margin-top:8px">ランキングの取得と通知を停止・再開します。アーカイブ監視とは別に切り替えられます。</div>
       <div style="font-size:14px;margin-top:8px">全員の監視をまとめて停止・再開します。対象一覧は残ります。実行中の処理は完了し、次回の監視から反映されます。</div>
     </details>
     <button type="button" onclick="logout()" style="margin-top:8px;font-size:14px;padding:6px 12px">ログアウト</button>
@@ -711,24 +715,28 @@
       if (!response.ok) throw new Error(result.error || '全体監視設定を読み込めませんでした。');
       monitoring = result;
       // 閉じていても、現在のオン・オフだけは確認できます。
-      document.getElementById('monitoringState').textContent = result.enabled ? '（監視中）' : '（停止中）';
+      document.getElementById('monitoringState').textContent = '（アーカイブ：' + (result.enabled ? 'オン' : 'オフ') + '／ランキング：' + (!result.rankingReady ? '準備中' : result.rankingEnabled ? 'オン' : 'オフ') + '）';
       const button = document.getElementById('globalMonitor');
       button.textContent = result.enabled ? 'オン：全体を停止する' : 'オフ（停止中）：全体を再開する';
       button.style.background = result.enabled ? '#1769d2' : '#e3e6eb';
       button.style.color = result.enabled ? '#fff' : '#20242b';
+      const rankingButton = document.getElementById('rankingMonitor');
+      rankingButton.textContent = !result.rankingReady ? '移行準備中' : result.rankingEnabled ? 'オン：ランキング監視を停止する' : 'オフ：ランキング監視を再開する';
+      rankingButton.style.background = result.rankingEnabled && result.rankingReady ? '#1769d2' : '#e3e6eb';
+      rankingButton.style.color = result.rankingEnabled && result.rankingReady ? '#fff' : '#20242b';
     }
-    async function toggleGlobalMonitor() {
-      if (loading || !monitoring) return;
+    async function toggleGlobalMonitor(kind = 'archive') {
+      if (loading || !monitoring || (kind === 'ranking' && !monitoring.rankingReady)) return;
       setLoading(true);
       try {
         const response = await fetch('/api/monitoring', {
           method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({enabled:!monitoring.enabled, version:monitoring.version}), signal:AbortSignal.timeout(25000),
+          body:JSON.stringify({kind, enabled:!(kind === 'ranking' ? monitoring.rankingEnabled : monitoring.enabled), version:monitoring.version}), signal:AbortSignal.timeout(25000),
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || '保存結果を確認できません。再読み込みしてください。');
         await loadMonitoring();
-        setStatus(monitoring.enabled ? '全体の監視を再開しました。次回の定期実行から監視します。' : '全体の監視を停止しました。対象一覧はそのまま残ります。', 'success');
+        setStatus((kind === 'ranking' ? 'ランキング' : 'アーカイブ') + '監視の設定を保存しました。次回の監視から反映します。', 'success');
       } catch (error) { monitoring = null; handleError(error); }
       finally { setLoading(false); }
     }
@@ -869,7 +877,7 @@
       document
         .querySelectorAll('button')
         .forEach((button) => {
-          button.disabled = value || (button.id === 'globalMonitor' && !monitoring);
+          button.disabled = value || (button.id === 'globalMonitor' && !monitoring) || (button.id === 'rankingMonitor' && (!monitoring || !monitoring.rankingReady));
         });
     }
 
@@ -1382,3 +1390,4 @@
   </script>
 </body>
 </html>
+

@@ -1,0 +1,79 @@
+name: MixChannelランキング監視
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 通知と履歴更新をせず確認する
+        type: boolean
+        default: true
+      test_webhook:
+        description: Discordへテスト通知を1件送る
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: [ranking/**, .github/workflows/ranking-monitor.yml]
+permissions:
+  contents: write
+concurrency:
+  group: mixch-ranking-monitor-state-current
+  cancel-in-progress: false
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      MOMENTUM_THRESHOLD: '150'
+      COOLDOWN_HOURS: '12'
+      ERROR_NOTIFY_COOLDOWN_HOURS: '6'
+      HEARTBEAT_DAYS: '7'
+      BLOCKED_USER_IDS: ''
+      FALLBACK_MONITOR_URL: https://ikioi-ranking.com/v/mixch
+      # コード変更時は安全な確認だけ。定期起動はCloudflareが明示的にfalseを送る。
+      DRY_RUN: ${{ github.event_name == 'push' || inputs.dry_run }}
+      TEST_WEBHOOK: ${{ github.event_name == 'workflow_dispatch' && inputs.test_webhook || false }}
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: 自動テスト
+        working-directory: ranking
+        run: python3 -m unittest discover -s tests -v
+      - name: 監視設定を確認
+        id: control
+        working-directory: ranking
+        run: |
+          python3 - <<'PY'
+          import os
+          from src.control import ranking_enabled
+          live = ranking_enabled()
+          probe = os.environ['DRY_RUN'].lower() == 'true'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('run=' + str(live or probe).lower() + '\n')
+          PY
+      - name: 通知履歴を読む
+        if: steps.control.outputs.run == 'true'
+        run: |
+          echo "STATE_FILE=$RUNNER_TEMP/mixch-ranking-state.json" >> "$GITHUB_ENV"
+          # 取得失敗を初回扱いにすると大量再通知するため、必ず失敗で止めます。
+          git fetch origin ranking-state --depth=1
+          git show origin/ranking-state:state.json > "$RUNNER_TEMP/mixch-ranking-state.json"
+      - name: ランキングを確認
+        if: steps.control.outputs.run == 'true'
+        working-directory: ranking
+        run: python3 -m src.mixch_monitor
+      - name: 通知履歴を保存
+        if: always() && steps.control.outputs.run == 'true' && env.DRY_RUN != 'true'
+        run: |
+          test -s "$STATE_FILE"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch --force-create ranking-state origin/ranking-state
+          cp "$STATE_FILE" state.json
+          git add state.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'chore: update ranking history [skip ci]'
+          git push origin HEAD:ranking-state
