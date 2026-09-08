@@ -3,6 +3,9 @@ on:
   schedule:
     - cron: '2,7,12,17,22,27,32,37,42,47,52,57 * * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ranking-watchdog.yml]
 permissions:
   actions: write
   contents: write
@@ -17,7 +20,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       RANKING_SCHEDULER: cloudflare
-      WATCHDOG_STATE_FILE: ${{ runner.temp }}/ranking-watchdog.json
       WATCHDOG_STALE_MINUTES: '12'
       PYTHONUNBUFFERED: '1'
     steps:
@@ -35,6 +37,8 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write('enabled=' + str(ranking_enabled()).lower() + '\n')
           PY
+      - name: 履歴の保存場所を設定
+        run: echo "WATCHDOG_STATE_FILE=$RUNNER_TEMP/ranking-watchdog.json" >> "$GITHUB_ENV"
       - name: 復旧処理の履歴を読む
         if: steps.control.outputs.enabled == 'true'
         run: |
