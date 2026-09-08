@@ -1,6 +1,6 @@
 # ミクチャ管理画面：Cloudflare移行版
 
-各対象の追加・編集・削除・アーカイブ監視のオンオフに対応。
+各対象の追加・編集・削除と、アーカイブ監視全体のオンオフに対応。
 GitHubの同じ `watchlist.json` を読み書きするため、対象一覧の引っ越しは不要です。
 名前の自動取得とアーカイブ監視は、既存のGitHub側の処理が続けて担当します。
 
@@ -92,8 +92,8 @@ Worker→「Settings」→「Build」または「Builds」→「Build watch path
 
 1. Workerの「Visit」から新しいURLを開き、専用パスワードでログインします。
 2. いつもの対象一覧が表示されることを確認します。
-3. 対象を1件「編集」し、アーカイブ監視をオフにして保存します。
-4. ページを開き直し、同じ対象が「オフ（停止中）」のままであることを確認します。
+3. 画面上部の「アーカイブ監視（全体）」をオフにします。
+4. ページを開き直し、全体監視が「オフ（停止中）」のままであることを確認します。
 5. 一時停止が目的でない場合はオンに戻して保存します。
 6. 新しいURLをスマホのブックマークへ登録します。
 
@@ -135,3 +135,6 @@ HTMLはWorkerへ文字列として同梱しています。
 - [GitHubからの自動公開](https://developers.cloudflare.com/workers/ci-cd/builds/)
 - [ログイン連続試行の制限](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/)
 - [変更を監視するパスの設定](https://developers.cloudflare.com/workers/ci-cd/builds/build-watch-paths/)
+
+## 全体監視スイッチ
+画面上部の「アーカイブ監視（全体）」で全員の取得・通知・未更新による自動削除を停止・再開します。設定は `monitor_settings.json` に保存され、次回の監視実行から反映されます。実行中の処理は完了します。定期起動自体は残りますが、停止中は監視処理をせず終了します。個別スイッチは廃止し、旧 archive_enabled 設定は監視時に無視します。

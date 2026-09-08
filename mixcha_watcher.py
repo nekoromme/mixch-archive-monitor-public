@@ -695,7 +695,25 @@ def remove_inactive_users_from_watchlist(
     return [user for user in watchlist if str(user["id"]) not in inactive_ids]
 
 
+def monitoring_enabled():
+    # 対象一覧とは独立した全体スイッチ。未導入時だけ従来どおりオン。
+    # 壊れた設定を勝手にオン扱いせず、エラーで停止させます。
+    path = Path(WATCHLIST_FILE).parent / "monitor_settings.json"
+    if not path.exists():
+        return True
+    settings = json.loads(path.read_text(encoding="utf-8"))
+    if type(settings.get("enabled")) is not bool:
+        raise ValueError("monitor_settings.json: enabled must be boolean")
+    return settings["enabled"]
+
+
 def main():
+    # ブラウザ起動・通知先検証・状態変更より前に全体の停止を確認します。
+    if not monitoring_enabled():
+        log_metric("monitoring_paused", scope="all")
+        logging.info("全体のアーカイブ監視は停止中です。対象一覧と履歴は変更しません。")
+        return
+
     log_metric(
         "python_start",
         watchlist_file=WATCHLIST_FILE,
@@ -733,7 +751,8 @@ def main():
 
     # 設定がない既存対象はオン。オフの対象も元の一覧には保持します。
     # 監視と長期未更新の自動削除には、オンの対象だけを渡します。
-    active_watchlist = [user for user in watchlist if user.get("archive_enabled") is not False]
+    # 旧画面の個別オフ設定は無視し、全体スイッチだけで制御します。
+    active_watchlist = watchlist
     log_metric("archive_monitor_selection",
                enabled_count=len(active_watchlist),
                disabled_count=len(watchlist) - len(active_watchlist))

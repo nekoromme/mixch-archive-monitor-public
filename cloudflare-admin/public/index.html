@@ -564,6 +564,12 @@
 
     <div id="status" class="status"></div>
     <div id="meta" class="meta"></div>
+    <section style="padding:12px 0">
+      <strong>アーカイブ監視（全体）</strong>
+      <button id="globalMonitor" type="button" disabled onclick="toggleGlobalMonitor()"
+        style="display:block;width:100%;padding:16px;margin-top:8px;border-radius:12px;font:inherit;font-weight:bold">状態を確認中…</button>
+      <div style="font-size:14px;margin-top:8px">全員の監視をまとめて停止・再開します。対象一覧は残ります。実行中の処理は完了し、次回の監視から反映されます。</div>
+    </section>
     <button type="button" onclick="logout()" style="margin-top:8px;font-size:14px;padding:6px 12px">ログアウト</button>
   </header>
 
@@ -666,20 +672,7 @@
             >
           </div>
 
-          <div id="archiveToggleGroup" class="field-group" hidden>
-            <label id="archiveToggleLabel">アーカイブ監視</label>
-            <button type="button" id="archiveToggle" role="switch"
-              aria-labelledby="archiveToggleLabel" aria-checked="true"
-              onclick="toggleArchiveMonitoring()"
-              style="width:100%;min-height:56px;border-radius:12px;font-weight:700">
-              オン（監視する）
-            </button>
-            <span class="field-note">
-              切り替え後に「保存」を押すと反映されます。
-              オフの間はアーカイブ取得・通知・未更新による自動削除を停止します。
-              再開すると、停止前との変化があれば通知します。
-            </span>
-          </div>
+
 
           <div id="formStatus" class="form-status"></div>
 
@@ -709,6 +702,33 @@
 
     // Cloudflare側の保存処理との通信。GitHubの鍵はブラウザへ渡しません。
     let currentVersion = null;
+    let monitoring = null;
+    async function loadMonitoring() {
+      const response = await fetch('/api/monitoring', { credentials:'same-origin', cache:'no-store', signal:AbortSignal.timeout(25000) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || '全体監視設定を読み込めませんでした。');
+      monitoring = result;
+      const button = document.getElementById('globalMonitor');
+      button.textContent = result.enabled ? 'オン：全体を停止する' : 'オフ（停止中）：全体を再開する';
+      button.style.background = result.enabled ? '#1769d2' : '#e3e6eb';
+      button.style.color = result.enabled ? '#fff' : '#20242b';
+    }
+    async function toggleGlobalMonitor() {
+      if (loading || !monitoring) return;
+      setLoading(true);
+      try {
+        const response = await fetch('/api/monitoring', {
+          method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({enabled:!monitoring.enabled, version:monitoring.version}), signal:AbortSignal.timeout(25000),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || '保存結果を確認できません。再読み込みしてください。');
+        await loadMonitoring();
+        setStatus(monitoring.enabled ? '全体の監視を再開しました。次回の定期実行から監視します。' : '全体の監視を停止しました。対象一覧はそのまま残ります。', 'success');
+      } catch (error) { monitoring = null; handleError(error); }
+      finally { setLoading(false); }
+    }
+
     async function logout() {
       if (loading) return;
       setLoading(true);
@@ -845,7 +865,7 @@
       document
         .querySelectorAll('button')
         .forEach((button) => {
-          button.disabled = value;
+          button.disabled = value || (button.id === 'globalMonitor' && !monitoring);
         });
     }
 
@@ -901,7 +921,8 @@
       setStatus('最新情報を確認中…', 'loading');
 
       adminApi()
-        .withSuccessHandler((result) => {
+        .withSuccessHandler(async (result) => {
+          try { await loadMonitoring(); } catch (error) { monitoring = null; handleError(error); return; }
           setLoading(false);
 
           items = result.items || [];
@@ -983,9 +1004,7 @@
                 ／
                 ${item.index + 1}件目
               </div>
-              <div style="font-size:14px;margin-top:6px;font-weight:700">
-                アーカイブ監視：${item.archiveEnabled === false ? 'オフ（停止中）' : 'オン'}
-              </div>
+
             </div>
 
             <div class="actions">
@@ -1008,21 +1027,6 @@
           </section>
         `)
         .join('');
-    }
-
-    // 色だけに頼らず、文字と読み上げ用の状態も一緒に切り替えます。
-    function setArchiveMonitoring(enabled) {
-      const button = document.getElementById('archiveToggle');
-      button.setAttribute('aria-checked', String(enabled));
-      button.textContent = enabled ? 'オン（監視する）' : 'オフ（停止する）';
-      button.style.backgroundColor = enabled ? '#1769d2' : '#e3e6eb';
-      button.style.color = enabled ? '#ffffff' : '#30343b';
-    }
-
-    function toggleArchiveMonitoring() {
-      if (loading) return;
-      setArchiveMonitoring(document.getElementById('archiveToggle')
-        .getAttribute('aria-checked') !== 'true');
     }
 
     function openForm(index) {
@@ -1064,8 +1068,6 @@
 
       const archiveEnabled = !item || item.archiveEnabled !== false;
       document.getElementById('targetArchiveEnabled').value = String(archiveEnabled);
-      document.getElementById('archiveToggleGroup').hidden = !isEdit;
-      setArchiveMonitoring(archiveEnabled);
 
       document.getElementById('streamerId').value =
         item ? item.id : '';
@@ -1231,9 +1233,7 @@
       const payload =
         targetIndex === ''
           ? { id: id }
-          : { id: id, name: name,
-              archive_enabled: document.getElementById('archiveToggle')
-                .getAttribute('aria-checked') === 'true' };
+          : { id: id, name: name };
 
       setLoading(true);
       setFormStatus(

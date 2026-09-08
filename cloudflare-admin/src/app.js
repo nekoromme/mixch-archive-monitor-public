@@ -103,7 +103,7 @@ async function readBody(request) {
   } catch { throw new UserError(400, '入力内容を読み取れませんでした。'); }
 }
 
-async function github(env, fetcher, method, body) {
+async function github(env, fetcher, method, body, filename = 'watchlist.json') {
   // コピー時に付いた前後の改行・空白は除去。鍵そのものは表示・記録しません。
   const token = typeof env.GITHUB_TOKEN === 'string' ? env.GITHUB_TOKEN.trim() : '';
   if (!token) throw new UserError(503, 'GITHUB_TOKENが未設定です。CloudflareのVariables and Secretsを確認してください。');
@@ -112,7 +112,7 @@ async function github(env, fetcher, method, body) {
   }
   let response;
   try {
-    response = await fetcher(CONTENTS_URL + (method === 'GET' ? '?ref=' + BRANCH : ''), {
+    response = await fetcher(CONTENTS_URL.replace('watchlist.json', filename) + (method === 'GET' ? '?ref=' + BRANCH : ''), {
       method,
       headers: {
         Authorization: 'Bearer ' + token,
@@ -156,8 +156,34 @@ async function getFile(env, fetcher) {
   return { raw, items: normalize(raw), sha: file.sha };
 }
 
+// 全体設定は対象一覧と別ファイルに保存し、配信者の追加・削除と競合させません。
+async function monitoringSettings(env, fetcher) {
+  const file = await github(env, fetcher, 'GET', undefined, 'monitor_settings.json');
+  const settings = JSON.parse(decodeContent(file.content));
+  if (typeof settings.enabled !== 'boolean') throw new UserError(502, '全体監視設定の形式が不正です。');
+  return { settings, version: file.sha };
+}
+
 async function api(request, env, fetcher) {
   const path = new URL(request.url).pathname;
+  if (path === '/api/monitoring') {
+    if (request.method === 'GET') {
+      const current = await monitoringSettings(env, fetcher);
+      return json({ enabled: current.settings.enabled, version: current.version });
+    }
+    if (request.method !== 'POST') throw new UserError(405, '保存ボタンを使用してください。');
+    if (request.headers.get('Origin') !== new URL(request.url).origin) throw new UserError(403, '送信元を確認できません。');
+    const body = await readBody(request);
+    if (typeof body.enabled !== 'boolean') throw new UserError(400, '監視設定が不正です。');
+    const current = await monitoringSettings(env, fetcher);
+    if (body.version !== current.version) throw new UserError(409, CONFLICT);
+    await github(env, fetcher, 'PUT', {
+      message: body.enabled ? 'Resume all archive monitoring' : 'Pause all archive monitoring',
+      content: encodeContent(JSON.stringify({ ...current.settings, enabled: body.enabled }, null, 2) + '\n'),
+      sha: current.version, branch: BRANCH,
+    }, 'monitor_settings.json');
+    return json({ ok: true });
+  }
   if (request.method === 'GET' && path === '/api/watchlist') {
     const file = await getFile(env, fetcher);
     const counts = new Map();
@@ -196,15 +222,14 @@ async function api(request, env, fetcher) {
     } else {
       const id = validateId(body.streamer?.id);
       const name = body.streamer?.name;
-      const enabled = body.streamer?.archive_enabled;
       if (typeof name !== 'string' || !name.trim() || name.length > 200) {
         throw new UserError(400, '配信者名を1～200文字で入力してください。');
       }
-      if (typeof enabled !== 'boolean') throw new UserError(400, '監視のオン・オフ設定が不正です。');
       if (file.items.some(item => item.index !== target.index && item.id === id)) {
         throw new UserError(400, '同じIDは既に登録されています。');
       }
-      file.raw[target.index] = { ...file.raw[target.index], id, name: name.trim(), archive_enabled: enabled };
+      file.raw[target.index] = { ...file.raw[target.index], id, name: name.trim() };
+      delete file.raw[target.index].archive_enabled;
     }
   }
   // shaの一致をGitHub側でも検証し、監視処理との同時更新による上書きを防ぎます。

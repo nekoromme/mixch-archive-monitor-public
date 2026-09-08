@@ -81,7 +81,7 @@ test('認証済みの画面は表示でき、秘密の鍵を含めない', async
   assert.ok(!(await response.text()).includes(env.GITHUB_TOKEN));
 });
 
-test('既存対象はオン、オフ保存→再読込→オン復帰で他の項目も保持', async () => {
+test('個別編集は名前を変更し他の項目を保持、古い個別フラグを除去', async () => {
   const f = fixture();
   assert.equal((await (await f.send('/api/watchlist')).json()).items[0].archiveEnabled, true);
   let response = await f.send('/api/update', {
@@ -89,13 +89,13 @@ test('既存対象はオン、オフ保存→再読込→オン復帰で他の�
   });
   assert.equal(response.status, 200);
   assert.equal(f.rows[0].extra, 'preserve');
-  assert.equal((await (await f.send('/api/watchlist')).json()).items[0].archiveEnabled, false);
+  assert.equal((await (await f.send('/api/watchlist')).json()).items[0].archiveEnabled, true);
   response = await f.send('/api/update', {
     target, streamer: { id: '123', name: 'テスト😊', archive_enabled: true },
   });
   assert.equal(response.status, 200);
   assert.equal(f.rows[0].name, 'テスト😊');
-  assert.equal(f.rows[0].archive_enabled, true);
+  assert.equal(f.rows[0].archive_enabled, undefined);
 });
 
 test('URLから追加、名前取得待ちの形式を維持、削除も可能', async () => {
@@ -121,7 +121,7 @@ test('他サイトからの送信と不正な設定・重複登録を拒否', as
   assert.equal((await f.send('/api/delete', { target }, { headers: { Origin: 'https://other.test' } })).status, 403);
   assert.equal(f.calls, 0);
   assert.equal((await f.send('/api/update', { target,
-    streamer: { id: '123', name: 'テスト', archive_enabled: 'false' } })).status, 400);
+    streamer: { id: '123', name: '' } })).status, 400);
   assert.equal((await f.send('/api/add', { streamer: { id: '123' } })).status, 400);
   assert.equal(f.writes, 0);
 });
@@ -141,7 +141,8 @@ test('移行画面にGAS依存や外部スクリプトがなく、JavaScript構�
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   assert.ok(!html.includes('google.script'));
   assert.ok(!html.includes('<script src='));
-  assert.ok(html.includes('id="archiveToggle"'));
+  assert.ok(html.includes('id="globalMonitor"'));
+  assert.ok(!html.includes('id="archiveToggle"'));
   new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
 });
 
@@ -207,4 +208,31 @@ test('1文字のパスワードでもログインできる', async () => {
   }), {...env, ADMIN_PASSWORD:'a'}, {});
   assert.equal(response.status, 200);
   assert.ok(response.headers.get('Set-Cookie'));
+});
+
+
+test('全体を停止・再開し、古い設定や別サイトからの操作を拒否', async () => {
+  let enabled = true, version = 'settings-1', writes = 0;
+  const app = createApp('', async (url, options) => {
+    assert.ok(url.includes('/contents/monitor_settings.json'));
+    if (options.method === 'GET') return Response.json({sha:version,content:Buffer.from(JSON.stringify({enabled})).toString('base64')});
+    const body = JSON.parse(options.body);
+    assert.equal(body.sha, version);
+    enabled = JSON.parse(Buffer.from(body.content,'base64').toString()).enabled;
+    version = 'settings-' + (++writes + 1);
+    return Response.json({});
+  });
+  const cookie = await login(app);
+  const send = (body, site = origin) => app.fetch(new Request(origin + '/api/monitoring', {
+    method:body ? 'POST':'GET', headers:{Cookie:cookie,Origin:site,'Content-Type':'application/json'},
+    ...(body ? {body:JSON.stringify(body)} : {}),
+  }),env,{});
+  assert.equal((await (await send()).json()).enabled,true);
+  assert.equal((await send({enabled:false,version})).status,200);
+  assert.equal((await (await send()).json()).enabled,false);
+  assert.equal((await send({enabled:true,version:'stale'})).status,409);
+  assert.equal((await send({enabled:true,version},'https://other.test')).status,403);
+  assert.equal(enabled,false);
+  assert.equal((await send({enabled:true,version})).status,200);
+  assert.equal((await (await send()).json()).enabled,true);
 });
