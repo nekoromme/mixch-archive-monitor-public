@@ -183,7 +183,8 @@ async function api(request, env, fetcher) {
     const key = kind === 'ranking' ? 'ranking_enabled' : 'enabled';
     await github(env, fetcher, 'PUT', {
       message: (body.enabled ? 'Resume ' : 'Pause ') + kind + ' monitoring',
-      content: encodeContent(JSON.stringify({ ...current.settings, [key]: body.enabled }, null, 2) + '\n'),
+      content: encodeContent(JSON.stringify({ ...current.settings, [key]: body.enabled,
+        ...(kind === 'ranking' ? { ranking_changed_at: new Date().toISOString() } : {}) }, null, 2) + '\n'),
       sha: current.version, branch: BRANCH,
     }, 'monitor_settings.json');
     return json({ ok: true });

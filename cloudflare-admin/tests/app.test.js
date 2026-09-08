@@ -250,7 +250,8 @@ test('アーカイブとランキングを独立保存し、未指定の設定�
     method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({...body,version})
   }),env,{});
   assert.equal((await send({kind:'ranking',enabled:false})).status,200);
-  assert.deepEqual(settings,{enabled:false,ranking_enabled:false,ranking_ready:true,extra:'keep'});
+  assert.equal(settings.enabled,false);assert.equal(settings.ranking_enabled,false);
+  assert.equal(settings.extra,'keep');assert.ok(settings.ranking_changed_at);
   assert.equal((await send({kind:'archive',enabled:true})).status,200);
   assert.equal(settings.ranking_enabled,false);assert.equal(settings.enabled,true);
   assert.equal((await send({kind:'ranking',enabled:true})).status,200);

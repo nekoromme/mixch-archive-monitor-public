@@ -842,7 +842,7 @@ def _dispatch_command(args: argparse.Namespace) -> int:
 def _watchdog_command(_args: argparse.Namespace) -> int:
     from .control import ranking_enabled
     # 利用者が停止した監視を再開したり、停止通知を送ったりしません。
-    if not ranking_enabled():
+    if not ranking_enabled(for_recovery=True):
         return 0
     return run_watchdog(WatchdogConfig.from_environment())
 
