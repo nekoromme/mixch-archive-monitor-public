@@ -24,12 +24,36 @@ export async function runSchedule(env, fetcher = (...args) => fetch(...args)) {
   });
   return probe ? 'probe-dispatched' : 'dispatched';
 }
+// 権限不足などもこちらから切り分けられるよう、結果が変わった時だけ保存。
+// 毎回コミットせず、監視履歴・管理画面の設定には触れません。
+async function recordHealth(env, result) {
+  const headers = { Authorization:'Bearer ' + env.GITHUB_TOKEN.trim(),
+    'User-Agent':'mixch-monitor-scheduler', 'Content-Type':'application/json', Accept:'application/vnd.github+json' };
+  const url = API + '/contents/ranking_scheduler_health.json';
+  const previous = await fetch(url + '?ref=main', {headers,redirect:'manual',signal:AbortSignal.timeout(10000)});
+  let sha;
+  if (previous.ok) {
+    const file = await previous.json();
+    const old = JSON.parse(atob(file.content.replace(/\s/g,'')));
+    if (old.result === result) return;
+    sha = file.sha;
+  } else if (previous.status !== 404) return;
+  const response = await fetch(url, {method:'PUT',headers,redirect:'manual',signal:AbortSignal.timeout(10000),
+    body:JSON.stringify({branch:'main',sha,message:'Record ranking scheduler health [skip ci]',
+      content:btoa(JSON.stringify({result,changed_at:new Date().toISOString()},null,2)+'\n')})});
+  if (!response.ok) console.error('SCHEDULER_HEALTH_WRITE_FAILED');
+}
 export async function scheduled(controller, env) {
-  try { console.log(JSON.stringify({event:'ranking_schedule',result:await runSchedule(env)})); }
+  try {
+    const result = await runSchedule(env);
+    console.log(JSON.stringify({event:'ranking_schedule',result}));
+    try { await recordHealth(env,result); } catch { console.error('SCHEDULER_HEALTH_WRITE_FAILED'); }
+  }
   catch (error) {
     // 接続ライブラリの例外に秘密情報が混ざっていても公開しません。
     const code = /^SCHEDULER_[A-Z_0-9]+$/.test(error.message) ? error.message : 'SCHEDULER_NETWORK';
     console.error(JSON.stringify({event:'ranking_schedule',result:code}));
+    try { await recordHealth(env,code); } catch { console.error('SCHEDULER_HEALTH_WRITE_FAILED'); }
     throw new Error(code);
   }
 }
