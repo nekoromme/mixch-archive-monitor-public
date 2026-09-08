@@ -574,11 +574,6 @@
       <button id="rankingMonitor" type="button" disabled onclick="toggleGlobalMonitor('ranking')"
         style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
       <div style="font-size:14px;margin-top:8px">ランキングの取得と通知を停止・再開します。アーカイブ監視とは別に切り替えられます。</div>
-      <!-- 移行中だけ表示。本番の監視設定や通知履歴は変更しません。 -->
-      <div id="rankingProbePanel" hidden style="font-size:14px;margin-top:10px">
-        <button type="button" onclick="checkRankingConnection()" style="min-height:44px;padding:8px 14px;font-size:14px">接続を確認</button>
-        <div id="rankingProbeResult" role="status" style="margin-top:6px"></div>
-      </div>
       <div style="font-size:14px;margin-top:8px">全員の監視をまとめて停止・再開します。対象一覧は残ります。実行中の処理は完了し、次回の監視から反映されます。</div>
     </details>
     <button type="button" onclick="logout()" style="margin-top:8px;font-size:14px;padding:6px 12px">ログアウト</button>
@@ -729,20 +724,6 @@
       rankingButton.textContent = !result.rankingReady ? '移行準備中' : result.rankingEnabled ? 'オン：ランキング監視を停止する' : 'オフ：ランキング監視を再開する';
       rankingButton.style.background = result.rankingEnabled && result.rankingReady ? '#1769d2' : '#e3e6eb';
       rankingButton.style.color = result.rankingEnabled && result.rankingReady ? '#fff' : '#20242b';
-      document.getElementById('rankingProbePanel').hidden = result.rankingReady;
-    }
-    async function checkRankingConnection() {
-      if (loading || !monitoring || monitoring.rankingReady) return;
-      const status = document.getElementById('rankingProbeResult');
-      setLoading(true);
-      status.textContent = '接続を確認しています…';
-      try {
-        const response = await fetch('/api/ranking-probe', {method:'POST',credentials:'same-origin',
-          headers:{'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(60000)});
-        const result = await response.json();
-        status.textContent = result.message || result.error || '確認結果を取得できませんでした。';
-      } catch { status.textContent = '接続確認の応答を受け取れませんでした。少し待って画面を開き直してください。'; }
-      finally { setLoading(false); }
     }
     async function toggleGlobalMonitor(kind = 'archive') {
       if (loading || !monitoring || (kind === 'ranking' && !monitoring.rankingReady)) return;

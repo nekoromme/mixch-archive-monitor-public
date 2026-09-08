@@ -1,0 +1,32 @@
+name: ランキング監視の5分待機
+on:
+  workflow_dispatch:
+    inputs:
+      probe:
+        description: 移行準備中の確認を1回だけ行う（通知なし）
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: [.github/workflows/ranking-relay.yml, ranking/src/relay.py]
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: mixch-ranking-relay
+  cancel-in-progress: false
+jobs:
+  wait-and-dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELAY_PROBE: ${{ github.event_name == 'push' || inputs.probe }}
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: 約5分待ち、設定を再確認して監視を起動
+        working-directory: ranking
+        run: python3 -m src.relay

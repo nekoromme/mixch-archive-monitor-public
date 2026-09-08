@@ -29,6 +29,7 @@ jobs:
           from pathlib import Path
           from src.github_actions_recovery import GitHubApiClient, dispatch_with_retry
           from src.control import ranking_enabled
+          from src.relay import ensure_relay
           if not ranking_enabled():
               print('停止中または準備中のため起動しません。')
               raise SystemExit(0)
@@ -40,5 +41,8 @@ jobs:
               print('ランキングの再開操作ではないため追加起動しません。')
               raise SystemExit(0)
           client = GitHubApiClient(os.environ['GITHUB_REPOSITORY'], os.environ['GH_TOKEN'], 10)
-          dispatch_with_retry(client,'ranking-monitor.yml',inputs={'dry_run':'false','test_webhook':'false'})
+          try:
+              dispatch_with_retry(client,'ranking-monitor.yml',inputs={'dry_run':'false','test_webhook':'false'})
+          finally:
+              ensure_relay(client)
           PY

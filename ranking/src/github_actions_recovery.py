@@ -37,7 +37,7 @@ JST = timezone(timedelta(hours=9))
 
 GITHUB_API_BASE = "https://api.github.com"
 MONITOR_WORKFLOW = "ranking-monitor.yml"
-RELAY_WORKFLOW = "relay.yml"  # 旧方式のテスト互換。統合後はCloudflareが定期起動。
+RELAY_WORKFLOW = os.getenv("RANKING_RELAY_WORKFLOW", "relay.yml")
 ACTIVE_RUN_STATUSES = frozenset(
     {"queued", "in_progress", "waiting", "pending", "requested"}
 )
@@ -1001,4 +1001,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

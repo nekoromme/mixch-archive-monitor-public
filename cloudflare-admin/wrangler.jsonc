@@ -5,8 +5,8 @@
   "compatibility_date": "2026-09-08",
   "workers_dev": true,
   "preview_urls": false,
-  // 起動記録が出ない旧設定を更新。5分間隔は維持し、毎時1・6・11…56分に起動します。
-  "triggers": { "crons": ["1,6,11,16,21,26,31,36,41,46,51,56 * * * *"] },
+  // 監視の起動はGitHub内で実施。以前登録したCloudflareの定期起動は解除します。
+  "triggers": { "crons": [] },
   // 静的アセット用の内部ルーターを使わず、HTMLを文字列として同梱します。
   // HTMLも認証処理を通して配信します。
   "rules": [{ "type": "Text", "globs": ["**/*.html"], "fallthrough": true }],

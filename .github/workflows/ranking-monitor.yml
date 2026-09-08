@@ -30,7 +30,7 @@ jobs:
       HEARTBEAT_DAYS: '7'
       BLOCKED_USER_IDS: ''
       FALLBACK_MONITOR_URL: https://ikioi-ranking.com/v/mixch
-      # コード変更時は安全な確認だけ。定期起動はCloudflareが明示的にfalseを送る。
+      # コード変更時は確認だけ。5分待機からの本番起動では明示的にfalseを送る。
       DRY_RUN: ${{ github.event_name == 'push' || inputs.dry_run }}
       TEST_WEBHOOK: ${{ github.event_name == 'workflow_dispatch' && inputs.test_webhook || false }}
       PYTHONUNBUFFERED: '1'
