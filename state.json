@@ -1,1 +1,9 @@
-{"version":1,"incident_open":false,"incident_started_at":null,"incident_kind":null,"last_alerted_at":null,"last_restart_attempt_at":null,"last_recovered_at":null}
+{
+  "incident_kind": null,
+  "incident_open": false,
+  "incident_started_at": null,
+  "last_alerted_at": null,
+  "last_recovered_at": null,
+  "last_restart_attempt_at": null,
+  "version": 1
+}
