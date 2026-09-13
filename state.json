@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18949965": {
+      "broadcaster_name": "【ミス同志社】No.3山崎真鈴",
+      "first_seen_at": "2026-09-13T14:35:02Z",
+      "last_seen_at": "2026-09-13T14:35:02Z",
+      "max_momentum": 205,
+      "url": "https://mixch.tv/u/18949965/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
