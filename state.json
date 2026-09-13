@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_heartbeat_at": "2026-09-02T09:17:23Z"
+    "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
   "night_candidates": {},
   "notifications": {
@@ -336,11 +336,6 @@
       "last_notified_at": "2026-08-31T11:01:13Z",
       "url": "https://mixch.tv/u/18464833/live"
     },
-    "18467780": {
-      "broadcaster_name": "あいみ#サツコレ",
-      "last_notified_at": "2026-08-13T00:13:43Z",
-      "url": "https://mixch.tv/u/18467780/live"
-    },
     "18480170": {
       "broadcaster_name": "Kurea",
       "last_notified_at": "2026-08-29T09:20:21Z",
@@ -372,11 +367,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18579071/live"
     },
-    "18580144": {
-      "broadcaster_name": "登坂美羽",
-      "last_notified_at": "2026-08-13T07:11:58Z",
-      "url": "https://mixch.tv/u/18580144/live"
-    },
     "18580359": {
       "broadcaster_name": "ノの",
       "last_notified_at": "2026-09-01T12:51:11Z",
@@ -406,11 +396,6 @@
       "broadcaster_name": "れんは⭐ #KOGYARU専属AD",
       "last_notified_at": "2026-08-25T03:55:21Z",
       "url": "https://mixch.tv/u/18639802/live"
-    },
-    "18642018": {
-      "broadcaster_name": "あおごん",
-      "last_notified_at": "2026-08-13T07:43:13Z",
-      "url": "https://mixch.tv/u/18642018/live"
     },
     "18652855": {
       "broadcaster_name": "ゆら#Natuul専属モデルAD",
@@ -540,16 +525,6 @@
       "last_notified_at": "2026-08-20T10:09:41Z",
       "url": "https://mixch.tv/u/18834510/live"
     },
-    "18838049": {
-      "broadcaster_name": "︎りらJCミスコン",
-      "last_notified_at": "2026-08-12T11:58:47Z",
-      "url": "https://mixch.tv/u/18838049/live"
-    },
-    "18839076": {
-      "broadcaster_name": "日1.5倍❤️川譲動画ﾗｲｸ",
-      "last_notified_at": "2026-08-13T04:31:48Z",
-      "url": "https://mixch.tv/u/18839076/live"
-    },
     "18846548": {
       "broadcaster_name": "こころん",
       "last_notified_at": "2026-08-30T06:44:14Z",
@@ -643,11 +618,6 @@
       "last_notified_at": "2026-08-27T08:48:05Z",
       "url": "https://mixch.tv/u/18901441/live"
     },
-    "18902944": {
-      "broadcaster_name": "Yuuna#日1.5",
-      "last_notified_at": "2026-08-13T11:46:36Z",
-      "url": "https://mixch.tv/u/18902944/live"
-    },
     "18903495": {
       "broadcaster_name": "さーや！！",
       "last_notified_at": "2026-08-22T03:35:34Z",
@@ -657,11 +627,6 @@
       "broadcaster_name": "りり",
       "last_notified_at": "2026-08-30T10:52:18Z",
       "url": "https://mixch.tv/u/18903516/live"
-    },
-    "18903569": {
-      "broadcaster_name": "てぃるも⒈5IVI日",
-      "last_notified_at": "2026-08-13T12:53:42Z",
-      "url": "https://mixch.tv/u/18903569/live"
     },
     "18905015": {
       "broadcaster_name": "パトン芦田右ャンボイ",
@@ -722,11 +687,6 @@
       "last_notified_at": "2026-08-30T03:48:19Z",
       "url": "https://mixch.tv/u/18922507/live"
     },
-    "18923924": {
-      "broadcaster_name": "りんビーlike#IVIAD",
-      "last_notified_at": "2026-08-12T22:20:05Z",
-      "url": "https://mixch.tv/u/18923924/live"
-    },
     "18924352": {
       "broadcaster_name": "RUI RUI#DCミスターコン",
       "last_notified_at": "2026-08-22T11:21:19Z",
@@ -757,11 +717,6 @@
       "broadcaster_name": "ゆりかよ",
       "last_notified_at": "2026-08-21T05:34:53Z",
       "url": "https://mixch.tv/u/18927766/live"
-    },
-    "18927820": {
-      "broadcaster_name": "あおIVIAD",
-      "last_notified_at": "2026-08-13T10:18:52Z",
-      "url": "https://mixch.tv/u/18927820/live"
     },
     "18929468": {
       "broadcaster_name": "ちさきJCミスコン2026",
@@ -801,21 +756,11 @@
       "last_notified_at": "2026-08-20T11:37:37Z",
       "url": "https://mixch.tv/u/18939637/live"
     },
-    "18939783": {
-      "broadcaster_name": "りの",
-      "last_notified_at": "2026-08-13T09:52:48Z",
-      "url": "https://mixch.tv/u/18939783/live"
-    },
     "18941044": {
       "broadcaster_name": "秋桜Zipper掲載AD",
       "last_notified_at": "2026-09-02T22:00:46Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18941044/live"
-    },
-    "18941703": {
-      "broadcaster_name": "yui#K-1ラウンドガールAD",
-      "last_notified_at": "2026-08-12T09:33:23Z",
-      "url": "https://mixch.tv/u/18941703/live"
     },
     "18942145": {
       "broadcaster_name": "ひなち#JCコンテス026",
@@ -847,16 +792,6 @@
       "last_notified_at": "2026-08-25T22:03:57Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18946717/live"
-    },
-    "18946786": {
-      "broadcaster_name": "ひな",
-      "last_notified_at": "2026-08-13T11:41:27Z",
-      "url": "https://mixch.tv/u/18946786/live"
-    },
-    "18947060": {
-      "broadcaster_name": "ミス立教 No.1 那波あや",
-      "last_notified_at": "2026-08-12T12:14:11Z",
-      "url": "https://mixch.tv/u/18947060/live"
     },
     "18947594": {
       "broadcaster_name": "【龍谷】No7松田鈴",
@@ -925,11 +860,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18950177/live"
     },
-    "18950410": {
-      "broadcaster_name": "【ミス同志社】No.2 小野優華",
-      "last_notified_at": "2026-08-12T11:33:02Z",
-      "url": "https://mixch.tv/u/18950410/live"
-    },
     "18950865": {
       "broadcaster_name": "名称未設定（ID: 18950865）",
       "last_notified_at": "2026-08-26T12:18:01Z",
@@ -939,11 +869,6 @@
       "broadcaster_name": "ふうな#JKミスコン",
       "last_notified_at": "2026-09-01T12:35:34Z",
       "url": "https://mixch.tv/u/18951227/live"
-    },
-    "18952318": {
-      "broadcaster_name": "るか",
-      "last_notified_at": "2026-08-13T02:48:39Z",
-      "url": "https://mixch.tv/u/18952318/live"
     },
     "18952906": {
       "broadcaster_name": "ここな#ラビッティ掲載AD",
@@ -991,16 +916,6 @@
       "last_notified_at": "2026-08-17T05:37:34Z",
       "url": "https://mixch.tv/u/18958724/live"
     },
-    "18958790": {
-      "broadcaster_name": "ゆずき",
-      "last_notified_at": "2026-08-12T12:24:32Z",
-      "url": "https://mixch.tv/u/18958790/live"
-    },
-    "18960079": {
-      "broadcaster_name": "こうこ＃JCミスコン",
-      "last_notified_at": "2026-08-13T04:21:31Z",
-      "url": "https://mixch.tv/u/18960079/live"
-    },
     "18960193": {
       "broadcaster_name": "れな ❤️#JCミスコン2026中2",
       "last_notified_at": "2026-08-23T03:33:49Z",
@@ -1015,11 +930,6 @@
       "broadcaster_name": "なーな#KOGYARU読モ",
       "last_notified_at": "2026-08-24T10:08:40Z",
       "url": "https://mixch.tv/u/18961405/live"
-    },
-    "18961444": {
-      "broadcaster_name": "りあら",
-      "last_notified_at": "2026-08-13T05:38:55Z",
-      "url": "https://mixch.tv/u/18961444/live"
     },
     "18962143": {
       "broadcaster_name": "おれNEXT STAR",
