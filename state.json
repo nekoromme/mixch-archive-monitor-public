@@ -2,29 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {
-    "16810478": {
-      "broadcaster_name": "のなびﾁｬ12-ﾏﾘｰﾑｰ",
-      "first_seen_at": "2026-09-13T15:27:04Z",
-      "last_seen_at": "2026-09-13T15:37:27Z",
-      "max_momentum": 259,
-      "url": "https://mixch.tv/u/16810478/live"
-    },
-    "18296626": {
-      "broadcaster_name": "2周年の!女王まりあ",
-      "first_seen_at": "2026-09-13T16:04:00Z",
-      "last_seen_at": "2026-09-13T16:19:43Z",
-      "max_momentum": 276,
-      "url": "https://mixch.tv/u/18296626/live"
-    },
-    "18949965": {
-      "broadcaster_name": "【ミス同志社】No.3山崎真鈴",
-      "first_seen_at": "2026-09-13T14:35:02Z",
-      "last_seen_at": "2026-09-13T14:35:02Z",
-      "max_momentum": 205,
-      "url": "https://mixch.tv/u/18949965/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -106,8 +84,8 @@
       "url": "https://mixch.tv/u/16634317/live"
     },
     "16810478": {
-      "broadcaster_name": "のなびﾁｬﾏミクパから帰宅中",
-      "last_notified_at": "2026-08-22T22:02:32Z",
+      "broadcaster_name": "のなびﾁｬ12-ﾏﾘｰﾑｰ",
+      "last_notified_at": "2026-09-13T22:01:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16810478/live"
     },
@@ -306,8 +284,8 @@
       "url": "https://mixch.tv/u/18233975/live"
     },
     "18296626": {
-      "broadcaster_name": "女王まりあ#札ｺﾚZipper",
-      "last_notified_at": "2026-09-01T22:04:16Z",
+      "broadcaster_name": "2周年の!女王まりあ",
+      "last_notified_at": "2026-09-13T22:01:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18296626/live"
     },
@@ -424,12 +402,6 @@
       "last_notified_at": "2026-08-16T07:06:36Z",
       "url": "https://mixch.tv/u/18652855/live"
     },
-    "18673781": {
-      "broadcaster_name": "あいね #マリ",
-      "last_notified_at": "2026-08-14T22:01:33Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18673781/live"
-    },
     "18674264": {
       "broadcaster_name": "こうぐちまﾙ",
       "last_notified_at": "2026-08-18T12:38:15Z",
@@ -440,12 +412,6 @@
       "last_notified_at": "2026-09-04T22:02:56Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18707904/live"
-    },
-    "18724672": {
-      "broadcaster_name": "真愛#ｼﾙﾊﾞﾆｱ",
-      "last_notified_at": "2026-08-14T22:01:33Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18724672/live"
     },
     "18729711": {
       "broadcaster_name": "日ここ #Reabbity",
@@ -729,12 +695,6 @@
       "last_notified_at": "2026-09-04T12:01:33Z",
       "url": "https://mixch.tv/u/18926160/live"
     },
-    "18927394": {
-      "broadcaster_name": "りい#めいどりーみ",
-      "last_notified_at": "2026-08-14T22:01:33Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18927394/live"
-    },
     "18927641": {
       "broadcaster_name": "そら#キャンコレ",
       "last_notified_at": "2026-08-24T10:50:01Z",
@@ -872,7 +832,7 @@
     },
     "18949965": {
       "broadcaster_name": "【ミス同志社】No.3山崎真鈴",
-      "last_notified_at": "2026-08-16T22:03:44Z",
+      "last_notified_at": "2026-09-13T22:01:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18949965/live"
     },
@@ -880,12 +840,6 @@
       "broadcaster_name": "日のうきモエドカフェ",
       "last_notified_at": "2026-08-31T10:35:16Z",
       "url": "https://mixch.tv/u/18950117/live"
-    },
-    "18950177": {
-      "broadcaster_name": "ミス東大2026 今飯田紀香",
-      "last_notified_at": "2026-08-14T22:01:33Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18950177/live"
     },
     "18950865": {
       "broadcaster_name": "名称未設定（ID: 18950865）",
@@ -926,12 +880,6 @@
       "broadcaster_name": "MOKA #プラチナAD",
       "last_notified_at": "2026-08-30T02:35:55Z",
       "url": "https://mixch.tv/u/18954638/live"
-    },
-    "18954672": {
-      "broadcaster_name": "ユナ",
-      "last_notified_at": "2026-08-14T22:01:33Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18954672/live"
     },
     "18956803": {
       "broadcaster_name": "なな#JCミスコン",
