@@ -9,30 +9,37 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
-      - name: Inspect public archive structure without notifications
+      - name: Archive regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Verify all public archive pages without notifications or writes
+        env:
+          PUBLIC_LOGS: 'true'
         run: |
           python - <<'PY'
-          import json, time
-          from bs4 import BeautifulSoup
+          import json
           import mixcha_watcher as w
           driver = w.create_driver()
+          found = empty = failed = 0
           try:
-              for user in json.load(open("watchlist.json"))[:2]:
-                  driver.get("https://mixch.tv/u/" + user["id"] + "/live_archives")
-                  time.sleep(12)
-                  soup = BeautifulSoup(driver.page_source, "html.parser")
-                  for tag in soup(["script", "style"]):
-                      tag.decompose()
-                  print("PAGE_TEXT", soup.get_text(" ", strip=True)[:14000])
-                  print("DURATION_ELEMENTS", [(s.name, s.get("class"), s.get_text(" ", strip=True)) for s in soup.find_all(["span","time"]) if ":" in s.get_text()][:30])
-                  print("ARCHIVE_LINKS", [(a.get("href"),a.get_text(" ",strip=True)) for a in soup.find_all("a",href=True) if "archive" in a["href"]][:10])
+              users = json.load(open("watchlist.json"))
+              for i, user in enumerate(users, 1):
+                  try:
+                      marker, date = w.get_latest_marker(driver, user["id"], index=i, total=len(users))
+                      found += marker != "NO_VIDEO"
+                      empty += marker == "NO_VIDEO"
+                  except Exception as error:
+                      failed += 1
+                      print("READ_FAILED", i, type(error).__name__)
+              print("VERIFIED_COUNTS", json.dumps(dict(total=len(users), found=found, empty=empty, failed=failed)))
+              if failed:
+                  raise RuntimeError("Some archive pages could not be read")
           finally:
               driver.quit()
           PY

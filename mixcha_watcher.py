@@ -44,15 +44,18 @@ PRIVATE_METRIC_KEYS = {
     "slowest_user_name",
 }
 JST = datetime.timezone(datetime.timedelta(hours=9))
-LATEST_MARKER_SELECTOR = "span.css-lmrlel.e1hhguts0"
+LATEST_MARKER_SELECTOR = "span.css-lmrlel"
 LATEST_MARKER_PATTERN = re.compile(r"(\d+:\d+)$")
 LATEST_ARCHIVE_AGE_PATTERN = re.compile(r"(\d+)(秒|分|時間|日)前")
 LATEST_ARCHIVE_AGE_EN_PATTERN = re.compile(
     r"(\d+)\s*(seconds?|minutes?|hours?|days?)\s+ago",
     re.IGNORECASE,
 )
-LATEST_MARKER_TEXT_SCRIPT = """
-const element = document.querySelector(arguments[0]);
+LATEST_MARKER_TEXT_SCRIPT = r"""
+// 自動生成されるクラス名が変わっても、経過時間＋再生時間で見つけます。
+const isArchive = text => /(?:\d+(?:秒|分|時間|日)前|\d+\s*(?:seconds?|minutes?|hours?|days?)\s+ago)\s*\d+:\d+$/i.test(text.replace(/\u00a0/g, ' ').trim());
+const element = Array.from(document.querySelectorAll('span')).find(node => isArchive(node.textContent))
+  || document.querySelector(arguments[0]);
 if (!element) {
     return null;
 }
@@ -78,6 +81,10 @@ CHROME_BINARY_CANDIDATES = (
     "chromium-browser",
 )
 PROCESS_START = time.perf_counter()
+
+
+class ArchiveReadError(RuntimeError):
+    """読み取り失敗を動画なしと区別し、履歴と通知を保護します。"""
 
 
 class DiscordDeliveryError(RuntimeError):
@@ -310,10 +317,24 @@ def read_latest_marker_text_with_fallback(
 
     # No marker or a DOM-query failure: preserve the old full-HTML parser.
     soup = BeautifulSoup(driver.page_source, "lxml")
+    # 表示用の自動生成クラスには依存せず、カードの意味から探します。
+    for span in soup.find_all("span"):
+        text = span.get_text(" ", strip=True).replace("\xa0", " ")
+        if extract_latest_marker(text) and (
+            LATEST_ARCHIVE_AGE_PATTERN.search(text)
+            or LATEST_ARCHIVE_AGE_EN_PATTERN.search(text)
+        ):
+            return text, "semantic_html"
     span = soup.select_one(LATEST_MARKER_SELECTOR)
-    if span is None:
-        return None, "page_source_fallback"
-    return span.get_text(strip=True).replace("\xa0", " "), "page_source_fallback"
+    if span is not None and extract_latest_marker(span.get_text(strip=True)):
+        return span.get_text(strip=True).replace("\xa0", " "), "page_source_fallback"
+    # 明示的な空表示だけを「なし」とします。ログイン画面や構造変更は失敗です。
+    visible_text = soup.get_text(" ", strip=True)
+    empty_messages = ("アーカイブなし", "アーカイブがありません", "アーカイブはありません",
+                      "No archives", "No live archives")
+    if any(message in visible_text for message in empty_messages):
+        return None, "confirmed_empty"
+    raise ArchiveReadError("Archive marker and explicit empty state are both missing")
 
 
 def get_latest_marker(
@@ -423,8 +444,10 @@ def get_latest_marker(
 
     marker = extract_latest_marker(text)
     latest_archive_date = extract_latest_archive_date(text, reference_date)
-    latest_marker = marker if marker is not None else "NO_VIDEO"
-    result = "ok" if marker is not None else "parse_failed"
+    if marker is None:
+        raise ArchiveReadError("Archive duration could not be parsed")
+    latest_marker = marker
+    result = "ok"
     log_metric(
         "parse_end",
         user_id=user_id,
@@ -885,6 +908,13 @@ def main():
         if driver is not None:
             driver.quit()
 
+    # 失敗を含む回は通知・保存・長期未更新の削除をしません。
+    # 次回も最後に成功した履歴と比較するため、取りこぼしを防げます。
+    if failed_count:
+        log_metric("archive_read_failed", failed_count=failed_count,
+                   watchlist_count=len(active_watchlist), state_preserved=True)
+        raise ArchiveReadError(f"Archive read failed for {failed_count} targets; state preserved")
+
     state_save_start = time.perf_counter()
     log_metric("save_state_start", path=STATE_FILE)
     save_json(STATE_FILE, state)
@@ -1009,3 +1039,4 @@ if __name__ == "__main__":
         )
         logging.exception("watcher全体が例外で終了しました")
         raise
+
