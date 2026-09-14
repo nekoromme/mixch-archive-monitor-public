@@ -20,6 +20,13 @@ class ArchiveReadHealthTests(unittest.TestCase):
             self.assertEqual(watcher.extract_latest_marker(text), '100:09')
             self.assertEqual(method, 'semantic_html')
 
+    def test_observed_english_empty_state(self):
+        driver = MagicMock()
+        driver.execute_script.return_value = None
+        driver.page_source = '<main>Broadcast archive does not exist</main>'
+        self.assertEqual(watcher.read_latest_marker_text_with_fallback(driver),
+                         (None, 'confirmed_empty'))
+
     def test_unknown_page_is_error_not_empty(self):
         for html in ('<html>Login</html>', '<html>Loading...</html>', '<html></html>'):
             driver = MagicMock()

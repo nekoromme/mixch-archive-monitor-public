@@ -1,9 +1,6 @@
 name: Archive page diagnostics
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/archive-diagnostics.yml'
 permissions:
   contents: read
 jobs:
@@ -28,7 +25,7 @@ jobs:
           driver = w.create_driver()
           found = empty = failed = 0
           try:
-              users = json.load(open("watchlist.json"))[12:13]
+              users = json.load(open("watchlist.json"))
               for i, user in enumerate(users, 1):
                   try:
                       marker, date = w.get_latest_marker(driver, user["id"], index=i, total=len(users))
@@ -37,10 +34,6 @@ jobs:
                   except Exception as error:
                       failed += 1
                       print("READ_FAILED", i, type(error).__name__)
-                      soup = w.BeautifulSoup(driver.page_source, "html.parser")
-                      for tag in soup(["script", "style"]):
-                          tag.decompose()
-                      print("EMPTY_PAGE_TEXT", soup.get_text(" ", strip=True)[:12000])
               print("VERIFIED_COUNTS", json.dumps(dict(total=len(users), found=found, empty=empty, failed=failed)))
               if failed:
                   raise RuntimeError("Some archive pages could not be read")

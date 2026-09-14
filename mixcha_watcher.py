@@ -331,7 +331,7 @@ def read_latest_marker_text_with_fallback(
     # 明示的な空表示だけを「なし」とします。ログイン画面や構造変更は失敗です。
     visible_text = soup.get_text(" ", strip=True)
     empty_messages = ("アーカイブなし", "アーカイブがありません", "アーカイブはありません",
-                      "No archives", "No live archives")
+                      "No archives", "No live archives", "Broadcast archive does not exist")
     if any(message in visible_text for message in empty_messages):
         return None, "confirmed_empty"
     raise ArchiveReadError("Archive marker and explicit empty state are both missing")

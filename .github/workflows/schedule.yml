@@ -4,6 +4,11 @@ run-name: >-
   Archive Monitor / ${{ github.event_name == 'schedule' && format('cron {0}', github.event.schedule) || format('manual by {0}', github.actor) }}
 
 on:
+  # 監視コード修正時もテスト後に動作確認します。状態更新では起動しません。
+  push:
+    paths:
+      - 'mixcha_watcher.py'
+      - '.github/workflows/schedule.yml'
   workflow_dispatch:
     inputs:
       replay_base:
@@ -60,6 +65,9 @@ jobs:
 
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Run archive regression tests
+        run: python -m unittest discover -s tests -v
 
       - name: Ensure Chrome is available
         if: inputs.replay_base == ''
