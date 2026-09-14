@@ -2,22 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {
-    "16534914": {
-      "broadcaster_name": "Reina‍♀行に行こう✈",
-      "first_seen_at": "2026-09-14T14:09:50Z",
-      "last_seen_at": "2026-09-14T14:09:50Z",
-      "max_momentum": 151,
-      "url": "https://mixch.tv/u/16534914/live"
-    },
-    "18971618": {
-      "broadcaster_name": "せな‍♀KIRARI専属モデルAD",
-      "first_seen_at": "2026-09-14T13:22:54Z",
-      "last_seen_at": "2026-09-14T13:22:54Z",
-      "max_momentum": 170,
-      "url": "https://mixch.tv/u/18971618/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -87,8 +72,8 @@
       "url": "https://mixch.tv/u/16264158/live"
     },
     "16534914": {
-      "broadcaster_name": "Reina‍♀",
-      "last_notified_at": "2026-08-26T22:01:20Z",
+      "broadcaster_name": "Reina‍♀行に行こう✈",
+      "last_notified_at": "2026-09-14T22:00:53Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16534914/live"
     },
@@ -225,12 +210,6 @@
       "broadcaster_name": "白石あお本日1.5倍最終日ｺﾞｼﾞｬﾎ",
       "last_notified_at": "2026-08-16T09:31:07Z",
       "url": "https://mixch.tv/u/17866373/live"
-    },
-    "17913238": {
-      "broadcaster_name": "初日しおぴぇﾏﾄﾞﾘｰ",
-      "last_notified_at": "2026-08-15T22:00:07Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/17913238/live"
     },
     "17921915": {
       "broadcaster_name": "かえでﾐｭｰｺﾚ初日",
@@ -785,12 +764,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18946717/live"
     },
-    "18947594": {
-      "broadcaster_name": "【龍谷】No7松田鈴",
-      "last_notified_at": "2026-08-15T22:00:07Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18947594/live"
-    },
     "18947774": {
       "broadcaster_name": "彩夏",
       "last_notified_at": "2026-08-20T02:39:37Z",
@@ -801,12 +774,6 @@
       "last_notified_at": "2026-08-24T22:03:30Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18948508/live"
-    },
-    "18948572": {
-      "broadcaster_name": "めい",
-      "last_notified_at": "2026-08-15T22:00:07Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18948572/live"
     },
     "18949092": {
       "broadcaster_name": "Sahoほさうといさ",
@@ -1025,6 +992,12 @@
       "broadcaster_name": "みく",
       "last_notified_at": "2026-08-24T06:00:31Z",
       "url": "https://mixch.tv/u/18971554/live"
+    },
+    "18971618": {
+      "broadcaster_name": "せな‍♀KIRARI専属モデルAD",
+      "last_notified_at": "2026-09-14T22:00:53Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18971618/live"
     },
     "18971911": {
       "broadcaster_name": "柚LARME",
