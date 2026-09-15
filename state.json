@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "17696747": {
+      "broadcaster_name": "日とぅん #配信1.5",
+      "first_seen_at": "2026-09-15T13:16:13Z",
+      "last_seen_at": "2026-09-15T13:16:13Z",
+      "max_momentum": 151,
+      "url": "https://mixch.tv/u/17696747/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
