@@ -2,50 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {
-    "16903258": {
-      "broadcaster_name": "サクラバシ919 公式",
-      "first_seen_at": "2026-09-15T14:08:36Z",
-      "last_seen_at": "2026-09-15T15:11:18Z",
-      "max_momentum": 318,
-      "url": "https://mixch.tv/u/16903258/live"
-    },
-    "17648693": {
-      "broadcaster_name": "名称未設定（ID: 17648693）",
-      "first_seen_at": "2026-09-15T15:42:46Z",
-      "last_seen_at": "2026-09-15T15:42:46Z",
-      "max_momentum": 156,
-      "url": "https://mixch.tv/u/17648693/live"
-    },
-    "17696747": {
-      "broadcaster_name": "日とぅん #配信1.5",
-      "first_seen_at": "2026-09-15T13:16:13Z",
-      "last_seen_at": "2026-09-15T13:16:13Z",
-      "max_momentum": 151,
-      "url": "https://mixch.tv/u/17696747/live"
-    },
-    "18936473": {
-      "broadcaster_name": "しょうこLARME",
-      "first_seen_at": "2026-09-15T14:29:37Z",
-      "last_seen_at": "2026-09-15T14:29:37Z",
-      "max_momentum": 151,
-      "url": "https://mixch.tv/u/18936473/live"
-    },
-    "18982433": {
-      "broadcaster_name": "ぷるち#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-15T15:27:04Z",
-      "last_seen_at": "2026-09-15T16:03:39Z",
-      "max_momentum": 268,
-      "url": "https://mixch.tv/u/18982433/live"
-    },
-    "18983581": {
-      "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-15T15:16:31Z",
-      "last_seen_at": "2026-09-15T15:21:51Z",
-      "max_momentum": 164,
-      "url": "https://mixch.tv/u/18983581/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -139,7 +96,7 @@
     },
     "16903258": {
       "broadcaster_name": "サクラバシ919 公式",
-      "last_notified_at": "2026-09-04T22:02:56Z",
+      "last_notified_at": "2026-09-15T22:04:48Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16903258/live"
     },
@@ -227,14 +184,20 @@
       "last_notified_at": "2026-08-26T11:46:59Z",
       "url": "https://mixch.tv/u/17561869/live"
     },
+    "17648693": {
+      "broadcaster_name": "名称未設定（ID: 17648693）",
+      "last_notified_at": "2026-09-15T22:04:48Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17648693/live"
+    },
     "17675065": {
       "broadcaster_name": "しず‬#Popteen",
       "last_notified_at": "2026-09-04T09:10:35Z",
       "url": "https://mixch.tv/u/17675065/live"
     },
     "17696747": {
-      "broadcaster_name": "とぅん #本日配信1.3",
-      "last_notified_at": "2026-08-26T22:01:20Z",
+      "broadcaster_name": "日とぅん #配信1.5",
+      "last_notified_at": "2026-09-15T22:04:48Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17696747/live"
     },
@@ -765,8 +728,8 @@
       "url": "https://mixch.tv/u/18932499/live"
     },
     "18936473": {
-      "broadcaster_name": "初日しょうこLARMEテミス",
-      "last_notified_at": "2026-08-24T22:03:30Z",
+      "broadcaster_name": "しょうこLARME",
+      "last_notified_at": "2026-09-15T22:04:48Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18936473/live"
     },
@@ -1141,6 +1104,18 @@
       "broadcaster_name": "白雪詩おりん)❄",
       "last_notified_at": "2026-09-07T11:14:18Z",
       "url": "https://mixch.tv/u/18980877/live"
+    },
+    "18982433": {
+      "broadcaster_name": "ぷるち#MEGAFON新メンバーAD",
+      "last_notified_at": "2026-09-15T22:04:48Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18982433/live"
+    },
+    "18983581": {
+      "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
+      "last_notified_at": "2026-09-15T22:04:48Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18983581/live"
     },
     "18984992": {
       "broadcaster_name": "Nonoka",
