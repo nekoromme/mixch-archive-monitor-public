@@ -2,43 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {
-    "16810478": {
-      "broadcaster_name": "のなびﾁｬ12-ﾏﾘｰﾑｰ",
-      "first_seen_at": "2026-09-16T15:36:08Z",
-      "last_seen_at": "2026-09-16T15:36:08Z",
-      "max_momentum": 188,
-      "url": "https://mixch.tv/u/16810478/live"
-    },
-    "16903258": {
-      "broadcaster_name": "サクラバシ919 公式",
-      "first_seen_at": "2026-09-16T15:10:00Z",
-      "last_seen_at": "2026-09-16T15:10:00Z",
-      "max_momentum": 162,
-      "url": "https://mixch.tv/u/16903258/live"
-    },
-    "18931827": {
-      "broadcaster_name": "ゲリラふじひな",
-      "first_seen_at": "2026-09-16T13:35:08Z",
-      "last_seen_at": "2026-09-16T13:35:08Z",
-      "max_momentum": 183,
-      "url": "https://mixch.tv/u/18931827/live"
-    },
-    "18982433": {
-      "broadcaster_name": "ぷるち#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-16T13:45:37Z",
-      "last_seen_at": "2026-09-16T13:45:37Z",
-      "max_momentum": 165,
-      "url": "https://mixch.tv/u/18982433/live"
-    },
-    "18983581": {
-      "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-16T17:04:53Z",
-      "last_seen_at": "2026-09-16T17:10:04Z",
-      "max_momentum": 192,
-      "url": "https://mixch.tv/u/18983581/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -121,7 +85,7 @@
     },
     "16810478": {
       "broadcaster_name": "のなびﾁｬ12-ﾏﾘｰﾑｰ",
-      "last_notified_at": "2026-09-13T22:01:50Z",
+      "last_notified_at": "2026-09-16T22:03:09Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16810478/live"
     },
@@ -132,7 +96,7 @@
     },
     "16903258": {
       "broadcaster_name": "サクラバシ919 公式",
-      "last_notified_at": "2026-09-15T22:04:48Z",
+      "last_notified_at": "2026-09-16T22:03:09Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16903258/live"
     },
@@ -747,8 +711,8 @@
       "url": "https://mixch.tv/u/18927766/live"
     },
     "18931827": {
-      "broadcaster_name": "ふじひな #Zipper掲載AD",
-      "last_notified_at": "2026-08-28T22:02:37Z",
+      "broadcaster_name": "ゲリラふじひな",
+      "last_notified_at": "2026-09-16T22:03:09Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18931827/live"
     },
@@ -1143,13 +1107,13 @@
     },
     "18982433": {
       "broadcaster_name": "ぷるち#MEGAFON新メンバーAD",
-      "last_notified_at": "2026-09-15T22:04:48Z",
+      "last_notified_at": "2026-09-16T22:03:09Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18982433/live"
     },
     "18983581": {
       "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "last_notified_at": "2026-09-15T22:04:48Z",
+      "last_notified_at": "2026-09-16T22:03:09Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18983581/live"
     },
