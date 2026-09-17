@@ -2,36 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {
-    "16534914": {
-      "broadcaster_name": "Reina‍♀年❣",
-      "first_seen_at": "2026-09-17T13:22:17Z",
-      "last_seen_at": "2026-09-17T13:37:55Z",
-      "max_momentum": 289,
-      "url": "https://mixch.tv/u/16534914/live"
-    },
-    "16903258": {
-      "broadcaster_name": "サクラバシ919 公式",
-      "first_seen_at": "2026-09-17T14:51:11Z",
-      "last_seen_at": "2026-09-17T15:12:07Z",
-      "max_momentum": 191,
-      "url": "https://mixch.tv/u/16903258/live"
-    },
-    "18664559": {
-      "broadcaster_name": "初日‼️松井ひな#Ray掲",
-      "first_seen_at": "2026-09-17T15:38:22Z",
-      "last_seen_at": "2026-09-17T15:38:22Z",
-      "max_momentum": 215,
-      "url": "https://mixch.tv/u/18664559/live"
-    },
-    "18932495": {
-      "broadcaster_name": "初日1.3倍もねンモ",
-      "first_seen_at": "2026-09-17T14:09:11Z",
-      "last_seen_at": "2026-09-17T14:14:25Z",
-      "max_momentum": 179,
-      "url": "https://mixch.tv/u/18932495/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -101,8 +72,8 @@
       "url": "https://mixch.tv/u/16264158/live"
     },
     "16534914": {
-      "broadcaster_name": "Reina‍♀行に行こう✈",
-      "last_notified_at": "2026-09-14T22:00:53Z",
+      "broadcaster_name": "Reina‍♀年❣",
+      "last_notified_at": "2026-09-17T22:01:17Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16534914/live"
     },
@@ -124,7 +95,7 @@
     },
     "16903258": {
       "broadcaster_name": "サクラバシ919 公式",
-      "last_notified_at": "2026-09-16T22:03:09Z",
+      "last_notified_at": "2026-09-17T22:01:17Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16903258/live"
     },
@@ -422,6 +393,12 @@
       "broadcaster_name": "れんは⭐ #KOGYARU専属AD",
       "last_notified_at": "2026-08-25T03:55:21Z",
       "url": "https://mixch.tv/u/18639802/live"
+    },
+    "18664559": {
+      "broadcaster_name": "初日‼️松井ひな#Ray掲",
+      "last_notified_at": "2026-09-17T22:01:17Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18664559/live"
     },
     "18707904": {
       "broadcaster_name": "ゆみ♪#沖コレ",
@@ -723,8 +700,8 @@
       "url": "https://mixch.tv/u/18931827/live"
     },
     "18932495": {
-      "broadcaster_name": "もね長ｲﾍ",
-      "last_notified_at": "2026-09-07T22:01:27Z",
+      "broadcaster_name": "初日1.3倍もねンモ",
+      "last_notified_at": "2026-09-17T22:01:17Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18932495/live"
     },
