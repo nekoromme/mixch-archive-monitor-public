@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "16534914": {
+      "broadcaster_name": "Reina‍♀年❣",
+      "first_seen_at": "2026-09-17T13:22:17Z",
+      "last_seen_at": "2026-09-17T13:22:17Z",
+      "max_momentum": 233,
+      "url": "https://mixch.tv/u/16534914/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
