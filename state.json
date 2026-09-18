@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18982433": {
+      "broadcaster_name": "ぷるち#MEGAFON新メンバーAD",
+      "first_seen_at": "2026-09-18T13:31:54Z",
+      "last_seen_at": "2026-09-18T13:31:54Z",
+      "max_momentum": 199,
+      "url": "https://mixch.tv/u/18982433/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
