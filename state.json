@@ -2,33 +2,12 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {
-    "16903258": {
-      "broadcaster_name": "サクラバシ919 公式",
-      "first_seen_at": "2026-09-18T14:09:38Z",
-      "last_seen_at": "2026-09-18T15:17:27Z",
-      "max_momentum": 227,
-      "url": "https://mixch.tv/u/16903258/live"
-    },
-    "18982433": {
-      "broadcaster_name": "ぷるち#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-18T13:31:54Z",
-      "last_seen_at": "2026-09-18T13:31:54Z",
-      "max_momentum": 199,
-      "url": "https://mixch.tv/u/18982433/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
       "last_notified_at": "2026-08-26T11:41:47Z",
       "url": "https://mixch.tv/u/10914555/live"
-    },
-    "11185663": {
-      "broadcaster_name": "べいべーあゆ【IRUYA",
-      "last_notified_at": "2026-08-19T22:00:12Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/11185663/live"
     },
     "12090027": {
       "broadcaster_name": "もこ☁2:00ゴジャ",
@@ -57,12 +36,6 @@
       "broadcaster_name": "ももにゃんありがとにゃん",
       "last_notified_at": "2026-09-07T11:29:50Z",
       "url": "https://mixch.tv/u/15399572/live"
-    },
-    "15477822": {
-      "broadcaster_name": "ゆゆ#",
-      "last_notified_at": "2026-08-19T22:00:12Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/15477822/live"
     },
     "15492927": {
       "broadcaster_name": "さあ6周年記念",
@@ -115,7 +88,7 @@
     },
     "16903258": {
       "broadcaster_name": "サクラバシ919 公式",
-      "last_notified_at": "2026-09-17T22:01:17Z",
+      "last_notified_at": "2026-09-18T22:03:35Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16903258/live"
     },
@@ -235,12 +208,6 @@
       "last_notified_at": "2026-09-08T12:30:51Z",
       "url": "https://mixch.tv/u/17946124/live"
     },
-    "17950307": {
-      "broadcaster_name": "春夏冬きゃろﾐｸﾁｬﾓﾃﾞﾙAD",
-      "last_notified_at": "2026-08-19T22:00:12Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/17950307/live"
-    },
     "17959898": {
       "broadcaster_name": "あいり❤️9/7誕生日",
       "last_notified_at": "2026-09-03T22:02:10Z",
@@ -315,12 +282,6 @@
       "broadcaster_name": "しゅうか#SSL",
       "last_notified_at": "2026-08-24T11:31:23Z",
       "url": "https://mixch.tv/u/18316661/live"
-    },
-    "18319157": {
-      "broadcaster_name": "mio#",
-      "last_notified_at": "2026-08-19T22:00:12Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18319157/live"
     },
     "18320765": {
       "broadcaster_name": "yua︎︎︎︎︎︎☁JCミスコン2026",
@@ -456,12 +417,6 @@
       "broadcaster_name": "華JCミスコン2026",
       "last_notified_at": "2026-09-18T10:29:18Z",
       "url": "https://mixch.tv/u/18750520/live"
-    },
-    "18750723": {
-      "broadcaster_name": "くるみ#egg専属モデルAD",
-      "last_notified_at": "2026-08-19T22:00:12Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18750723/live"
     },
     "18752604": {
       "broadcaster_name": "みさえJKミスコン",
@@ -925,12 +880,6 @@
       "last_notified_at": "2026-09-08T09:49:44Z",
       "url": "https://mixch.tv/u/18967241/live"
     },
-    "18968140": {
-      "broadcaster_name": "み",
-      "last_notified_at": "2026-08-19T22:00:12Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18968140/live"
-    },
     "18968348": {
       "broadcaster_name": "ここ",
       "last_notified_at": "2026-08-21T22:03:42Z",
@@ -1094,7 +1043,7 @@
     },
     "18982433": {
       "broadcaster_name": "ぷるち#MEGAFON新メンバーAD",
-      "last_notified_at": "2026-09-16T22:03:09Z",
+      "last_notified_at": "2026-09-18T22:03:35Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18982433/live"
     },
