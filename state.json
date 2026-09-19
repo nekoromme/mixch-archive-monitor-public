@@ -2,22 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-13T01:29:06Z"
   },
-  "night_candidates": {
-    "16721611": {
-      "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
-      "first_seen_at": "2026-09-19T15:38:30Z",
-      "last_seen_at": "2026-09-19T15:48:50Z",
-      "max_momentum": 271,
-      "url": "https://mixch.tv/u/16721611/live"
-    },
-    "17114808": {
-      "broadcaster_name": "スカイピョン(・・)湘南撮影",
-      "first_seen_at": "2026-09-19T16:14:53Z",
-      "last_seen_at": "2026-09-19T16:14:53Z",
-      "max_momentum": 166,
-      "url": "https://mixch.tv/u/17114808/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -91,6 +76,12 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16634317/live"
     },
+    "16721611": {
+      "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
+      "last_notified_at": "2026-09-19T22:05:01Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/16721611/live"
+    },
     "16810478": {
       "broadcaster_name": "NAVI#12-ﾏﾘｰﾑｰ",
       "last_notified_at": "2026-09-17T10:14:04Z",
@@ -120,8 +111,8 @@
       "url": "https://mixch.tv/u/17030639/live"
     },
     "17114808": {
-      "broadcaster_name": "スカイピョン()札コレ",
-      "last_notified_at": "2026-08-20T22:04:45Z",
+      "broadcaster_name": "スカイピョン(・・)湘南撮影",
+      "last_notified_at": "2026-09-19T22:05:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17114808/live"
     },
@@ -201,12 +192,6 @@
       "last_notified_at": "2026-09-15T22:04:48Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17696747/live"
-    },
-    "17849248": {
-      "broadcaster_name": "かほ‪#",
-      "last_notified_at": "2026-08-20T22:04:45Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/17849248/live"
     },
     "17921915": {
       "broadcaster_name": "かえでﾐｭｰｺﾚ初日",
@@ -561,12 +546,6 @@
       "broadcaster_name": "乃愛#ウエアワ5",
       "last_notified_at": "2026-09-14T11:58:35Z",
       "url": "https://mixch.tv/u/18873012/live"
-    },
-    "18882904": {
-      "broadcaster_name": "⚡️初日1.3倍⚡️ゆゆだぼイク女",
-      "last_notified_at": "2026-08-20T22:04:45Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18882904/live"
     },
     "18883555": {
       "broadcaster_name": "いぶ #バイク女",
