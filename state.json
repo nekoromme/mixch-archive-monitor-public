@@ -2,36 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
-  "night_candidates": {
-    "16721611": {
-      "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
-      "first_seen_at": "2026-09-20T13:29:43Z",
-      "last_seen_at": "2026-09-20T13:29:43Z",
-      "max_momentum": 154,
-      "url": "https://mixch.tv/u/16721611/live"
-    },
-    "17553944": {
-      "broadcaster_name": "パトン兎姫るう#sweet",
-      "first_seen_at": "2026-09-20T15:39:55Z",
-      "last_seen_at": "2026-09-20T15:39:55Z",
-      "max_momentum": 289,
-      "url": "https://mixch.tv/u/17553944/live"
-    },
-    "18664559": {
-      "broadcaster_name": "松井ひな#Ray掲",
-      "first_seen_at": "2026-09-20T15:50:20Z",
-      "last_seen_at": "2026-09-20T16:00:48Z",
-      "max_momentum": 188,
-      "url": "https://mixch.tv/u/18664559/live"
-    },
-    "18983581": {
-      "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-20T17:19:05Z",
-      "last_seen_at": "2026-09-20T17:29:28Z",
-      "max_momentum": 178,
-      "url": "https://mixch.tv/u/18983581/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -107,7 +78,7 @@
     },
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
-      "last_notified_at": "2026-09-19T22:05:01Z",
+      "last_notified_at": "2026-09-20T22:02:03Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16721611/live"
     },
@@ -199,6 +170,12 @@
       "broadcaster_name": "おと︎︎#JKミスコン2026",
       "last_notified_at": "2026-09-01T12:25:11Z",
       "url": "https://mixch.tv/u/17532146/live"
+    },
+    "17553944": {
+      "broadcaster_name": "パトン兎姫るう#sweet",
+      "last_notified_at": "2026-09-20T22:02:03Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17553944/live"
     },
     "17561869": {
       "broadcaster_name": "あずMisspopgirl",
@@ -415,8 +392,8 @@
       "url": "https://mixch.tv/u/18639802/live"
     },
     "18664559": {
-      "broadcaster_name": "初日‼️松井ひな#Ray掲",
-      "last_notified_at": "2026-09-17T22:01:17Z",
+      "broadcaster_name": "松井ひな#Ray掲",
+      "last_notified_at": "2026-09-20T22:02:03Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18664559/live"
     },
@@ -1067,7 +1044,7 @@
     },
     "18983581": {
       "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "last_notified_at": "2026-09-16T22:03:09Z",
+      "last_notified_at": "2026-09-20T22:02:03Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18983581/live"
     },
