@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "16721611": {
+      "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
+      "first_seen_at": "2026-09-20T13:29:43Z",
+      "last_seen_at": "2026-09-20T13:29:43Z",
+      "max_momentum": 154,
+      "url": "https://mixch.tv/u/16721611/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
