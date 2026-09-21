@@ -3,6 +3,13 @@
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
   "night_candidates": {
+    "16721611": {
+      "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
+      "first_seen_at": "2026-09-21T15:34:22Z",
+      "last_seen_at": "2026-09-21T15:34:22Z",
+      "max_momentum": 191,
+      "url": "https://mixch.tv/u/16721611/live"
+    },
     "18971618": {
       "broadcaster_name": "せな‍♀KIRARI専属モデルAD",
       "first_seen_at": "2026-09-21T13:18:04Z",
@@ -20,8 +27,8 @@
     "18990658": {
       "broadcaster_name": "003823",
       "first_seen_at": "2026-09-21T15:08:07Z",
-      "last_seen_at": "2026-09-21T15:29:07Z",
-      "max_momentum": 214,
+      "last_seen_at": "2026-09-21T15:34:22Z",
+      "max_momentum": 244,
       "url": "https://mixch.tv/u/18990658/live"
     }
   },
