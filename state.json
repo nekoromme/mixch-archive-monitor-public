@@ -2,36 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
-  "night_candidates": {
-    "16721611": {
-      "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
-      "first_seen_at": "2026-09-21T15:34:22Z",
-      "last_seen_at": "2026-09-21T15:34:22Z",
-      "max_momentum": 191,
-      "url": "https://mixch.tv/u/16721611/live"
-    },
-    "18971618": {
-      "broadcaster_name": "せな‍♀KIRARI専属モデルAD",
-      "first_seen_at": "2026-09-21T13:18:04Z",
-      "last_seen_at": "2026-09-21T13:18:04Z",
-      "max_momentum": 209,
-      "url": "https://mixch.tv/u/18971618/live"
-    },
-    "18983581": {
-      "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-21T13:33:47Z",
-      "last_seen_at": "2026-09-21T13:59:50Z",
-      "max_momentum": 224,
-      "url": "https://mixch.tv/u/18983581/live"
-    },
-    "18990658": {
-      "broadcaster_name": "003823",
-      "first_seen_at": "2026-09-21T15:08:07Z",
-      "last_seen_at": "2026-09-21T15:34:22Z",
-      "max_momentum": 244,
-      "url": "https://mixch.tv/u/18990658/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -101,7 +72,7 @@
     },
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
-      "last_notified_at": "2026-09-20T22:02:03Z",
+      "last_notified_at": "2026-09-21T22:02:32Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16721611/live"
     },
@@ -876,12 +847,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18965126/live"
     },
-    "18966992": {
-      "broadcaster_name": "かんな",
-      "last_notified_at": "2026-08-22T22:02:32Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18966992/live"
-    },
     "18967045": {
       "broadcaster_name": "今日1.3倍❗️蛍(けい)#COSGC",
       "last_notified_at": "2026-09-08T12:41:14Z",
@@ -908,12 +873,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18969138/live"
     },
-    "18969242": {
-      "broadcaster_name": "HINA",
-      "last_notified_at": "2026-08-22T22:02:32Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18969242/live"
-    },
     "18970692": {
       "broadcaster_name": "あいか",
       "last_notified_at": "2026-08-28T22:02:37Z",
@@ -932,7 +891,7 @@
     },
     "18971618": {
       "broadcaster_name": "せな‍♀KIRARI専属モデルAD",
-      "last_notified_at": "2026-09-14T22:00:53Z",
+      "last_notified_at": "2026-09-21T22:02:32Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18971618/live"
     },
@@ -1053,7 +1012,7 @@
     },
     "18983581": {
       "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "last_notified_at": "2026-09-20T22:02:03Z",
+      "last_notified_at": "2026-09-21T22:02:32Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18983581/live"
     },
@@ -1091,6 +1050,12 @@
       "broadcaster_name": "ひなぴ",
       "last_notified_at": "2026-09-21T05:06:06Z",
       "url": "https://mixch.tv/u/18990137/live"
+    },
+    "18990658": {
+      "broadcaster_name": "003823",
+      "last_notified_at": "2026-09-21T22:02:32Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18990658/live"
     }
   },
   "version": 1
