@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18971618": {
+      "broadcaster_name": "せな‍♀KIRARI専属モデルAD",
+      "first_seen_at": "2026-09-21T13:18:04Z",
+      "last_seen_at": "2026-09-21T13:18:04Z",
+      "max_momentum": 209,
+      "url": "https://mixch.tv/u/18971618/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
