@@ -2,50 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
-  "night_candidates": {
-    "16903258": {
-      "broadcaster_name": "サクラバシ919 公式",
-      "first_seen_at": "2026-09-22T14:09:32Z",
-      "last_seen_at": "2026-09-22T15:07:46Z",
-      "max_momentum": 307,
-      "url": "https://mixch.tv/u/16903258/live"
-    },
-    "18854742": {
-      "broadcaster_name": "みラリ専属モデルAD",
-      "first_seen_at": "2026-09-22T13:48:27Z",
-      "last_seen_at": "2026-09-22T13:48:27Z",
-      "max_momentum": 225,
-      "url": "https://mixch.tv/u/18854742/live"
-    },
-    "18909862": {
-      "broadcaster_name": "日.5倍まし美人",
-      "first_seen_at": "2026-09-22T14:20:03Z",
-      "last_seen_at": "2026-09-22T14:25:19Z",
-      "max_momentum": 773,
-      "url": "https://mixch.tv/u/18909862/live"
-    },
-    "18949965": {
-      "broadcaster_name": "【ミス同志社】No.3山崎真鈴",
-      "first_seen_at": "2026-09-22T14:35:54Z",
-      "last_seen_at": "2026-09-22T14:35:54Z",
-      "max_momentum": 167,
-      "url": "https://mixch.tv/u/18949965/live"
-    },
-    "18983581": {
-      "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-22T15:28:44Z",
-      "last_seen_at": "2026-09-22T15:34:00Z",
-      "max_momentum": 184,
-      "url": "https://mixch.tv/u/18983581/live"
-    },
-    "18991260": {
-      "broadcaster_name": "koko",
-      "first_seen_at": "2026-09-22T16:16:16Z",
-      "last_seen_at": "2026-09-22T16:37:14Z",
-      "max_momentum": 210,
-      "url": "https://mixch.tv/u/18991260/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -125,7 +82,7 @@
     },
     "16903258": {
       "broadcaster_name": "サクラバシ919 公式",
-      "last_notified_at": "2026-09-18T22:03:35Z",
+      "last_notified_at": "2026-09-22T22:03:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16903258/live"
     },
@@ -553,7 +510,8 @@
     },
     "18854742": {
       "broadcaster_name": "みラリ専属モデルAD",
-      "last_notified_at": "2026-09-16T10:15:25Z",
+      "last_notified_at": "2026-09-22T22:03:01Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18854742/live"
     },
     "18858926": {
@@ -655,8 +613,8 @@
       "url": "https://mixch.tv/u/18905689/live"
     },
     "18909862": {
-      "broadcaster_name": "ま/2パトン#麗し美人",
-      "last_notified_at": "2026-09-01T22:04:16Z",
+      "broadcaster_name": "日.5倍まし美人",
+      "last_notified_at": "2026-09-22T22:03:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18909862/live"
     },
@@ -802,7 +760,7 @@
     },
     "18949965": {
       "broadcaster_name": "【ミス同志社】No.3山崎真鈴",
-      "last_notified_at": "2026-09-13T22:01:50Z",
+      "last_notified_at": "2026-09-22T22:03:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18949965/live"
     },
@@ -1043,7 +1001,7 @@
     },
     "18983581": {
       "broadcaster_name": "ゆちི#MEGAFON新メンバーAD",
-      "last_notified_at": "2026-09-21T22:02:32Z",
+      "last_notified_at": "2026-09-22T22:03:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18983581/live"
     },
@@ -1087,6 +1045,12 @@
       "last_notified_at": "2026-09-21T22:02:32Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18990658/live"
+    },
+    "18991260": {
+      "broadcaster_name": "koko",
+      "last_notified_at": "2026-09-22T22:03:01Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18991260/live"
     }
   },
   "version": 1
