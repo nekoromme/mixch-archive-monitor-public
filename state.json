@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18854742": {
+      "broadcaster_name": "みラリ専属モデルAD",
+      "first_seen_at": "2026-09-22T13:48:27Z",
+      "last_seen_at": "2026-09-22T13:48:27Z",
+      "max_momentum": 225,
+      "url": "https://mixch.tv/u/18854742/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
