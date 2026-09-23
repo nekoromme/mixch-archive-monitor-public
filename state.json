@@ -2,64 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-09-20T01:33:22Z"
   },
-  "night_candidates": {
-    "16721611": {
-      "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
-      "first_seen_at": "2026-09-23T15:14:48Z",
-      "last_seen_at": "2026-09-23T15:30:34Z",
-      "max_momentum": 357,
-      "url": "https://mixch.tv/u/16721611/live"
-    },
-    "16903258": {
-      "broadcaster_name": "サクラバシ919 公式",
-      "first_seen_at": "2026-09-23T15:09:33Z",
-      "last_seen_at": "2026-09-23T15:09:33Z",
-      "max_momentum": 160,
-      "url": "https://mixch.tv/u/16903258/live"
-    },
-    "17397938": {
-      "broadcaster_name": "日のゆあん❤️定ｱｲﾃ",
-      "first_seen_at": "2026-09-23T13:02:27Z",
-      "last_seen_at": "2026-09-23T13:07:36Z",
-      "max_momentum": 198,
-      "url": "https://mixch.tv/u/17397938/live"
-    },
-    "18118529": {
-      "broadcaster_name": "本日ﾗｽ.5倍みっきー⭐ar",
-      "first_seen_at": "2026-09-23T13:39:46Z",
-      "last_seen_at": "2026-09-23T13:39:46Z",
-      "max_momentum": 171,
-      "url": "https://mixch.tv/u/18118529/live"
-    },
-    "18329247": {
-      "broadcaster_name": "ヒメJKミスコン日‼",
-      "first_seen_at": "2026-09-23T13:02:27Z",
-      "last_seen_at": "2026-09-23T13:02:27Z",
-      "max_momentum": 157,
-      "url": "https://mixch.tv/u/18329247/live"
-    },
-    "18863033": {
-      "broadcaster_name": "みぃ最終日#ガル",
-      "first_seen_at": "2026-09-23T13:34:27Z",
-      "last_seen_at": "2026-09-23T13:34:27Z",
-      "max_momentum": 204,
-      "url": "https://mixch.tv/u/18863033/live"
-    },
-    "18932495": {
-      "broadcaster_name": "もねンモ",
-      "first_seen_at": "2026-09-23T15:25:21Z",
-      "last_seen_at": "2026-09-23T15:25:21Z",
-      "max_momentum": 227,
-      "url": "https://mixch.tv/u/18932495/live"
-    },
-    "18982206": {
-      "broadcaster_name": "るる#MEGAFON新メンバーAD",
-      "first_seen_at": "2026-09-23T14:53:51Z",
-      "last_seen_at": "2026-09-23T14:53:51Z",
-      "max_momentum": 158,
-      "url": "https://mixch.tv/u/18982206/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこアプデマイスタ",
@@ -124,7 +67,8 @@
     },
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
-      "last_notified_at": "2026-09-22T12:45:16Z",
+      "last_notified_at": "2026-09-23T22:00:50Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16721611/live"
     },
     "16810478": {
@@ -139,7 +83,7 @@
     },
     "16903258": {
       "broadcaster_name": "サクラバシ919 公式",
-      "last_notified_at": "2026-09-22T22:03:01Z",
+      "last_notified_at": "2026-09-23T22:00:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16903258/live"
     },
@@ -205,8 +149,9 @@
       "url": "https://mixch.tv/u/17376445/live"
     },
     "17397938": {
-      "broadcaster_name": "ゆあん❤️選初日Web投票",
-      "last_notified_at": "2026-08-27T12:30:51Z",
+      "broadcaster_name": "日のゆあん❤️定ｱｲﾃ",
+      "last_notified_at": "2026-09-23T22:00:50Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17397938/live"
     },
     "17532146": {
@@ -299,6 +244,12 @@
       "last_notified_at": "2026-09-18T12:08:26Z",
       "url": "https://mixch.tv/u/18108682/live"
     },
+    "18118529": {
+      "broadcaster_name": "本日ﾗｽ.5倍みっきー⭐ar",
+      "last_notified_at": "2026-09-23T22:00:50Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18118529/live"
+    },
     "18160273": {
       "broadcaster_name": "しゃな#KIRARI♡♡",
       "last_notified_at": "2026-09-16T10:42:06Z",
@@ -346,6 +297,12 @@
       "last_notified_at": "2026-09-01T22:04:16Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18328200/live"
+    },
+    "18329247": {
+      "broadcaster_name": "ヒメJKミスコン日‼",
+      "last_notified_at": "2026-09-23T22:00:50Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18329247/live"
     },
     "18362102": {
       "broadcaster_name": "日あゆな#WEB投票‍♀",
@@ -596,8 +553,8 @@
       "url": "https://mixch.tv/u/18862791/live"
     },
     "18863033": {
-      "broadcaster_name": "みぃyell投票#ネクジェネ大阪",
-      "last_notified_at": "2026-09-05T22:02:44Z",
+      "broadcaster_name": "みぃ最終日#ガル",
+      "last_notified_at": "2026-09-23T22:00:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18863033/live"
     },
@@ -738,8 +695,8 @@
       "url": "https://mixch.tv/u/18931827/live"
     },
     "18932495": {
-      "broadcaster_name": "初日1.3倍もねンモ",
-      "last_notified_at": "2026-09-17T22:01:17Z",
+      "broadcaster_name": "もねンモ",
+      "last_notified_at": "2026-09-23T22:00:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18932495/live"
     },
@@ -1037,7 +994,8 @@
     },
     "18982206": {
       "broadcaster_name": "るる#MEGAFON新メンバーAD",
-      "last_notified_at": "2026-09-16T11:18:53Z",
+      "last_notified_at": "2026-09-23T22:00:50Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18982206/live"
     },
     "18982433": {
