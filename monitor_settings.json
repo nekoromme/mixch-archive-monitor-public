@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "ranking_enabled": true,
   "ranking_ready": true,
   "ranking_scheduler_probe": false,
