@@ -259,10 +259,18 @@ class _RankingParser(HTMLParser):
         if href and _extract_mixch_user_id(href):
             self._current.url = href
 
+        # 上位3人だけは数字の代わりに王冠画像です。画像の表示位置ではなく、
+        # 順位欄のcrown1〜3という明示情報を読みます。サムネイル画像は対象外。
+        if tag == "img" and self._capture_field == "rank_text":
+            crown = re.fullmatch(r"/image/crown/crown([123])\.png", urlparse(attr.get("src", "")).path)
+            label = re.fullmatch(r"(?:第)?([123])位", attr.get("alt", "") or attr.get("title", ""))
+            if crown or label:
+                self._capture_parts.append((crown or label).group(1))
+
     def handle_startendtag(
         self, tag: str, attrs: list[tuple[str, str | None]]
     ) -> None:
-        # 対象箇所のvoid要素はテキストを持たないので、URLだけ通常処理に任せる。
+        # 自己終了形式の順位画像も、通常のimgと同じ処理へ回します。
         self.handle_starttag(tag, attrs)
 
     def handle_data(self, data: str) -> None:

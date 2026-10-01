@@ -91,6 +91,22 @@ def config_for_state(path: Path) -> Config:
 
 
 class ParserTests(unittest.TestCase):
+    def test_top_three_crown_images_are_ranks_not_missing_text(self) -> None:
+        # 実際の代替サイトは、上位3位だけlive_rankNum内にcrown画像を表示します。
+        boxes = []
+        for rank in range(1, 5):
+            badge = f'<img src="/image/crown/crown{rank}.png"/>' if rank < 4 else str(rank)
+            boxes.append(f'''<div id="livebox" data-uid="mixch_{rank}">
+              <div id="board"><div class="live_rankNum rankIcon">{badge}</div>
+              <div class="thumbnail"><img src="/image/crown/crown1.png"></div>
+              <div class="live_title"><a href="https://mixch.tv/u/{rank}/live">配信</a></div>
+              <div class="live_name">配信者{rank}</div>
+              <div class="live_viewer"><span>200</span><span>ポイント</span></div>
+              </div></div>''')
+        parsed = parse_ranking_page(''.join(boxes))
+        self.assertEqual([item.rank for item in parsed], [1,2,3,4])
+        self.assertEqual([item.user_id for item in parsed], ['1','2','3','4'])
+
     def test_parses_user_id_momentum_and_elapsed_time(self) -> None:
         parsed = parse_ranking_page(FIXTURE.read_text(encoding="utf-8"))
 
@@ -692,4 +708,3 @@ class ConfigTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
