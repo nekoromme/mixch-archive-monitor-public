@@ -48,8 +48,8 @@ jobs:
         run: |
           python3 - <<'PY'
           import os
-          from src.control import ranking_enabled
-          live = ranking_enabled()
+          from src.control import ranking_work_enabled
+          live = ranking_work_enabled()
           probe = os.environ['DRY_RUN'].lower() == 'true'
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write('run=' + str(live or probe).lower() + '\n')
@@ -58,9 +58,14 @@ jobs:
         if: steps.control.outputs.run == 'true'
         run: |
           echo "STATE_FILE=$RUNNER_TEMP/mixch-ranking-state.json" >> "$GITHUB_ENV"
+          echo "RANKING_HISTORY_FILE=$RUNNER_TEMP/mixch-ranking-days.json" >> "$GITHUB_ENV"
           # 取得失敗を初回扱いにすると大量再通知するため、必ず失敗で止めます。
           git fetch origin ranking-state --depth=1
           git show origin/ranking-state:state.json > "$RUNNER_TEMP/mixch-ranking-state.json"
+          # 初回だけ日別記録がありません。取得できない既存データは初期化しません。
+          if git cat-file -e origin/ranking-state:ranking-days.json 2>/dev/null; then
+            git show origin/ranking-state:ranking-days.json > "$RUNNER_TEMP/mixch-ranking-days.json"
+          fi
       - name: ランキングを確認
         if: steps.control.outputs.run == 'true'
         working-directory: ranking
@@ -74,6 +79,10 @@ jobs:
           git switch --force-create ranking-state origin/ranking-state
           cp "$STATE_FILE" state.json
           git add state.json
+          if test -s "$RANKING_HISTORY_FILE"; then
+            cp "$RANKING_HISTORY_FILE" ranking-days.json
+            git add ranking-days.json
+          fi
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'chore: update ranking history [skip ci]'
           git push origin HEAD:ranking-state

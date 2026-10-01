@@ -15,7 +15,7 @@ import re
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -23,6 +23,8 @@ from typing import AbstractSet, Any, Iterable, Sequence
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
+
+from .ranking_history import load_history, observe, save_history
 
 
 LOGGER = logging.getLogger("mixch-ranking-monitor")
@@ -110,6 +112,10 @@ class Config:
     test_webhook: bool
     notify_on_error: bool
     blocked_user_ids: frozenset[str]
+    # 別ファイルなので通知済み履歴の整理でも日数の記録は消えません。
+    history_file: Path | None = None
+    record_history: bool = True
+    notifications_enabled: bool = True
 
     @classmethod
     def from_environment(cls) -> "Config":
@@ -158,6 +164,7 @@ class Config:
             blocked_user_ids=(
                 DEFAULT_BLOCKED_USER_IDS | _read_user_id_set("BLOCKED_USER_IDS")
             ),
+            history_file=Path(os.getenv("RANKING_HISTORY_FILE", "ranking-days.json")),
         )
 
 
@@ -1080,11 +1087,13 @@ def maybe_send_error_notification(
 
 def run(config: Config, now: datetime | None = None) -> int:
     # ``now`` は夜間・朝の境界を副作用なしで試験するため注入可能にする。
+    fixed_now = now
     now = now or datetime.now(timezone.utc)
     state: dict[str, Any] | None = None
 
     try:
         state = load_state(config.state_file)
+        history = load_history(config.history_file) if config.record_history and config.history_file else None
 
         if config.test_webhook:
             send_test_notification(
@@ -1098,7 +1107,18 @@ def run(config: Config, now: datetime | None = None) -> int:
             config.request_timeout_seconds,
         )
         # 後から初速と伸び方を比較できるよう、通知判定とは独立して毎回記録する。
-        log_top_ranking_snapshot(streams, now)
+        observed_at = fixed_now or datetime.now(timezone.utc)
+        log_top_ranking_snapshot(streams, observed_at)
+
+        if history is not None and not config.dry_run:
+            changes = observe(history, streams, observed_at)
+            # 通知や公開アーカイブの確認が後で失敗しても、取得できた順位は残します。
+            save_history(config.history_file, history)
+            LOGGER.info("RANKING_DAYS_SAVED: 日付=%s, 新しい到達順位=%d, 記録日数=%d",
+                        observed_at.astimezone(JST).date(), changes, len(history["days"]))
+        if not config.notifications_enabled:
+            LOGGER.info("RANKING_RECORD_ONLY: 日別順位を記録しました。通知は停止中です。")
+            return 0
 
         blocked_count = sum(
             1 for stream in streams if stream.user_id in config.blocked_user_ids
@@ -1228,7 +1248,7 @@ def run(config: Config, now: datetime | None = None) -> int:
 
     except Exception as exc:  # noqa: BLE001 - 監視を黙って落とさないため最上位で集約
         LOGGER.exception("監視処理に失敗しました: %s", exc)
-        if state is not None and not config.dry_run and config.notify_on_error:
+        if state is not None and not config.dry_run and config.notify_on_error and config.notifications_enabled:
             try:
                 if maybe_send_error_notification(
                     config.discord_webhook_url,
@@ -1493,12 +1513,16 @@ def configure_logging() -> None:
 
 def main() -> int:
     configure_logging()
-    from .control import ranking_enabled
+    from .control import read_settings, ranking_work_enabled
     # 確認実行は通知も履歴更新もしない。本番実行は全体設定を必ず確認。
-    if os.getenv("DRY_RUN", "false").lower() != "true" and not ranking_enabled():
+    if os.getenv("DRY_RUN", "false").lower() != "true" and not ranking_work_enabled():
         return 0
     try:
         config = Config.from_environment()
+        if not config.dry_run:
+            settings = read_settings()
+            config = replace(config, notifications_enabled=settings['ranking_enabled'],
+                             record_history=settings.get('ranking_recording_enabled', False))
     except Exception as exc:  # noqa: BLE001
         LOGGER.error("設定の読み込みに失敗しました: %s", exc)
         return 1
@@ -1507,4 +1531,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

@@ -120,7 +120,7 @@ class WatchdogConfig:
     dry_run: bool
 
     @classmethod
-    def from_environment(cls) -> "WatchdogConfig":
+    def from_environment(cls, notifications_enabled: bool = True) -> "WatchdogConfig":
         repository = os.getenv("GITHUB_REPOSITORY", "").strip()
         if repository.count("/") != 1:
             raise RecoveryError(
@@ -134,8 +134,9 @@ class WatchdogConfig:
         if not github_token:
             raise RecoveryError("GH_TOKENまたはGITHUB_TOKENが未設定です")
 
-        webhook_url = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
-        _validate_discord_webhook_url(webhook_url)
+        webhook_url = os.getenv("DISCORD_WEBHOOK_URL", "").strip() if notifications_enabled else ""
+        if notifications_enabled:
+            _validate_discord_webhook_url(webhook_url)
 
         return cls(
             repository=repository,
@@ -840,11 +841,16 @@ def _dispatch_command(args: argparse.Namespace) -> int:
 
 
 def _watchdog_command(_args: argparse.Namespace) -> int:
-    from .control import ranking_enabled
+    from .control import ranking_enabled, ranking_work_enabled
     # 利用者が停止した監視を再開したり、停止通知を送ったりしません。
-    if not ranking_enabled(for_recovery=True):
+    if not ranking_work_enabled(for_recovery=True):
         return 0
-    return run_watchdog(WatchdogConfig.from_environment())
+    notifications_enabled = ranking_enabled()
+    config = WatchdogConfig.from_environment(notifications_enabled=notifications_enabled)
+    if not notifications_enabled:
+        # 順位記録だけの利用時も復旧は試みますが、停止した通知は送りません。
+        return run_watchdog(config, notify=lambda *_: LOGGER.info('RANKING_RECORD_ONLY: 復旧状況は実行ログへ記録しました。'))
+    return run_watchdog(config)
 
 
 def build_argument_parser() -> argparse.ArgumentParser:

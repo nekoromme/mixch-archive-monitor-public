@@ -3,10 +3,11 @@
  * 個人の名前、認証情報、GitHubの返答本文はログへ出しません。
  */
 import { authorize } from './auth.js';
+import { emptyHistory, parseFilters, summarize } from './ranking.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-09-08-password-1';
+const VERSION = '2026-10-01-ranking-days-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 
@@ -27,6 +28,7 @@ function secureResponse(response, requestId) {
   copy.headers.set('X-Frame-Options', 'DENY');
   copy.headers.set('Referrer-Policy', 'no-referrer');
   copy.headers.set('X-Request-Id', requestId);
+  copy.headers.set('X-App-Version', VERSION);
   // 既存画面のonclickとstyleを引き継ぐためinlineを許可。
   // 外部サイトへの通信や、他サイトからの埋め込みは許可しません。
   copy.headers.set('Content-Security-Policy',
@@ -103,7 +105,7 @@ async function readBody(request) {
   } catch { throw new UserError(400, '入力内容を読み取れませんでした。'); }
 }
 
-async function github(env, fetcher, method, body, filename = 'watchlist.json') {
+async function github(env, fetcher, method, body, filename = 'watchlist.json', { ref = BRANCH, allowMissing = false, raw = false } = {}) {
   // コピー時に付いた前後の改行・空白は除去。鍵そのものは表示・記録しません。
   const token = typeof env.GITHUB_TOKEN === 'string' ? env.GITHUB_TOKEN.trim() : '';
   if (!token) throw new UserError(503, 'GITHUB_TOKENが未設定です。CloudflareのVariables and Secretsを確認してください。');
@@ -112,11 +114,12 @@ async function github(env, fetcher, method, body, filename = 'watchlist.json') {
   }
   let response;
   try {
-    response = await fetcher(CONTENTS_URL.replace('watchlist.json', filename) + (method === 'GET' ? '?ref=' + BRANCH : ''), {
+    response = await fetcher(CONTENTS_URL.replace('watchlist.json', filename) + (method === 'GET' ? '?ref=' + ref : ''), {
       method,
       headers: {
         Authorization: 'Bearer ' + token,
-        Accept: 'application/vnd.github+json',
+        // 日数の記録は大きくなっても読めるよう、内容を直接返す形式を使います。
+        Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
         'User-Agent': 'mixch-watchlist-admin',
         'Content-Type': 'application/json',
@@ -136,6 +139,7 @@ async function github(env, fetcher, method, body, filename = 'watchlist.json') {
       : '保存結果を確認できません。連続で保存せず、一度再読み込みして確認してください。') + '（接続診断: ' + reason + '）');
   }
   if (response.status >= 300 && response.status < 400) throw new UserError(502, '保存先から別の接続先へ転送されました。管理者へこの画面を送ってください。（接続診断: REDIRECT）');
+  if (response.status === 404 && allowMissing) return null;
   if (response.status === 409 || response.status === 422) throw new UserError(409, CONFLICT);
   if ([401, 403, 404].includes(response.status)) {
     throw new UserError(502, 'GitHubとの接続を確認してください。認証の期限・権限・接続先が原因の可能性があります。');
@@ -166,25 +170,35 @@ async function monitoringSettings(env, fetcher) {
 
 async function api(request, env, fetcher) {
   const path = new URL(request.url).pathname;
+  if (path === '/api/ranking-days') {
+    if (request.method !== 'GET') throw new UserError(405, 'ランキングは読み取り専用です。');
+    let filters;
+    try { filters = parseFilters(new URL(request.url).searchParams); }
+    catch (error) { throw new UserError(400, error.message); }
+    const history = await github(env, fetcher, 'GET', undefined, 'ranking-days.json',
+      {ref: 'ranking-state', allowMissing: true, raw: true});
+    try { return json(summarize(history ?? emptyHistory(), filters)); }
+    catch { throw new UserError(502, '日別順位記録を読み取れませんでした。既存の記録は残っています。'); }
+  }
   if (path === '/api/monitoring') {
     if (request.method === 'GET') {
       const current = await monitoringSettings(env, fetcher);
-      return json({ enabled: current.settings.enabled, rankingEnabled: current.settings.ranking_enabled === true, rankingReady: current.settings.ranking_ready === true, version: current.version });
+      return json({ enabled: current.settings.enabled, rankingEnabled: current.settings.ranking_enabled === true, rankingRecordingEnabled: current.settings.ranking_recording_enabled === true, rankingReady: current.settings.ranking_ready === true, version: current.version });
     }
     if (request.method !== 'POST') throw new UserError(405, '保存ボタンを使用してください。');
     if (request.headers.get('Origin') !== new URL(request.url).origin) throw new UserError(403, '送信元を確認できません。');
     const body = await readBody(request);
     const kind = body.kind || 'archive';
-    if (!['archive', 'ranking'].includes(kind)) throw new UserError(400, '監視の種類が不正です。');
+    if (!['archive', 'ranking', 'recording'].includes(kind)) throw new UserError(400, '監視の種類が不正です。');
     if (typeof body.enabled !== 'boolean') throw new UserError(400, '監視設定が不正です。');
     const current = await monitoringSettings(env, fetcher);
     if (body.version !== current.version) throw new UserError(409, CONFLICT);
-    if (kind === 'ranking' && current.settings.ranking_ready !== true) throw new UserError(409, 'ランキング監視は移行準備中です。');
-    const key = kind === 'ranking' ? 'ranking_enabled' : 'enabled';
+    if (kind !== 'archive' && current.settings.ranking_ready !== true) throw new UserError(409, 'ランキング監視は移行準備中です。');
+    const key = kind === 'ranking' ? 'ranking_enabled' : kind === 'recording' ? 'ranking_recording_enabled' : 'enabled';
     await github(env, fetcher, 'PUT', {
       message: (body.enabled ? 'Resume ' : 'Pause ') + kind + ' monitoring',
       content: encodeContent(JSON.stringify({ ...current.settings, [key]: body.enabled,
-        ...(kind === 'ranking' ? { ranking_changed_at: new Date().toISOString() } : {}) }, null, 2) + '\n'),
+        ...(kind !== 'archive' ? { ranking_changed_at: new Date().toISOString() } : {}) }, null, 2) + '\n'),
       sha: current.version, branch: BRANCH,
     }, 'monitor_settings.json');
     return json({ ok: true });

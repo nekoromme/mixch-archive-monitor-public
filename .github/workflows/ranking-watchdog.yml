@@ -37,9 +37,9 @@ jobs:
         run: |
           python3 - <<'PY'
           import os
-          from src.control import ranking_enabled
+          from src.control import ranking_work_enabled
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
-              output.write('enabled=' + str(ranking_enabled()).lower() + '\n')
+              output.write('enabled=' + str(ranking_work_enabled()).lower() + '\n')
           PY
       - name: 履歴の保存場所を設定
         run: echo "WATCHDOG_STATE_FILE=$RUNNER_TEMP/ranking-watchdog.json" >> "$GITHUB_ENV"

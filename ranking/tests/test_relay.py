@@ -22,6 +22,13 @@ class RelayTests(unittest.TestCase):
         sleep.assert_not_called()
         client.dispatch_workflow.assert_not_called()
 
+    def test_recording_continues_when_notifications_are_paused(self):
+        client, settings = self.client(enabled=False)
+        settings['ranking_recording_enabled'] = True
+        run_relay(client, sleep=Mock())
+        client.dispatch_workflow.assert_any_call('ranking-monitor.yml', inputs={'dry_run':'false','test_webhook':'false'})
+        client.dispatch_workflow.assert_any_call('ranking-relay.yml', inputs={'probe':'false'})
+
     def test_stop_during_wait_ends_chain(self):
         client, settings = self.client()
         def stop(_): settings['ranking_enabled'] = False

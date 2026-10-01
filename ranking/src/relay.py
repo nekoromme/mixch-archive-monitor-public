@@ -29,6 +29,8 @@ def read_settings(client):
     for key in ('ranking_enabled', 'ranking_ready'):
         if type(settings.get(key)) is not bool:
             raise ValueError('監視設定の形式が不正です: ' + key)
+    if type(settings.get('ranking_recording_enabled', False)) is not bool:
+        raise ValueError('監視設定の形式が不正です: ranking_recording_enabled')
     return settings
 
 
@@ -36,7 +38,7 @@ def allowed(settings, probe):
     if probe:
         # 移行確認は1回だけで、通知も次の予約も行いません。
         return settings['ranking_ready'] is False and settings.get('ranking_scheduler_probe') is True
-    return settings['ranking_enabled'] and settings['ranking_ready']
+    return (settings['ranking_enabled'] or settings.get('ranking_recording_enabled', False)) and settings['ranking_ready']
 
 
 def ensure_relay(client, *, current_run_id=None):
