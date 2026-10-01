@@ -7,7 +7,7 @@ import { emptyHistory, parseFilters, summarize } from './ranking.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-10-01-ranking-checks-1';
+const VERSION = '2026-10-01-ranking-momentum-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 

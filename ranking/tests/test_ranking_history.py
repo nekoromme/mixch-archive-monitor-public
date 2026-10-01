@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from src import control
 from src.mixch_monitor import load_state, run
-from src.ranking_history import load_history, new_history, observe, save_history
+from src.ranking_history import load_history, new_history, observe, save_history, validate_history
 from test_monitor import config_for_state, stream
 
 
@@ -23,6 +23,47 @@ class RankingHistoryTests(unittest.TestCase):
         self.assertEqual(history['days']['2026-10-01']['observations'], 2)
         self.assertEqual(history['profiles']['111']['name'], '新しい名前')
         self.assertEqual(len(history['profiles']), 2)
+
+    def test_momentum_maximum_is_saved_separately_for_each_rank(self):
+        history = new_history()
+        first = datetime(2026, 10, 1, tzinfo=timezone.utc)
+        observe(history, [stream('111',149,rank=1)], first)
+        observe(history, [stream('111',150,rank=1)], first.replace(minute=5))
+        observe(history, [stream('111',1000,rank=3)], first.replace(minute=10))
+        observe(history, [stream('111',0,rank=1)], first.replace(minute=15))
+        record = history['days']['2026-10-01']
+        self.assertEqual(record['users'], {'111':5})
+        self.assertEqual(record['momentum'], {'111':{'1':150,'3':1000}})
+        self.assertTrue(record['momentum_complete'])
+        validate_history(history)
+
+    def test_old_rank_history_is_preserved_and_partial_momentum_stays_partial(self):
+        history = new_history()
+        first = datetime(2026,10,1,tzinfo=timezone.utc)
+        observe(history,[stream('111',100,rank=1)],first)
+        record = history['days']['2026-10-01']
+        del record['momentum']
+        del record['momentum_complete']
+        validate_history(history) # 更新前の形式も読み込めます。
+        observe(history,[stream('111',50,rank=1)],first.replace(minute=5))
+        self.assertEqual(record['users'],{'111':1})
+        self.assertEqual(record['momentum'],{'111':{'1':50}})
+        self.assertFalse(record['momentum_complete'])
+        observe(history,[stream('111',150,rank=1)],first.replace(minute=10))
+        self.assertFalse(record['momentum_complete'])
+
+    def test_bad_momentum_never_changes_history_and_corrupt_values_are_rejected(self):
+        history = new_history()
+        for momentum in [-1, 1.5, True, 9007199254740992]:
+            with self.assertRaises(ValueError):
+                observe(history,[stream('111',momentum)],datetime.now(timezone.utc))
+            self.assertEqual(history,new_history())
+        observe(history,[stream('111',0)],datetime.now(timezone.utc))
+        day = next(iter(history['days']))
+        for corrupt in [None, [], {'222':{'1':10}}, {'111':{'2':10}}, {'111':{'1':-1}}, {'111':{'1':True}}]:
+            broken = json.loads(json.dumps(history))
+            broken['days'][day]['momentum'] = corrupt
+            with self.assertRaises(ValueError): validate_history(broken)
 
     def test_japan_midnight_month_and_year_boundaries(self):
         history = new_history()
@@ -45,6 +86,7 @@ class RankingHistoryTests(unittest.TestCase):
                 self.assertEqual(run(config, datetime(2026,10,1,tzinfo=timezone.utc)), 0)
             self.assertEqual(load_state(state_file), state)
             self.assertEqual(load_history(history_file)['days']['2026-10-01']['users'], {'14082684':1})
+            self.assertEqual(load_history(history_file)['days']['2026-10-01']['momentum'], {'14082684':{'1':1}})
             discord.assert_not_called()
             archives.assert_not_called()
 
