@@ -89,6 +89,9 @@
     .rank-checkboxes { display: flex; flex-wrap: wrap; gap: 8px; }
     .rank-checkboxes label { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
     .rank-checkboxes input { width: 19px; height: 19px; accent-color: var(--primary); margin: 0; }
+    .check-filters { margin: 14px 0 0; }
+    .check-filters label { flex: 1 1 220px; flex-direction: column; align-items: stretch; min-width: 0; }
+    .check-filters select { max-width: 100%; }
     .ranking-help { font-size: 14px; color: var(--muted); margin: 12px 0 0; }
     .ranking-meta { font-size: 14px; color: var(--muted); margin: 10px 2px 12px; overflow-wrap: anywhere; }
     .ranking-notice { border-left: 3px solid #e0a21b; padding: 10px 12px; background: #fff7e1; font-size: 14px; margin-bottom: 12px; border-radius: 6px; }
@@ -104,6 +107,15 @@
     .ranking-breakdown { margin-top: 5px; font-size: 14px; color: var(--muted); }
     .ranking-day-count { flex: 0 0 auto; text-align: right; font-weight: 800; font-size: 24px; color: var(--text); }
     .ranking-day-count small { font-size: 14px; margin-left: 2px; font-weight: 500; }
+    .ranking-check { flex: 0 0 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .ranking-check input { width: 21px; height: 21px; margin: 0; accent-color: var(--primary); }
+    .ranking-check input:disabled { cursor: wait; }
+    .ranking-row.is-checked { border-color: #9dbbeb; }
+    @media (max-width: 420px) {
+      .ranking-row { gap: 8px; padding: 12px 8px; }
+      .ranking-placement { flex-basis: 26px; }
+      .ranking-day-count { font-size: 22px; }
+    }
     .ranking-empty { padding: 24px 16px; border: 1px solid var(--border); border-radius: 12px; background: white; color: var(--muted); font-size: 16px; }
     button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid #1769e0; outline-offset: 3px; }
 
@@ -677,6 +689,23 @@
               <label><input type="checkbox" name="rankingRank" value="3" checked onchange="changeRankingRanks()">3位</label>
             </div>
           </fieldset>
+          <div class="date-filters check-filters">
+            <label>チェックで絞込み
+              <select id="rankingCheckFilter" onchange="changeRankingChecksView()">
+                <option value="all">全員</option>
+                <option value="checked">チェック済みだけ</option>
+                <option value="unchecked">未チェックだけ</option>
+              </select>
+            </label>
+            <label>並び順
+              <select id="rankingCheckSort" onchange="changeRankingChecksView()">
+                <option value="days">日数が多い順</option>
+                <option value="checked">チェック済みを上に</option>
+                <option value="unchecked">未チェックを上に</option>
+              </select>
+            </label>
+          </div>
+          <p class="ranking-help">配信者の右側でチェックを付けられます。チェックは期間を切り替えても残り、別の端末からも使えます。同じチェック状態の中では日数が多い順に並びます。</p>
           <p class="ranking-help">勢いランキングの取得時に、選んだ順位のいずれかへ入った日を数えます。日付は日本時間。同じ日の1位と3位は合計1日です。</p>
           <p class="ranking-help">順位別の内訳は同じ日が重なるため、足し算しても合計日数と一致しないことがあります。記録開始前や取得できなかった時間は含みません。</p>
         </div>
@@ -684,6 +713,7 @@
       <div id="rankingNotice" class="ranking-notice" hidden></div>
       <div id="rankingMeta" class="ranking-meta"></div>
       <div id="rankingStatus" class="ranking-status" role="status" aria-live="polite"></div>
+      <div id="rankingCheckStatus" class="ranking-status" role="status" aria-live="polite"></div>
       <div id="rankingList" class="ranking-list" aria-busy="false"></div>
     </section>
   </main>
@@ -935,10 +965,16 @@
     let rankingData = null;
     let rankingRequest = 0;
     let rankingRefreshTimer = null;
+    let rankingChecks = {};
+    let rankingChecksVersion = null;
+    let rankingChecksEpoch = 0;
+    let rankingChecksSaving = false;
+    const pendingRankingChecks = new Map();
+    const rankingCheckQueue = [];
     const japanParts = new Intl.DateTimeFormat('en', {timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit'}).formatToParts(new Date());
     const currentYear = japanParts.find(part => part.type === 'year').value;
     const currentMonth = japanParts.find(part => part.type === 'month').value;
-    let rankingPrefs = {mode:'month', year:currentYear, month:currentMonth, ranks:[1,2,3]};
+    let rankingPrefs = {mode:'month', year:currentYear, month:currentMonth, ranks:[1,2,3], checkFilter:'all', checkSort:'days'};
 
     function storeRankingPrefs() {
       try { localStorage.setItem(RANKING_PREFS_KEY, JSON.stringify({...rankingPrefs, view:activeView})); } catch {}
@@ -948,7 +984,9 @@
         const saved = JSON.parse(localStorage.getItem(RANKING_PREFS_KEY));
         if (saved && ['month','year','all'].includes(saved.mode) && /^\d{4}$/.test(saved.year) &&
             /^(0[1-9]|1[0-2])$/.test(saved.month) && Array.isArray(saved.ranks) && saved.ranks.every(rank => [1,2,3].includes(rank))) {
-          rankingPrefs = {mode:saved.mode,year:saved.year,month:saved.month,ranks:[...new Set(saved.ranks)].sort()};
+          rankingPrefs = {mode:saved.mode,year:saved.year,month:saved.month,ranks:[...new Set(saved.ranks)].sort(),
+            checkFilter:['all','checked','unchecked'].includes(saved.checkFilter) ? saved.checkFilter : 'all',
+            checkSort:['days','checked','unchecked'].includes(saved.checkSort) ? saved.checkSort : 'days'};
           if (saved.view === 'ranking') activeView = 'ranking';
         }
       } catch {}
@@ -1014,6 +1052,13 @@
       updateRankingControls();
       scheduleRankingRefresh();
     }
+    function changeRankingChecksView() {
+      rankingPrefs.checkFilter = document.getElementById('rankingCheckFilter').value;
+      rankingPrefs.checkSort = document.getElementById('rankingCheckSort').value;
+      storeRankingPrefs();
+      updateRankingControls();
+      renderRanking();
+    }
     function scheduleRankingRefresh() {
       storeRankingPrefs();
       // 古い条件への応答が後から届いても、現在の画面へ上書きしません。
@@ -1025,7 +1070,7 @@
       rankingRefreshTimer = window.setTimeout(loadRanking, 200);
     }
     function updateRankingControls() {
-      const {mode,year,month,ranks} = rankingPrefs;
+      const {mode,year,month,ranks,checkFilter,checkSort} = rankingPrefs;
       const yearChoices = [...new Set([currentYear,year,...(rankingData?.meta.years || [])])].sort().reverse();
       document.getElementById('rankingYear').innerHTML = yearChoices.map(value => '<option value="'+value+'">'+value+'年</option>').join('');
       document.getElementById('rankingYear').value = year;
@@ -1034,8 +1079,109 @@
       document.getElementById('rankingMonthLabel').hidden = mode !== 'month';
       document.querySelectorAll('[data-period]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.period === mode)));
       document.querySelectorAll('input[name="rankingRank"]').forEach(input => {input.checked = ranks.includes(Number(input.value));});
+      document.getElementById('rankingCheckFilter').value = checkFilter;
+      document.getElementById('rankingCheckSort').value = checkSort;
       const period = mode === 'month' ? year+'年'+Number(month)+'月' : mode === 'year' ? year+'年' : '全期間';
-      document.getElementById('rankingOptionsSummary').textContent = '（'+period+'／'+(ranks.length ? ranks.join('・')+'位' : '順位未選択')+'）';
+      const checkSummary = checkFilter === 'checked' ? '／チェック済みだけ' : checkFilter === 'unchecked' ? '／未チェックだけ' : '';
+      const sortSummary = checkSort === 'checked' ? '／チェック済みを上に' : checkSort === 'unchecked' ? '／未チェックを上に' : '';
+      document.getElementById('rankingOptionsSummary').textContent = '（'+period+'／'+(ranks.length ? ranks.join('・')+'位' : '順位未選択')+checkSummary+sortSummary+'）';
+    }
+    function streamerIsChecked(id) {
+      return pendingRankingChecks.has(id) ? pendingRankingChecks.get(id) : rankingChecks[id] === true;
+    }
+    async function requestRankingChecks(body) {
+      const response = await fetch('/api/ranking-checks', {
+        method:body ? 'POST' : 'GET', credentials:'same-origin', cache:'no-store',
+        ...(body ? {headers:{'Content-Type':'application/json'},body:JSON.stringify(body)} : {}),
+        signal:AbortSignal.timeout(25000),
+      });
+      if (!response.headers.get('content-type')?.includes('application/json')) {
+        throw new Error('チェックを確認できません。ページを開き直してログインしてください。');
+      }
+      const result = await response.json();
+      if (!response.ok) {
+        const error = new Error(result.error || 'チェックを確認できませんでした。');
+        error.status = response.status;
+        throw error;
+      }
+      return result;
+    }
+    function setRankingCheckStatus(message, error = false) {
+      const status = document.getElementById('rankingCheckStatus');
+      status.textContent = message;
+      status.className = 'ranking-status' + (error ? ' error' : '');
+    }
+    async function loadRankingChecks() {
+      if (rankingChecksSaving) return;
+      const epoch = ++rankingChecksEpoch;
+      try {
+        const result = await requestRankingChecks();
+        if (epoch !== rankingChecksEpoch) return;
+        rankingChecks = result.checked;
+        rankingChecksVersion = result.version;
+        setRankingCheckStatus('');
+      } catch (error) {
+        if (epoch !== rankingChecksEpoch) return;
+        rankingChecksVersion = null;
+        setRankingCheckStatus('チェックを読み込めませんでした。再読み込みしてください。', true);
+      }
+      renderRanking();
+    }
+    function changeStreamerCheck(id, checked) {
+      if (!rankingChecksVersion || pendingRankingChecks.has(id)) { renderRanking(); return; }
+      rankingChecksEpoch++; // 保存前に始まった読込みで、保存したチェックを戻さないようにします。
+      pendingRankingChecks.set(id, checked);
+      rankingCheckQueue.push({id,checked});
+      renderRanking();
+      saveRankingChecks();
+    }
+    async function saveRankingChecks() {
+      if (rankingChecksSaving) return;
+      rankingChecksSaving = true;
+      let failed = false;
+      setRankingCheckStatus('チェックを保存中…');
+      while (rankingCheckQueue.length) {
+        const {id,checked} = rankingCheckQueue.shift();
+        try {
+          if (!rankingChecksVersion) {
+            const latest = await requestRankingChecks();
+            rankingChecks = latest.checked;
+            rankingChecksVersion = latest.version;
+          }
+          for (let attempt = 0; attempt < 2; attempt++) {
+            try {
+              const saved = await requestRankingChecks({id,checked,version:rankingChecksVersion});
+              rankingChecks = saved.checked;
+              rankingChecksVersion = saved.version;
+              break;
+            } catch (error) {
+              if (error.status !== 409 || attempt !== 0) throw error;
+              // 他の端末の変更を残したまま、この配信者の操作だけを再送します。
+              const latest = await requestRankingChecks();
+              rankingChecks = latest.checked;
+              rankingChecksVersion = latest.version;
+            }
+          }
+        } catch (error) {
+          // 通信が途切れても保存済みの可能性があるので、結果を読み直します。
+          let confirmed = false;
+          try {
+            const latest = await requestRankingChecks();
+            rankingChecks = latest.checked;
+            rankingChecksVersion = latest.version;
+            confirmed = (rankingChecks[id] === true) === checked;
+          } catch { rankingChecksVersion = null; }
+          if (!confirmed) {
+            failed = true;
+            setRankingCheckStatus('チェックの保存を確認できません。再読み込みしてください。', true);
+          }
+        } finally {
+          pendingRankingChecks.delete(id);
+          renderRanking();
+        }
+      }
+      rankingChecksSaving = false;
+      if (!failed) setRankingCheckStatus('チェックを保存しました。');
     }
     function renderRankingNotice() {
       const notice = document.getElementById('rankingNotice');
@@ -1046,18 +1192,35 @@
       const list = document.getElementById('rankingList');
       if (!rankingData) return;
       const {rows, ranks, meta} = rankingData;
-      if (activeView === 'ranking') document.getElementById('count').textContent = rows.length + '人';
+      const {checkFilter,checkSort} = rankingPrefs;
+      const visibleRows = rows.filter(row => checkFilter === 'all' || streamerIsChecked(row.id) === (checkFilter === 'checked'));
+      if (checkSort !== 'days') visibleRows.sort((a,b) => {
+        const difference = Number(streamerIsChecked(b.id)) - Number(streamerIsChecked(a.id));
+        return checkSort === 'checked' ? difference : -difference;
+      });
+      if (activeView === 'ranking') document.getElementById('count').textContent = (visibleRows.length === rows.length ? rows.length : visibleRows.length+' / '+rows.length) + '人';
       const updated = meta.lastObservedAt ? new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(meta.lastObservedAt)) : 'まだ記録なし';
       document.getElementById('rankingMeta').textContent = '最終取得：'+updated+'（日本時間）'+(meta.firstDay ? ' · 記録範囲：'+meta.firstDay+'〜'+meta.lastDay : '')+' · 対象期間の取得日：'+meta.periodObservedDays+'日';
       if (!rows.length) {
         list.innerHTML = '<div class="ranking-empty">'+(!ranks.length ? '数える順位を1つ以上選択してください。' : !meta.totalObservedDays ? '最初の順位取得を待っています。記録が保存されると、ここに日数ランキングが表示されます。' : !meta.periodObservedDays ? 'この期間には順位の記録がありません。' : '選択した順位に入った配信者は、この期間にはいません。')+'</div>';
         return;
       }
-      list.innerHTML = rows.map(row => '<article class="ranking-row'+(row.placement<=3 ? ' top-three' : '')+'">'+
+      if (checkFilter !== 'all' && !rankingChecksVersion && !rankingChecksSaving) {
+        list.innerHTML = '<div class="ranking-empty">チェックを確認してから表示します。読み込めない場合は再読み込みしてください。</div>';
+        return;
+      }
+      if (!visibleRows.length) {
+        list.innerHTML = '<div class="ranking-empty">この期間・順位には、'+(checkFilter === 'checked' ? 'チェック済み' : '未チェック')+'の配信者はいません。</div>';
+        return;
+      }
+      list.innerHTML = visibleRows.map(row => '<article class="ranking-row'+(row.placement<=3 ? ' top-three' : '')+(streamerIsChecked(row.id) ? ' is-checked' : '')+'" data-streamer-id="'+escapeHtml(row.id)+'">'+
         '<div class="ranking-placement" aria-label="日数ランキング'+row.placement+'位">'+row.placement+'</div>'+
         '<div class="ranking-person"><a class="ranking-name" href="'+escapeHtml(row.profileUrl)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(row.name)+'</a>'+
         '<div class="ranking-breakdown">'+ranks.map(rank => rank+'位 '+row.rankDays[rank]+'日').join(' · ')+'</div></div>'+
-        '<div class="ranking-day-count" aria-label="合計'+row.days+'日">'+row.days+'<small>日</small></div></article>').join('');
+        '<div class="ranking-day-count" aria-label="合計'+row.days+'日">'+row.days+'<small>日</small></div>'+
+        '<label class="ranking-check" title="配信者のチェック"><input type="checkbox" data-streamer-check="'+escapeHtml(row.id)+'" aria-label="'+escapeHtml(row.name)+'をチェック"'+
+        (streamerIsChecked(row.id) ? ' checked' : '')+(!rankingChecksVersion || pendingRankingChecks.has(row.id) ? ' disabled' : '')+'></label></article>').join('');
+      list.querySelectorAll('[data-streamer-check]').forEach(input => input.addEventListener('change', () => changeStreamerCheck(input.dataset.streamerCheck,input.checked)));
     }
     async function loadRanking() {
       const request = ++rankingRequest;
@@ -1066,7 +1229,8 @@
       status.textContent = '日数を集計中…';
       status.className = 'ranking-status';
       list.setAttribute('aria-busy','true');
-      const params = new URLSearchParams({...rankingPrefs,ranks:rankingPrefs.ranks.join(',')});
+      const params = new URLSearchParams({mode:rankingPrefs.mode,year:rankingPrefs.year,month:rankingPrefs.month,ranks:rankingPrefs.ranks.join(',')});
+      const checksTask = loadRankingChecks();
       try {
         const response = await fetch('/api/ranking-days?'+params, {credentials:'same-origin',cache:'no-store',signal:AbortSignal.timeout(25000)});
         const result = await response.json();
@@ -1083,6 +1247,7 @@
         status.className = 'ranking-status error';
       } finally {
         if (request === rankingRequest) list.setAttribute('aria-busy','false');
+        await checksTask;
       }
     }
 

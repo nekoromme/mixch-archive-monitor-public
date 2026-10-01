@@ -7,7 +7,7 @@ import { emptyHistory, parseFilters, summarize } from './ranking.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-10-01-ranking-days-1';
+const VERSION = '2026-10-01-ranking-checks-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 
@@ -168,8 +168,46 @@ async function monitoringSettings(env, fetcher) {
   return { settings, version: file.sha };
 }
 
+// 配信者のチェックはIDで管理し、順位記録やアーカイブ一覧とは別に保存します。
+async function rankingChecks(env, fetcher) {
+  const file = await github(env, fetcher, 'GET', undefined, 'ranking-checks.json');
+  try {
+    const data = JSON.parse(decodeContent(file.content));
+    if (typeof file.sha !== 'string' || !file.sha || data.version !== 1 ||
+        !data.checked || typeof data.checked !== 'object' || Array.isArray(data.checked) ||
+        Object.entries(data.checked).some(([id, value]) => !/^\d{1,30}$/.test(id) || value !== true)) {
+      throw new Error();
+    }
+    return { checked: data.checked, version: file.sha };
+  } catch { throw new UserError(502, '配信者のチェックを読み取れませんでした。既存のチェックは残っています。'); }
+}
+
 async function api(request, env, fetcher) {
   const path = new URL(request.url).pathname;
+  if (path === '/api/ranking-checks') {
+    if (request.method === 'GET') return json(await rankingChecks(env, fetcher));
+    if (request.method !== 'POST') throw new UserError(405, 'チェック欄を使用してください。');
+    if (request.headers.get('Origin') !== new URL(request.url).origin) throw new UserError(403, '送信元を確認できません。');
+    const body = await readBody(request);
+    if (typeof body.id !== 'string' || !/^\d{1,30}$/.test(body.id) || typeof body.checked !== 'boolean') {
+      throw new UserError(400, '配信者のチェック設定が不正です。');
+    }
+    const current = await rankingChecks(env, fetcher);
+    if (body.version !== current.version) throw new UserError(409, 'チェックが別の画面で更新されました。最新のチェックを取得してから保存してください。');
+    if ((current.checked[body.id] === true) === body.checked) return json(current);
+    const checked = { ...current.checked };
+    if (body.checked) checked[body.id] = true;
+    else delete checked[body.id];
+    const saved = await github(env, fetcher, 'PUT', {
+      message: 'Update ranking streamer check',
+      content: encodeContent(JSON.stringify({ version: 1, checked }, null, 2) + '\n'),
+      sha: current.version, branch: BRANCH,
+    }, 'ranking-checks.json');
+    if (typeof saved.content?.sha !== 'string' || !saved.content.sha) {
+      throw new UserError(502, 'チェックの保存結果を確認できません。再読み込みしてください。');
+    }
+    return json({ checked, version: saved.content.sha });
+  }
   if (path === '/api/ranking-days') {
     if (request.method !== 'GET') throw new UserError(405, 'ランキングは読み取り専用です。');
     let filters;
