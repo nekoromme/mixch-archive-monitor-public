@@ -51,7 +51,7 @@ class ArchiveReadHealthTests(unittest.TestCase):
                 patch.object(watcher, 'ACTIVITY_STATE_FILE', str(activity)),
                 patch.object(watcher, 'get_discord_webhook_url', return_value='unused'),
                 patch.object(watcher, 'create_driver', return_value=MagicMock()),
-                patch.object(watcher, 'get_latest_marker', side_effect=watcher.ArchiveReadError('unreadable')),
+                patch.object(watcher.ArchiveClient, 'fetch_latest', side_effect=watcher.ArchiveReadError('unreadable')),
                 patch.object(watcher, 'log_metric'),
                 patch.object(watcher, 'send_embeds_to_discord') as notify,
                 patch.object(watcher, 'save_json') as save,

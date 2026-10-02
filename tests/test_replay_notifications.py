@@ -29,6 +29,23 @@ class ReplayNotificationTests(unittest.TestCase):
                 [],
             )
 
+    def test_same_duration_new_archive_can_be_replayed_by_notified_id(self):
+        reports = collect_changed_reports(
+            {"100": "240:00"}, {"100": "240:00"}, [{"id": "100", "name": "test"}],
+            {"100": {"archive_identity_version": 1, "last_notified_archive_id": "10"}},
+            {"100": {"archive_identity_version": 1, "last_notified_archive_id": "11"}},
+        )
+        self.assertEqual(len(reports), 1)
+
+    def test_migration_and_metadata_changes_do_not_create_replay_notifications(self):
+        self.assertEqual(collect_changed_reports(
+            {"100": "240:00"}, {"100": "239:59"}, [{"id": "100", "name": "test"}],
+            {}, {"100": {"archive_identity_version": 1, "latest_archive_id": "10"}},
+        ), [])
+        self.assertEqual(collect_changed_reports(
+            {"100": "240:00"}, {"100": "NO_VIDEO"}, [{"id": "100", "name": "test"}],
+        ), [])
+
 
 if __name__ == "__main__":
     unittest.main()

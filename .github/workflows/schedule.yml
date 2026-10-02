@@ -8,6 +8,9 @@ on:
   push:
     paths:
       - 'mixcha_watcher.py'
+      - 'archive_metadata.py'
+      - 'tests/**'
+      - 'replay_notifications.py'
       - '.github/workflows/schedule.yml'
   workflow_dispatch:
     inputs:
@@ -105,6 +108,7 @@ jobs:
           fi
 
       - name: Run watcher
+        id: watcher
         if: inputs.replay_base == ''
         env:
           MIXCH_DATA_DIR: .
@@ -131,7 +135,9 @@ jobs:
         run: python replay_notifications.py
 
       - name: Commit updated public data
-        if: inputs.replay_base == '' && success()
+        # 一部取得失敗でも、正常に取得・通知できた人の履歴は保存します。
+        # 未送信の新着や全件取得失敗ではプログラムが履歴を進めません。
+        if: ${{ !cancelled() && inputs.replay_base == '' && (steps.watcher.outcome == 'success' || steps.watcher.outcome == 'failure') }}
         shell: bash
         run: |
           git config user.name "mixch-bot"

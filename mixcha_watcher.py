@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import shutil
+import tempfile
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -13,6 +14,8 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
+from archive_metadata import ArchiveClient, ArchiveReadError, plan_archive_update
 
 # 監視対象と状態は、実行するリポジトリ内の3つのJSONへ保存します。
 # MIXCH_DATA_DIRを指定すれば、ローカルテスト時だけ別ディレクトリへ
@@ -42,6 +45,7 @@ PRIVATE_METRIC_KEYS = {
     "url",
     "slowest_user_id",
     "slowest_user_name",
+    "archive_id",
 }
 JST = datetime.timezone(datetime.timedelta(hours=9))
 LATEST_MARKER_SELECTOR = "span.css-lmrlel"
@@ -81,10 +85,6 @@ CHROME_BINARY_CANDIDATES = (
     "chromium-browser",
 )
 PROCESS_START = time.perf_counter()
-
-
-class ArchiveReadError(RuntimeError):
-    """読み取り失敗を動画なしと区別し、履歴と通知を保護します。"""
 
 
 class DiscordDeliveryError(RuntimeError):
@@ -480,8 +480,92 @@ def load_json(path: str, default):
 
 
 def save_json(path: str, data):
-    with open(path, "w", encoding="utf-8") as fp:
-        json.dump(data, fp, ensure_ascii=False, indent=2)
+    # 途中終了しても元のJSONが半分だけ書き換わらないよう、同じ場所の
+    # 一時ファイルへ完成版を書き、最後に置き換えます。
+    target = Path(path)
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=target.parent,
+                                         prefix=f".{target.name}.", suffix=".tmp", delete=False) as fp:
+            temporary_path = Path(fp.name)
+            json.dump(data, fp, ensure_ascii=False, indent=2)
+            fp.write("\n")
+            fp.flush()
+            os.fsync(fp.fileno())
+        os.replace(temporary_path, target)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
+
+
+def load_archive_history():
+    """欠落・破損した履歴を初回扱いにして全員へ通知することを防ぐ。"""
+    for path in (STATE_FILE, ACTIVITY_STATE_FILE):
+        if not Path(path).is_file():
+            raise ArchiveReadError(f"Required archive history is missing: {Path(path).name}")
+    try:
+        state = load_json(STATE_FILE, {})
+        activity = load_json(ACTIVITY_STATE_FILE, {})
+    except (OSError, ValueError) as error:
+        raise ArchiveReadError("Archive history could not be read safely") from error
+    if not isinstance(state, dict) or not isinstance(activity, dict):
+        raise ArchiveReadError("Archive history must contain JSON objects")
+    for marker in state.values():
+        if not isinstance(marker, str) or (marker != "NO_VIDEO" and not re.fullmatch(r"\d+:[0-5]\d", marker)):
+            raise ArchiveReadError("Invalid saved archive duration")
+    if not state and activity:
+        raise ArchiveReadError("Saved archive durations are empty while activity history exists")
+    for user_id, record in activity.items():
+        if not isinstance(record, dict):
+            raise ArchiveReadError("Invalid saved archive activity")
+        for key in ("last_notified_date", "latest_archive_date"):
+            value = record.get(key)
+            if value is not None:
+                try:
+                    datetime.date.fromisoformat(value)
+                except (ValueError, TypeError):
+                    raise ArchiveReadError("Invalid saved archive activity date") from None
+        archive_id = record.get("latest_archive_id")
+        if archive_id is not None and (not isinstance(archive_id, str) or not archive_id.isascii()
+                                       or not archive_id.isdigit() or int(archive_id) <= 0):
+            raise ArchiveReadError("Invalid saved archive identity")
+        if archive_id is not None and (type(record.get("latest_archive_created")) is not int
+                                       or record["latest_archive_created"] <= 0):
+            raise ArchiveReadError("Saved archive identity has no valid creation time")
+        seen_ids = record.get("seen_archive_ids", [])
+        if not isinstance(seen_ids, list) or any(not isinstance(value, str) or not value.isascii()
+                                                or not value.isdigit() or int(value) <= 0 for value in seen_ids):
+            raise ArchiveReadError("Invalid saved archive identity history")
+        if record.get("archive_identity_version") not in (None, 1):
+            raise ArchiveReadError("Unsupported saved archive identity format")
+        if archive_id is None and record.get("archive_identity_version") == 1 and state.get(user_id) not in (None, "NO_VIDEO"):
+            raise ArchiveReadError("Saved archive identity is incomplete")
+    return state, activity
+
+
+def persist_archive_history(state, activity):
+    # 動画番号と通知済み番号が判定の正本。そちらを先に確定し、再生時間の
+    # 互換用ファイルの書き込みが失敗しても、同じ動画を再通知しない。
+    save_json(ACTIVITY_STATE_FILE, activity)
+    save_json(STATE_FILE, state)
+    log_metric("archive_history_saved", state_count=len(state), activity_count=len(activity))
+
+
+def group_update_reports(reports):
+    """送信上限ごとに配信者をまとめ、成功した組だけ通知済みにできるようにする。"""
+    groups, group, length = [], [], 0
+    for report in reports:
+        line_length = len(build_update_lines([report])[0])
+        if line_length > DESCRIPTION_LIMIT:
+            raise DiscordDeliveryError("Archive notification entry is too long")
+        if group and length + 2 + line_length > DESCRIPTION_LIMIT:
+            groups.append(group)
+            group, length = [], 0
+        length += line_length + (2 if group else 0)
+        group.append(report)
+    if group:
+        groups.append(group)
+    return groups
 
 
 def get_watchlist_entry_line_numbers(path: str, expected_count: int) -> List[Optional[int]]:
@@ -752,14 +836,7 @@ def main():
     original_watchlist_count = len(watchlist)
     log_metric("watchlist_loaded", watchlist_count=original_watchlist_count)
 
-    state = load_json(STATE_FILE, {})
-
-    activity_state_path = Path(ACTIVITY_STATE_FILE)
-    if activity_state_path.exists():
-        activity_state = load_json(ACTIVITY_STATE_FILE, {})
-    else:
-        logging.info("activity_state.json が存在しないため初回作成します")
-        activity_state = {}
+    state, activity_state = load_archive_history()
 
     logging.info(f"watchlist総数: {len(watchlist)}")
     watchlist = dedupe_watchlist(watchlist)
@@ -772,8 +849,6 @@ def main():
     )
     logging.info(f"重複除去後の監視対象数: {len(watchlist)}")
 
-    # 設定がない既存対象はオン。オフの対象も元の一覧には保持します。
-    # 監視と長期未更新の自動削除には、オンの対象だけを渡します。
     # 旧画面の個別オフ設定は無視し、全体スイッチだけで制御します。
     active_watchlist = watchlist
     log_metric("archive_monitor_selection",
@@ -789,18 +864,30 @@ def main():
     slowest_user_name = None
     max_user_elapsed_sec = 0.0
     discord_send_elapsed_points: List[float] = []
+    notified_archive_count = 0
+    successful_ids = set()
+    pending_decisions = {}
+    empty_previous_video_ids = set()
+    known_video_count = sum(state.get(str(user["id"]), "NO_VIDEO") != "NO_VIDEO"
+                            for user in active_watchlist)
+    checked_at = datetime.datetime.now(datetime.timezone.utc)
+    # 外部サイトが遅い時も、30分の強制終了前に正常結果の保存まで終える。
+    read_deadline = time.monotonic() + 24 * 60
 
-    driver: Optional[webdriver.Chrome] = None
+    client = ArchiveClient(browser_factory=create_driver, metric=log_metric)
     try:
-        if active_watchlist:
-            driver = create_driver()
         total = len(active_watchlist)
         for index, user in enumerate(active_watchlist, start=1):
+            if time.monotonic() >= read_deadline:
+                deferred_count = total - index + 1
+                failed_count += deferred_count
+                log_metric("archive_read_budget_exhausted", deferred_count=deferred_count)
+                break
             user_start = time.perf_counter()
             user_id = str(user["id"])
             user_name = user["name"]
             url = f"https://mixch.tv/u/{user_id}/live_archives"
-            prev_marker = state.get(user_id, "NO_VIDEO")
+            prev_marker = state.get(user_id)
             latest_marker = prev_marker
             latest_archive_date = None
             state_updated = False
@@ -816,22 +903,20 @@ def main():
             )
 
             try:
-                if user_id not in activity_state:
-                    activity_state[user_id] = {"last_notified_date": today_jst}
-
-                latest_marker, latest_archive_date = get_latest_marker(
-                    driver,
-                    user_id,
-                    user_name=user_name,
-                    index=index,
-                    total=total,
-                    reference_date=today_dt,
+                snapshot = client.fetch_latest(user_id)
+                decision = plan_archive_update(
+                    prev_marker, activity_state.get(user_id, {}), snapshot,
+                    checked_at=checked_at,
                 )
-                activity_state[user_id]["latest_archive_date"] = latest_archive_date
-                changed = latest_marker != prev_marker
-                result = "no_video" if latest_marker == "NO_VIDEO" else "ok"
-                if latest_marker == "NO_VIDEO":
+                latest_marker = snapshot.marker
+                latest_archive_date = snapshot.archive_date
+                changed = decision.changed
+                result = "no_video" if snapshot.archive_id is None else "ok"
+                successful_ids.add(user_id)
+                if snapshot.archive_id is None:
                     no_video_count += 1
+                    if prev_marker not in (None, "NO_VIDEO"):
+                        empty_previous_video_ids.add(user_id)
 
                 log_metric(
                     "user_marker_result",
@@ -844,6 +929,9 @@ def main():
                     latest_archive_date=latest_archive_date,
                     changed=changed,
                     result=result,
+                    decision_reason=decision.reason,
+                    archive_id=snapshot.archive_id,
+                    extraction_method=snapshot.source,
                 )
 
                 if changed:
@@ -854,10 +942,13 @@ def main():
                             "url": url,
                         }
                     )
-                    activity_state[user_id]["last_notified_date"] = today_jst
-
-                state[user_id] = latest_marker
-                state_updated = True
+                    # 通知に失敗した人の比較基準を先へ進めない。
+                    # 送信が成功した組だけ、後でこの変更案を確定する。
+                    pending_decisions[user_id] = decision
+                else:
+                    state[user_id] = decision.marker
+                    activity_state[user_id] = decision.activity
+                    state_updated = True
             except Exception as exc:
                 failed_count += 1
                 log_metric(
@@ -905,38 +996,55 @@ def main():
                 )
 
     finally:
-        if driver is not None:
-            driver.quit()
+        client.close()
 
-    # 失敗を含む回は通知・保存・長期未更新の削除をしません。
-    # 次回も最後に成功した履歴と比較するため、取りこぼしを防げます。
-    if failed_count:
+    # サービス側が多数の一覧を空にした時も、動画履歴の初期化や自動解除を
+    # しない。正常に読めた別の人の新着は、この後そのまま処理する。
+    if len(empty_previous_video_ids) >= 5 and len(empty_previous_video_ids) >= known_video_count * 0.8:
+        original_state, original_activity = load_archive_history()
+        for user_id in empty_previous_video_ids:
+            if user_id in original_activity:
+                activity_state[user_id] = original_activity[user_id]
+            else:
+                activity_state.pop(user_id, None)
+            state[user_id] = original_state[user_id]
+        successful_ids -= empty_previous_video_ids
+        failed_count += len(empty_previous_video_ids)
+        log_metric("archive_widespread_empty", affected_count=len(empty_previous_video_ids),
+                   known_video_count=known_video_count, state_preserved=True)
+
+    # 全件失敗なら書き込みも通知も行わない。一部失敗なら、その人の履歴を
+    # 残し、成功した人の結果だけ保存する。1人の失敗で全員分を止めない。
+    if active_watchlist and not successful_ids:
         log_metric("archive_read_failed", failed_count=failed_count,
                    watchlist_count=len(active_watchlist), state_preserved=True)
         raise ArchiveReadError(f"Archive read failed for {failed_count} targets; state preserved")
 
-    state_save_start = time.perf_counter()
-    log_metric("save_state_start", path=STATE_FILE)
-    save_json(STATE_FILE, state)
-    log_metric(
-        "save_state_end",
-        elapsed_sec=round(time.perf_counter() - state_save_start, 3),
-        path=STATE_FILE,
-    )
-
-    activity_state_save_start = time.perf_counter()
-    log_metric("save_activity_state_start", path=ACTIVITY_STATE_FILE)
-    save_json(ACTIVITY_STATE_FILE, activity_state)
-    log_metric(
-        "save_activity_state_end",
-        elapsed_sec=round(time.perf_counter() - activity_state_save_start, 3),
-        path=ACTIVITY_STATE_FILE,
-    )
-
     logging.info(f"新着通知対象の人数: {len(report_summary)}")
+    delivery_error = None
+    # 通知不要の正常結果を先に確定する。新着の変更案はまだ含まれていない。
+    persist_archive_history(state, activity_state)
     if report_summary:
-        update_lines = build_update_lines(report_summary)
-        discord_send_elapsed_points.extend(send_embeds_to_discord("🆕 Mixcha 更新通知", update_lines))
+        groups = group_update_reports(report_summary)
+        for index, group in enumerate(groups, 1):
+            title = "🆕 Mixcha 更新通知"
+            if len(groups) > 1:
+                title += f" {index}/{len(groups)}"
+            try:
+                discord_send_elapsed_points.extend(send_embeds_to_discord(title, build_update_lines(group)))
+            except DiscordDeliveryError as error:
+                delivery_error = error
+                log_metric("archive_notification_pending", pending_count=sum(len(g) for g in groups[index - 1:]))
+                break
+            for report in group:
+                decision = pending_decisions[report["id"]]
+                state[report["id"]] = decision.marker
+                activity_state[report["id"]] = decision.activity
+            notified_archive_count += len(group)
+            log_metric("archive_update_notification_delivered", recipient_count=len(group),
+                       chunk_index=index, chunk_total=len(groups))
+            # 後続の組が失敗しても、送れた組を次回また送らない。
+            persist_archive_history(state, activity_state)
     else:
         logging.info("変化がないため、Mixcha 更新通知のDiscord送信をスキップします")
         log_metric("discord_update_notification_skipped", reason="no_changes")
@@ -952,6 +1060,8 @@ def main():
     inactive_reports = []
     for user in active_watchlist:
         user_id = str(user["id"])
+        if user_id not in successful_ids or delivery_error is not None:
+            continue
         user_name = user["name"]
         watchlist_line = user.get("watchlist_line", "不明")
         last_notified_date = activity_state[user_id]["last_notified_date"]
@@ -1018,6 +1128,7 @@ def main():
         watchlist_count=original_watchlist_count,
         deduped_watchlist_count=deduped_watchlist_count,
         changed_count=len(report_summary),
+        notified_archive_count=notified_archive_count,
         failed_count=failed_count,
         no_video_count=no_video_count,
         discord_send_count=len(discord_send_elapsed_points),
@@ -1027,6 +1138,10 @@ def main():
         slowest_user_name=slowest_user_name,
         max_user_elapsed_sec=max_user_elapsed_sec,
     )
+    if delivery_error is not None:
+        raise delivery_error
+    if failed_count:
+        raise ArchiveReadError(f"Archive read failed for {failed_count} targets; healthy results saved")
 
 if __name__ == "__main__":
     try:
@@ -1039,4 +1154,3 @@ if __name__ == "__main__":
         )
         logging.exception("watcher全体が例外で終了しました")
         raise
-

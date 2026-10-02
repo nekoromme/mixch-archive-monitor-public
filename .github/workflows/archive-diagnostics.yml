@@ -1,12 +1,19 @@
 name: Archive page diagnostics
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'archive_metadata.py'
+      - 'archive_diagnostics.py'
+      - 'mixcha_watcher.py'
+      - '.github/workflows/archive-diagnostics.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -18,25 +25,4 @@ jobs:
       - name: Verify all public archive pages without notifications or writes
         env:
           PUBLIC_LOGS: 'true'
-        run: |
-          python - <<'PY'
-          import json
-          import mixcha_watcher as w
-          driver = w.create_driver()
-          found = empty = failed = 0
-          try:
-              users = json.load(open("watchlist.json"))
-              for i, user in enumerate(users, 1):
-                  try:
-                      marker, date = w.get_latest_marker(driver, user["id"], index=i, total=len(users))
-                      found += marker != "NO_VIDEO"
-                      empty += marker == "NO_VIDEO"
-                  except Exception as error:
-                      failed += 1
-                      print("READ_FAILED", i, type(error).__name__)
-              print("VERIFIED_COUNTS", json.dumps(dict(total=len(users), found=found, empty=empty, failed=failed)))
-              if failed:
-                  raise RuntimeError("Some archive pages could not be read")
-          finally:
-              driver.quit()
-          PY
+        run: python archive_diagnostics.py

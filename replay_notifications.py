@@ -38,14 +38,22 @@ def collect_changed_reports(
     base_state: Dict[str, str],
     head_state: Dict[str, str],
     watchlist: List[Dict[str, Any]],
+    base_activity=None,
+    head_activity=None,
 ) -> List[Dict[str, str]]:
-    """Return changed watched users in watchlist order."""
+    """通知済み動画番号で再送対象を選び、旧履歴だけ再生時間で比較する。"""
 
-    changed_ids = {
-        user_id
-        for user_id in set(base_state) | set(head_state)
-        if base_state.get(user_id) != head_state.get(user_id)
-    }
+    base_activity, head_activity = base_activity or {}, head_activity or {}
+    changed_ids = set()
+    for user_id in set(base_state) | set(head_state) | set(head_activity):
+        before, after = base_activity.get(user_id, {}), head_activity.get(user_id, {})
+        if after.get("archive_identity_version") == 1:
+            # 同じ再生時間の新動画も拾う。番号を記録しただけの移行は再送しない。
+            notified_id = after.get("last_notified_archive_id")
+            if notified_id and notified_id != before.get("last_notified_archive_id"):
+                changed_ids.add(user_id)
+        elif head_state.get(user_id) not in (None, "NO_VIDEO") and base_state.get(user_id) != head_state.get(user_id):
+            changed_ids.add(user_id)
 
     reports = []
     for user in watchlist:
@@ -81,8 +89,10 @@ def main() -> None:
 
     base_state = load_json_from_git(data_dir, base_sha, "state.json")
     head_state = load_json_from_git(data_dir, head_sha, "state.json")
+    base_activity = load_json_from_git(data_dir, base_sha, "activity_state.json")
+    head_activity = load_json_from_git(data_dir, head_sha, "activity_state.json")
     watchlist = load_json_from_git(data_dir, head_sha, "watchlist.json")
-    reports = collect_changed_reports(base_state, head_state, watchlist)
+    reports = collect_changed_reports(base_state, head_state, watchlist, base_activity, head_activity)
 
     if not reports:
         logging.info("再送対象は0件です")
