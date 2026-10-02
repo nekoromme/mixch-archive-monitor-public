@@ -9,6 +9,8 @@ from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from pathlib import Path
 from unittest.mock import patch
+from dataclasses import replace
+from src.blocklist import read_blocked_user_ids
 
 from src.mixch_monitor import (
     Config,
@@ -451,6 +453,26 @@ class NightModeTests(unittest.TestCase):
         immediate.assert_not_called()
         self.assertIn("111", state["night_candidates"])
 
+    def test_blocked_overnight_candidate_is_removed_before_morning_digest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "state.json"
+            state = new_state()
+            accumulate_night_candidates(state, [stream("111", 999)], NOW)
+            path.write_text(json.dumps(state), encoding="utf-8")
+            with (
+                patch("src.mixch_monitor.fetch_ranking", return_value=[stream("111",999)]),
+                patch("src.mixch_monitor.find_public_archive_profiles") as profiles,
+                patch("src.mixch_monitor.send_night_digest_notification") as digest,
+                patch("src.mixch_monitor.send_stream_notifications") as immediate,
+            ):
+                result = run(replace(config_for_state(path),blocked_user_ids=frozenset({'111'})),
+                             now=datetime(2026,8,8,22,0,tzinfo=timezone.utc))
+            self.assertEqual(0,result)
+            profiles.assert_not_called()
+            digest.assert_not_called()
+            immediate.assert_not_called()
+            self.assertEqual({},load_state(path)['night_candidates'])
+
     def test_morning_run_sends_digest_once_and_clears_candidates(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "state.json"
@@ -656,15 +678,7 @@ class ConfigTests(unittest.TestCase):
             "https://ikioi-ranking.com/v/mixch", config.fallback_monitor_url
         )
         self.assertEqual(
-            frozenset(
-                {
-                    "14082684",
-                    "17373942",  # うえきあやか
-                    "18014848",  # 日DXコーラ
-                    "18504420",  # のうみくん#ﾚｷﾞｭﾗｰﾓﾃﾞ
-                    "18674264",  # こうぐちまﾙ
-                }
-            ),
+            read_blocked_user_ids(),
             config.blocked_user_ids,
         )
 
@@ -684,17 +698,7 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(275, config.momentum_threshold)
         self.assertEqual(8, config.cooldown_hours)
         self.assertEqual(
-            frozenset(
-                {
-                    "14082684",
-                    "17373942",
-                    "18014848",
-                    "18504420",
-                    "18674264",
-                    "18844927",
-                    "18856007",
-                }
-            ),
+            read_blocked_user_ids() | {"18844927", "18856007"},
             config.blocked_user_ids,
         )
 

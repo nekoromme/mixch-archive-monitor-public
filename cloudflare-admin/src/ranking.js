@@ -68,7 +68,7 @@ export function parseFilters(params, now = new Date()) {
   return { mode, year, month: month.padStart(2, '0'), ranks, minMomentum:Number(minimum) };
 }
 
-export function summarize(history, filters) {
+export function summarize(history, filters, blockedUserIds = new Set()) {
   validateHistory(history);
   const { mode, year, month, ranks, minMomentum = 0 } = filters;
   const selectedMask = ranks.reduce((mask, rank) => mask | (1 << (rank - 1)), 0);
@@ -80,6 +80,8 @@ export function summarize(history, filters) {
   for (const [day, record] of matchingDays) {
     let incomplete = record.momentum_complete === false && ranks.length > 0;
     for (const [id, mask] of Object.entries(record.users)) {
+      // 保存した順位を消すのではなく、全期間で共通の除外リストを使います。
+      if (blockedUserIds.has(id)) continue;
       if (!(mask & selectedMask)) continue;
       const reachedRanks = ranks.filter(rank => mask & (1 << (rank - 1)));
       const momentum = record.momentum?.[id] || {};

@@ -113,6 +113,9 @@
     .ranking-check input { width: 21px; height: 21px; margin: 0; accent-color: var(--primary); }
     .ranking-check input:disabled { cursor: wait; }
     .ranking-row.is-checked { border-color: #9dbbeb; }
+    .ranking-actions { flex: 0 0 52px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .ranking-actions .ranking-check { flex: auto; margin: 0; }
+    .ranking-delete { min-height: 44px; width: 52px; padding: 6px; background: #fff0f1; color: var(--danger); font-size: 14px; }
     @media (max-width: 420px) {
       .ranking-row { gap: 8px; padding: 12px 8px; }
       .ranking-placement { flex-basis: 26px; }
@@ -723,6 +726,7 @@
       <div id="rankingMeta" class="ranking-meta"></div>
       <div id="rankingStatus" class="ranking-status" role="status" aria-live="polite"></div>
       <div id="rankingCheckStatus" class="ranking-status" role="status" aria-live="polite"></div>
+      <div id="rankingBlockStatus" class="ranking-status" role="status" aria-live="polite"></div>
       <div id="rankingList" class="ranking-list" aria-busy="false"></div>
     </section>
   </main>
@@ -980,6 +984,12 @@
     let rankingChecksSaving = false;
     const pendingRankingChecks = new Map();
     const rankingCheckQueue = [];
+    // 削除の保存先は通知側と共通。読み込みが保存前の古い結果でも復活させません。
+    let rankingBlocked = {};
+    let rankingBlocklistVersion = null;
+    let rankingBlockEpoch = 0;
+    let rankingBlockSaving = false;
+    const pendingRankingBlocks = new Set();
     const japanParts = new Intl.DateTimeFormat('en', {timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit'}).formatToParts(new Date());
     const currentYear = japanParts.find(part => part.type === 'year').value;
     const currentMonth = japanParts.find(part => part.type === 'month').value;
@@ -1215,10 +1225,77 @@
       notice.hidden = !monitoring || monitoring.rankingRecordingEnabled;
       notice.textContent = '順位の記録は停止中です。保存済みの日数を表示しています。再開する場合は上の「監視設定」を開いてください。';
     }
+    async function requestRankingBlocklist(body) {
+      const response = await fetch('/api/ranking-blocklist', {
+        method:body ? 'POST' : 'GET', credentials:'same-origin', cache:'no-store',
+        ...(body ? {headers:{'Content-Type':'application/json'},body:JSON.stringify(body)} : {}),
+        signal:AbortSignal.timeout(25000),
+      });
+      if (!response.headers.get('content-type')?.includes('application/json')) {
+        throw new Error('削除結果を確認できません。ページを開き直してログインしてください。');
+      }
+      const result = await response.json();
+      if (!response.ok) {
+        const error = new Error(result.error || '削除結果を確認できませんでした。');
+        error.status = response.status;
+        throw error;
+      }
+      return result;
+    }
+    function setRankingBlockStatus(message, error = false) {
+      const status = document.getElementById('rankingBlockStatus');
+      status.textContent = message;
+      status.className = 'ranking-status' + (error ? ' error' : '');
+    }
+    async function deleteRankingStreamer(id) {
+      if (!rankingBlocklistVersion || rankingBlockSaving || rankingBlocked[id]) return;
+      const row = rankingData?.rows.find(item => item.id === id);
+      if (!row || !window.confirm(row.name+'を日数ランキングから削除しますか？\n今後、再びランキング入りしても表示しません。ランキング通知も次回の監視からブロックします。')) return;
+      rankingBlockSaving = true;
+      rankingBlockEpoch++;
+      pendingRankingBlocks.add(id);
+      setRankingBlockStatus('削除と通知ブロックを保存中…');
+      renderRanking();
+      let confirmed = false;
+      try {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          try {
+            const saved = await requestRankingBlocklist({id,version:rankingBlocklistVersion});
+            rankingBlocked = saved.blocked;
+            rankingBlocklistVersion = saved.version;
+            confirmed = rankingBlocked[id] === true;
+            break;
+          } catch (error) {
+            if (error.status !== 409 || attempt !== 0) throw error;
+            // 同時に別の人を削除した端末の変更も残して、この人だけを追加します。
+            const latest = await requestRankingBlocklist();
+            rankingBlocked = latest.blocked;
+            rankingBlocklistVersion = latest.version;
+          }
+        }
+      } catch {
+        // 保存後に通信が途切れた可能性があるため、再送せず結果を確認します。
+        try {
+          const latest = await requestRankingBlocklist();
+          rankingBlocked = latest.blocked;
+          rankingBlocklistVersion = latest.version;
+          confirmed = rankingBlocked[id] === true;
+        } catch { rankingBlocklistVersion = null; }
+      } finally {
+        pendingRankingBlocks.delete(id);
+        rankingBlockSaving = false;
+        rankingBlockEpoch++;
+        setRankingBlockStatus(confirmed ? '削除しました。ランキング通知も次回の監視からブロックします。'
+          : '削除の保存を確認できません。再読み込みして確認してください。', !confirmed);
+        renderRanking();
+        if (confirmed) loadRanking();
+      }
+    }
     function renderRanking() {
       const list = document.getElementById('rankingList');
       if (!rankingData) return;
-      const {rows, ranks, meta} = rankingData;
+      const {ranks, meta} = rankingData;
+      const rows = rankingData.rows.filter(row => rankingBlocked[row.id] !== true && !pendingRankingBlocks.has(row.id));
       const momentumNotice = document.getElementById('rankingMomentumNotice');
       momentumNotice.hidden = !(rankingData.minMomentum > 0 && meta.momentumIncompleteDays > 0);
       momentumNotice.textContent = '対象期間の'+meta.momentumIncompleteDays+'日分に、勢い未記録の時間・順位が含まれます。その部分は勢い条件で判定できないため数えません。';
@@ -1248,12 +1325,16 @@
         '<div class="ranking-person"><a class="ranking-name" href="'+escapeHtml(row.profileUrl)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(row.name)+'</a>'+
         '<div class="ranking-breakdown">'+ranks.map(rank => rank+'位 '+row.rankDays[rank]+'日').join(' · ')+'</div></div>'+
         '<div class="ranking-day-count" aria-label="合計'+row.days+'日">'+row.days+'<small>日</small></div>'+
-        '<label class="ranking-check" title="配信者のチェック"><input type="checkbox" data-streamer-check="'+escapeHtml(row.id)+'" aria-label="'+escapeHtml(row.name)+'をチェック"'+
-        (streamerIsChecked(row.id) ? ' checked' : '')+(!rankingChecksVersion || pendingRankingChecks.has(row.id) ? ' disabled' : '')+'></label></article>').join('');
+        '<div class="ranking-actions"><label class="ranking-check" title="配信者のチェック"><input type="checkbox" data-streamer-check="'+escapeHtml(row.id)+'" aria-label="'+escapeHtml(row.name)+'をチェック"'+
+        (streamerIsChecked(row.id) ? ' checked' : '')+(!rankingChecksVersion || pendingRankingChecks.has(row.id) ? ' disabled' : '')+'></label>'+
+        '<button type="button" class="ranking-delete" data-streamer-delete="'+escapeHtml(row.id)+'" aria-label="'+escapeHtml(row.name)+'を削除してランキング通知をブロック"'+
+        (!rankingBlocklistVersion || rankingBlockSaving ? ' disabled' : '')+'>削除</button></div></article>').join('');
       list.querySelectorAll('[data-streamer-check]').forEach(input => input.addEventListener('change', () => changeStreamerCheck(input.dataset.streamerCheck,input.checked)));
+      list.querySelectorAll('[data-streamer-delete]').forEach(button => button.addEventListener('click', () => deleteRankingStreamer(button.dataset.streamerDelete)));
     }
     async function loadRanking() {
       const request = ++rankingRequest;
+      const blockEpoch = rankingBlockEpoch;
       const list = document.getElementById('rankingList');
       const status = document.getElementById('rankingStatus');
       status.textContent = '日数を集計中…';
@@ -1267,6 +1348,10 @@
         if (request !== rankingRequest) return;
         if (!response.ok) throw new Error((result.error || '日数ランキングを読み込めませんでした。')+(result.requestId ? '（確認番号：'+result.requestId+'）' : ''));
         rankingData = result;
+        if (blockEpoch === rankingBlockEpoch && !rankingBlockSaving) {
+          rankingBlocked = result.blocked;
+          rankingBlocklistVersion = result.blocklistVersion;
+        }
         updateRankingControls();
         renderRankingNotice();
         renderRanking();

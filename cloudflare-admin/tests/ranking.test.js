@@ -94,6 +94,9 @@ test('ランキングAPIは認証必須、保存ブランチを読み、不正�
   let upstream=history, status=200, calls=0;
   const app=createApp('',async(url,options)=>{
     calls++;
+    if (url.endsWith('/contents/ranking-blocklist.json?ref=main')) {
+      return Response.json({sha:'blocks-1',content:Buffer.from(JSON.stringify({version:1,blocked:{}})).toString('base64')});
+    }
     assert.ok(url.endsWith('/contents/ranking-days.json?ref=ranking-state'));
     assert.equal(options.headers.Accept,'application/vnd.github.raw+json');
     assert.equal(options.method,'GET');
@@ -118,6 +121,20 @@ test('ランキングAPIは認証必須、保存ブランチを読み、不正�
   const filtered=await app.fetch(new Request(origin+'/api/ranking-days?mode=month&year=2026&month=10&ranks=1&minMomentum=150',{headers:{Cookie:cookie}}),env,{});
   assert.deepEqual((await filtered.json()).rows.map(row=>row.id),['222']);
   assert.equal((await app.fetch(new Request(origin+'/api/ranking-days?minMomentum=-1',{headers:{Cookie:cookie}}),env,{})).status,400);
+});
+
+test('ブロック対象は月・年・全期間から除外され、再登場や名前変更でも復活しない',()=>{
+  const again = structuredClone(history);
+  again.profiles['111'].name = '変更後の名前';
+  again.days['2027-01-01'] = {observations:1,users:{111:1,222:2}};
+  const before = JSON.stringify(again);
+  for (const filters of [{mode:'month',year:'2026',month:'10'}, {mode:'year',year:'2027'}, {mode:'all'}]) {
+    const result = summarize(again,params(filters),new Set(['111']));
+    assert.ok(result.rows.length > 0);
+    assert.ok(result.rows.every(row => row.id !== '111'));
+    assert.equal(result.rows[0].placement,1);
+  }
+  assert.equal(JSON.stringify(again),before); // 他人の記録と過去の順位は消しません。
 });
 
 test('順位記録の切り替えは既存のアーカイブと通知の設定を変えない',async()=>{

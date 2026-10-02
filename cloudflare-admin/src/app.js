@@ -7,7 +7,7 @@ import { emptyHistory, parseFilters, summarize } from './ranking.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-10-01-ranking-momentum-1';
+const VERSION = '2026-10-02-ranking-blocklist-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 
@@ -182,8 +182,45 @@ async function rankingChecks(env, fetcher) {
   } catch { throw new UserError(502, '配信者のチェックを読み取れませんでした。既存のチェックは残っています。'); }
 }
 
+// 通知側も同じファイルを読みます。読み取れない時は、対象を復活させません。
+async function rankingBlocklist(env, fetcher) {
+  const file = await github(env, fetcher, 'GET', undefined, 'ranking-blocklist.json');
+  try {
+    const data = JSON.parse(decodeContent(file.content));
+    if (typeof file.sha !== 'string' || !file.sha || data.version !== 1 ||
+        !data.blocked || typeof data.blocked !== 'object' || Array.isArray(data.blocked) ||
+        Object.entries(data.blocked).some(([id, value]) => !/^\d{1,30}$/.test(id) || value !== true)) {
+      throw new Error();
+    }
+    return { blocked: data.blocked, version: file.sha };
+  } catch { throw new UserError(502, 'ブロックリストを読み取れませんでした。削除済みの配信者は復元しません。再読み込みしてください。'); }
+}
+
 async function api(request, env, fetcher) {
   const path = new URL(request.url).pathname;
+  if (path === '/api/ranking-blocklist') {
+    if (request.method === 'GET') return json(await rankingBlocklist(env, fetcher));
+    if (request.method !== 'POST') throw new UserError(405, 'ランキングの削除ボタンを使用してください。');
+    if (request.headers.get('Origin') !== new URL(request.url).origin) throw new UserError(403, '送信元を確認できません。');
+    const body = await readBody(request);
+    if (typeof body.id !== 'string' || !/^\d{1,30}$/.test(body.id)) {
+      throw new UserError(400, '削除する配信者が不正です。');
+    }
+    const current = await rankingBlocklist(env, fetcher);
+    // 再送は成功扱い。通信が切れた後でも、二重登録や既存リストの消去を防ぐ。
+    if (current.blocked[body.id] === true) return json(current);
+    if (body.version !== current.version) throw new UserError(409, 'ブロックリストが更新されました。最新の一覧を取得してからやり直してください。');
+    const blocked = { ...current.blocked, [body.id]: true };
+    const saved = await github(env, fetcher, 'PUT', {
+      message: 'Block ranking streamer from display and notifications',
+      content: encodeContent(JSON.stringify({ version: 1, blocked }, null, 2) + '\n'),
+      sha: current.version, branch: BRANCH,
+    }, 'ranking-blocklist.json');
+    if (typeof saved.content?.sha !== 'string' || !saved.content.sha) {
+      throw new UserError(502, '削除の保存結果を確認できません。再読み込みしてください。');
+    }
+    return json({ blocked, version: saved.content.sha });
+  }
   if (path === '/api/ranking-checks') {
     if (request.method === 'GET') return json(await rankingChecks(env, fetcher));
     if (request.method !== 'POST') throw new UserError(405, 'チェック欄を使用してください。');
@@ -213,9 +250,13 @@ async function api(request, env, fetcher) {
     let filters;
     try { filters = parseFilters(new URL(request.url).searchParams); }
     catch (error) { throw new UserError(400, error.message); }
-    const history = await github(env, fetcher, 'GET', undefined, 'ranking-days.json',
-      {ref: 'ranking-state', allowMissing: true, raw: true});
-    try { return json(summarize(history ?? emptyHistory(), filters)); }
+    const [history, blocklist] = await Promise.all([
+      github(env, fetcher, 'GET', undefined, 'ranking-days.json',
+        {ref: 'ranking-state', allowMissing: true, raw: true}),
+      rankingBlocklist(env, fetcher),
+    ]);
+    try { return json({ ...summarize(history ?? emptyHistory(), filters, new Set(Object.keys(blocklist.blocked))),
+      blocked: blocklist.blocked, blocklistVersion: blocklist.version }); }
     catch { throw new UserError(502, '日別順位記録を読み取れませんでした。既存の記録は残っています。'); }
   }
   if (path === '/api/monitoring') {

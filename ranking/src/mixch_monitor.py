@@ -25,26 +25,14 @@ from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
 from .ranking_history import load_history, observe, save_history
+from .blocklist import read_blocked_user_ids
 
 
 LOGGER = logging.getLogger("mixch-ranking-monitor")
 
 DEFAULT_MONITOR_URL = "https://live-ranking.com/v/mixch"
 DEFAULT_FALLBACK_MONITOR_URL = "https://ikioi-ranking.com/v/mixch"
-# 通知しない配信者の初期リスト。
-#
-# 配信者名は変更できるため、ここでは名前ではなくMixChannelのユーザーIDを
-# 固定で登録する。Repository variableのBLOCKED_USER_IDSは、この初期リストへ
-# 追加する仕組みなので、既存の設定を消さずに個別追加もできる。
-DEFAULT_BLOCKED_USER_IDS = frozenset(
-    {
-        "14082684",  # 既存の初期ブロック対象
-        "17373942",  # うえきあやか
-        "18014848",  # 日DXコーラ
-        "18504420",  # のうみくん#ﾚｷﾞｭﾗｰﾓﾃﾞ
-        "18674264",  # こうぐちまﾙ
-    }
-)
+# 既存の5人もranking-blocklist.jsonへ移行し、画面と通知で同じ一覧を使う。
 DEFAULT_THRESHOLD = 150
 DEFAULT_COOLDOWN_HOURS = 12.0
 DEFAULT_ERROR_COOLDOWN_HOURS = 6.0
@@ -160,9 +148,9 @@ class Config:
             dry_run=_read_bool("DRY_RUN", False),
             test_webhook=_read_bool("TEST_WEBHOOK", False),
             notify_on_error=_read_bool("NOTIFY_ON_ERROR", True),
-            # 初期ブロックリストへ、Repository variableで指定したIDを追加する。
+            # 共通リストを毎回読み直す。既存の環境設定による追加も維持する。
             blocked_user_ids=(
-                DEFAULT_BLOCKED_USER_IDS | _read_user_id_set("BLOCKED_USER_IDS")
+                read_blocked_user_ids() | _read_user_id_set("BLOCKED_USER_IDS")
             ),
             history_file=Path(os.getenv("RANKING_HISTORY_FILE", "ranking-days.json")),
         )
@@ -1101,6 +1089,9 @@ def run(config: Config, now: datetime | None = None) -> int:
 
     try:
         state = load_state(config.state_file)
+        # 夜間に候補へ入った後で削除された人も、朝のまとめ通知へ出さない。
+        for user_id in config.blocked_user_ids:
+            state["night_candidates"].pop(user_id, None)
         history = load_history(config.history_file) if config.record_history and config.history_file else None
 
         if config.test_webhook:
