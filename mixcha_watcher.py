@@ -498,7 +498,7 @@ def save_json(path: str, data):
             temporary_path.unlink(missing_ok=True)
 
 
-def load_archive_history():
+def load_archive_history(watched_ids=None):
     """欠落・破損した履歴を初回扱いにして全員へ通知することを防ぐ。"""
     for path in (STATE_FILE, ACTIVITY_STATE_FILE):
         if not Path(path).is_file():
@@ -510,12 +510,18 @@ def load_archive_history():
         raise ArchiveReadError("Archive history could not be read safely") from error
     if not isinstance(state, dict) or not isinstance(activity, dict):
         raise ArchiveReadError("Archive history must contain JSON objects")
-    for marker in state.values():
+    # 解除済み対象の旧履歴には NO_PAGE 等の旧エラー値も残っている。
+    # 履歴を消さず、今回比較する対象だけを厳密に検証する。
+    for user_id, marker in state.items():
+        if watched_ids is not None and user_id not in watched_ids:
+            continue
         if not isinstance(marker, str) or (marker != "NO_VIDEO" and not re.fullmatch(r"\d+:[0-5]\d", marker)):
             raise ArchiveReadError("Invalid saved archive duration")
     if not state and activity:
         raise ArchiveReadError("Saved archive durations are empty while activity history exists")
     for user_id, record in activity.items():
+        if watched_ids is not None and user_id not in watched_ids:
+            continue
         if not isinstance(record, dict):
             raise ArchiveReadError("Invalid saved archive activity")
         for key in ("last_notified_date", "latest_archive_date"):
@@ -836,7 +842,8 @@ def main():
     original_watchlist_count = len(watchlist)
     log_metric("watchlist_loaded", watchlist_count=original_watchlist_count)
 
-    state, activity_state = load_archive_history()
+    state, activity_state = load_archive_history({str(user["id"]) for user in watchlist})
+    original_state, original_activity = dict(state), dict(activity_state)
 
     logging.info(f"watchlist総数: {len(watchlist)}")
     watchlist = dedupe_watchlist(watchlist)
@@ -1001,7 +1008,6 @@ def main():
     # サービス側が多数の一覧を空にした時も、動画履歴の初期化や自動解除を
     # しない。正常に読めた別の人の新着は、この後そのまま処理する。
     if len(empty_previous_video_ids) >= 5 and len(empty_previous_video_ids) >= known_video_count * 0.8:
-        original_state, original_activity = load_archive_history()
         for user_id in empty_previous_video_ids:
             if user_id in original_activity:
                 activity_state[user_id] = original_activity[user_id]

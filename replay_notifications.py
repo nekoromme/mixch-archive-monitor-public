@@ -52,7 +52,9 @@ def collect_changed_reports(
             notified_id = after.get("last_notified_archive_id")
             if notified_id and notified_id != before.get("last_notified_archive_id"):
                 changed_ids.add(user_id)
-        elif head_state.get(user_id) not in (None, "NO_VIDEO") and base_state.get(user_id) != head_state.get(user_id):
+        elif (isinstance(head_state.get(user_id), str)
+              and re.fullmatch(r"\d+:[0-5]\d", head_state[user_id])
+              and base_state.get(user_id) != head_state.get(user_id)):
             changed_ids.add(user_id)
 
     reports = []

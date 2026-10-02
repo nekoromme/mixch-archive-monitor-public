@@ -45,6 +45,9 @@ class ReplayNotificationTests(unittest.TestCase):
         self.assertEqual(collect_changed_reports(
             {"100": "240:00"}, {"100": "NO_VIDEO"}, [{"id": "100", "name": "test"}],
         ), [])
+        self.assertEqual(collect_changed_reports(
+            {"100": "240:00"}, {"100": "NO_PAGE"}, [{"id": "100", "name": "test"}],
+        ), [])
 
 
 if __name__ == "__main__":

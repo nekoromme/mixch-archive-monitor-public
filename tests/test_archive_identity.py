@@ -250,6 +250,25 @@ class MonitorPersistenceTests(unittest.TestCase):
         self.assertEqual(before, self.state.read_text())
         self.assertEqual(list(self.root.glob("*.tmp")), [])
 
+    def test_removed_legacy_target_does_not_block_current_targets_or_get_erased(self):
+        state = json.loads(self.state.read_text())
+        state["official_live"] = "NO_PAGE"
+        self.state.write_text(json.dumps(state))
+        with (patch.object(watcher.ArchiveClient, "fetch_latest", return_value=snapshot("10", CREATED - 86400)),
+              patch.object(watcher, "send_embeds_to_discord") as notify):
+            watcher.main()
+        notify.assert_not_called()
+        self.assertEqual(json.loads(self.state.read_text())["official_live"], "NO_PAGE")
+
+    def test_current_target_old_error_value_still_requires_attention(self):
+        self.state.write_text('{"1":"NO_PAGE","2":"240:00"}')
+        with (patch.object(watcher.ArchiveClient, "fetch_latest") as fetch,
+              patch.object(watcher, "send_embeds_to_discord") as notify):
+            with self.assertRaises(watcher.ArchiveReadError):
+                watcher.main()
+        fetch.assert_not_called()
+        notify.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
