@@ -17,6 +17,9 @@ API_BASE = "https://mixch.tv/api-web/users"
 REQUEST_TIMEOUT = (20, 20)
 READ_ATTEMPTS = 3
 SEEN_ID_LIMIT = 64
+# ミクチャの一覧で「全体公開」と表示される値。0（非公開）や
+# 2・3（ファン向けの限定公開）は、この値と一致しないため除外します。
+PUBLIC_VISIBILITY = 1
 REQUEST_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -182,7 +185,7 @@ class ArchiveDecision:
     reason: str
 
 
-def plan_archive_update(previous_marker, previous_activity, snapshot, *, checked_at):
+def plan_archive_update(previous_marker, previous_activity, snapshot, *, checked_at, public_only=False):
     """履歴の変更案を作る。通知が必要な案は、送信成功後にだけ確定する。"""
     activity = dict(previous_activity)
     today = checked_at.astimezone(JST).date().isoformat()
@@ -191,6 +194,25 @@ def plan_archive_update(previous_marker, previous_activity, snapshot, *, checked
     activity["archive_read_status"] = "empty" if snapshot.archive_id is None else "ok"
     previous_id = activity.get("latest_archive_id")
     initialized = activity.get("archive_identity_version") == 1
+
+    if snapshot.archive_date is not None:
+        # 通知の絞り込みだけで「20日更新なし」の自動解除が起きないよう、
+        # 配信者自身の最新活動日は限定公開も含めて別に記録します。
+        activity["latest_observed_archive_date"] = max(
+            activity.get("latest_observed_archive_date") or "", snapshot.archive_date)
+
+    if public_only and snapshot.archive_id is not None and snapshot.visibility != PUBLIC_VISIBILITY:
+        activity["archive_read_status"] = "filtered"
+        activity["archive_filter_reason"] = "not_public"
+        activity["archive_observed_visibility"] = snapshot.visibility
+        # 限定公開の番号を通知済み履歴へ入れると、後で全体公開になっても
+        # 新着を見逃します。既存の比較基準・通知日・通知済み番号は保ちます。
+        if previous_id is None and previous_marker in (None, "NO_VIDEO"):
+            activity["archive_identity_version"] = 1
+        return ArchiveDecision(previous_marker or "NO_VIDEO", activity, False, "filtered_not_public")
+
+    activity.pop("archive_filter_reason", None)
+    activity.pop("archive_observed_visibility", None)
 
     if snapshot.archive_id is None:
         if previous_id is not None or previous_marker in (None, "NO_VIDEO"):

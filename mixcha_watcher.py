@@ -524,7 +524,7 @@ def load_archive_history(watched_ids=None):
             continue
         if not isinstance(record, dict):
             raise ArchiveReadError("Invalid saved archive activity")
-        for key in ("last_notified_date", "latest_archive_date"):
+        for key in ("last_notified_date", "latest_archive_date", "latest_observed_archive_date"):
             value = record.get(key)
             if value is not None:
                 try:
@@ -808,21 +808,30 @@ def remove_inactive_users_from_watchlist(
     return [user for user in watchlist if str(user["id"]) not in inactive_ids]
 
 
-def monitoring_enabled():
+def load_monitoring_settings():
     # 対象一覧とは独立した全体スイッチ。未導入時だけ従来どおりオン。
     # 壊れた設定を勝手にオン扱いせず、エラーで停止させます。
     path = Path(WATCHLIST_FILE).parent / "monitor_settings.json"
     if not path.exists():
-        return True
+        return {"enabled": True, "archive_public_only": False}
     settings = json.loads(path.read_text(encoding="utf-8"))
     if type(settings.get("enabled")) is not bool:
         raise ValueError("monitor_settings.json: enabled must be boolean")
+    if type(settings.get("archive_public_only", False)) is not bool:
+        raise ValueError("monitor_settings.json: archive_public_only must be boolean")
+    return settings
+
+
+def monitoring_enabled():
+    settings = load_monitoring_settings()
     return settings["enabled"]
 
 
 def main():
     # ブラウザ起動・通知先検証・状態変更より前に全体の停止を確認します。
-    if not monitoring_enabled():
+    settings = load_monitoring_settings()
+    public_only = settings.get("archive_public_only", False)
+    if not settings["enabled"]:
         log_metric("monitoring_paused", scope="all")
         logging.info("全体のアーカイブ監視は停止中です。対象一覧と履歴は変更しません。")
         return
@@ -860,7 +869,8 @@ def main():
     active_watchlist = watchlist
     log_metric("archive_monitor_selection",
                enabled_count=len(active_watchlist),
-               disabled_count=len(watchlist) - len(active_watchlist))
+               disabled_count=len(watchlist) - len(active_watchlist),
+               public_only=public_only)
 
     today_jst = get_today_jst()
     today_dt = datetime.date.fromisoformat(today_jst)
@@ -913,7 +923,7 @@ def main():
                 snapshot = client.fetch_latest(user_id)
                 decision = plan_archive_update(
                     prev_marker, activity_state.get(user_id, {}), snapshot,
-                    checked_at=checked_at,
+                    checked_at=checked_at, public_only=public_only,
                 )
                 latest_marker = snapshot.marker
                 latest_archive_date = snapshot.archive_date
@@ -938,6 +948,8 @@ def main():
                     result=result,
                     decision_reason=decision.reason,
                     archive_id=snapshot.archive_id,
+                    archive_visibility=snapshot.visibility,
+                    public_only=public_only,
                     extraction_method=snapshot.source,
                 )
 
@@ -1072,6 +1084,12 @@ def main():
         watchlist_line = user.get("watchlist_line", "不明")
         last_notified_date = activity_state[user_id]["last_notified_date"]
         latest_archive_date = activity_state[user_id].get("latest_archive_date")
+
+        # 全体公開だけの新着通知に絞っても、限定公開が続いている人を
+        # 誤って「活動なし」と判断して監視一覧から消さないようにします。
+        if public_only and activity_state[user_id].get("latest_observed_archive_date"):
+            latest_archive_date = max(latest_archive_date or "",
+                                      activity_state[user_id]["latest_observed_archive_date"])
 
         if latest_archive_date:
             basis_label = "最新アーカイブ"

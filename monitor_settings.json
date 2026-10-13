@@ -1,5 +1,6 @@
 {
   "enabled": false,
+  "archive_public_only": true,
   "ranking_enabled": false,
   "ranking_ready": true,
   "ranking_scheduler_probe": false,

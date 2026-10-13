@@ -1,5 +1,6 @@
 """登録中の実ページと履歴移行を検証する。通知・運用データの変更は行わない。"""
 import collections
+import datetime
 import hashlib
 import json
 import shutil
@@ -17,6 +18,7 @@ def main():
     users = watcher.dedupe_watchlist(watcher.load_watchlist(watcher.WATCHLIST_FILE))
     snapshots, failed = {}, 0
     sources = collections.Counter()
+    visibility_decisions = collections.Counter()
     client = watcher.ArchiveClient(browser_factory=watcher.create_driver, metric=watcher.log_metric)
     try:
         for index, user in enumerate(users, 1):
@@ -24,6 +26,14 @@ def main():
                 snapshot = client.fetch_latest(user["id"])
                 snapshots[str(user["id"])] = snapshot
                 sources[snapshot.source] += 1
+                # 運用中の停止スイッチや通知履歴を変更せず、公式から取得した
+                # 実データでも全体公開だけの判定が一致することを確認します。
+                decision = watcher.plan_archive_update(None, {}, snapshot,
+                    checked_at=datetime.datetime.now(datetime.timezone.utc), public_only=True)
+                expected = snapshot.archive_id is not None and snapshot.visibility == 1
+                if decision.changed != expected:
+                    raise AssertionError("Public-only decision did not match archive visibility")
+                visibility_decisions[decision.reason] += 1
                 print("READ_OK", index, "empty" if snapshot.archive_id is None else "identified", flush=True)
             except Exception as error:
                 failed += 1
@@ -41,6 +51,7 @@ def main():
             "empty": sum(s.archive_id is None for s in snapshots.values()), "failed": failed,
             "sources": dict(sources), "repeated": repeated,
             "changed_while_reading": changed_while_reading,
+            "public_only_decisions": dict(visibility_decisions),
         }), flush=True)
     finally:
         client.close()

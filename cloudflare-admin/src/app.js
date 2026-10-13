@@ -7,7 +7,7 @@ import { emptyHistory, parseFilters, summarize } from './ranking.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-10-02-ranking-blocklist-1';
+const VERSION = '2026-10-13-archive-public-only-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 
@@ -165,6 +165,9 @@ async function monitoringSettings(env, fetcher) {
   const file = await github(env, fetcher, 'GET', undefined, 'monitor_settings.json');
   const settings = JSON.parse(decodeContent(file.content));
   if (typeof settings.enabled !== 'boolean') throw new UserError(502, '全体監視設定の形式が不正です。');
+  if (settings.archive_public_only !== undefined && typeof settings.archive_public_only !== 'boolean') {
+    throw new UserError(502, '公開範囲の設定が不正です。');
+  }
   return { settings, version: file.sha };
 }
 
@@ -262,22 +265,23 @@ async function api(request, env, fetcher) {
   if (path === '/api/monitoring') {
     if (request.method === 'GET') {
       const current = await monitoringSettings(env, fetcher);
-      return json({ enabled: current.settings.enabled, rankingEnabled: current.settings.ranking_enabled === true, rankingRecordingEnabled: current.settings.ranking_recording_enabled === true, rankingReady: current.settings.ranking_ready === true, version: current.version });
+      return json({ enabled: current.settings.enabled, archivePublicOnly: current.settings.archive_public_only === true, rankingEnabled: current.settings.ranking_enabled === true, rankingRecordingEnabled: current.settings.ranking_recording_enabled === true, rankingReady: current.settings.ranking_ready === true, version: current.version });
     }
     if (request.method !== 'POST') throw new UserError(405, '保存ボタンを使用してください。');
     if (request.headers.get('Origin') !== new URL(request.url).origin) throw new UserError(403, '送信元を確認できません。');
     const body = await readBody(request);
     const kind = body.kind || 'archive';
-    if (!['archive', 'ranking', 'recording'].includes(kind)) throw new UserError(400, '監視の種類が不正です。');
+    if (!['archive', 'publicOnly', 'ranking', 'recording'].includes(kind)) throw new UserError(400, '監視の種類が不正です。');
     if (typeof body.enabled !== 'boolean') throw new UserError(400, '監視設定が不正です。');
     const current = await monitoringSettings(env, fetcher);
     if (body.version !== current.version) throw new UserError(409, CONFLICT);
-    if (kind !== 'archive' && current.settings.ranking_ready !== true) throw new UserError(409, 'ランキング監視は移行準備中です。');
-    const key = kind === 'ranking' ? 'ranking_enabled' : kind === 'recording' ? 'ranking_recording_enabled' : 'enabled';
+    const rankingSetting = ['ranking', 'recording'].includes(kind);
+    if (rankingSetting && current.settings.ranking_ready !== true) throw new UserError(409, 'ランキング監視は移行準備中です。');
+    const key = kind === 'ranking' ? 'ranking_enabled' : kind === 'recording' ? 'ranking_recording_enabled' : kind === 'publicOnly' ? 'archive_public_only' : 'enabled';
     await github(env, fetcher, 'PUT', {
-      message: (body.enabled ? 'Resume ' : 'Pause ') + kind + ' monitoring',
+      message: kind === 'publicOnly' ? 'Update archive visibility filter' : (body.enabled ? 'Resume ' : 'Pause ') + kind + ' monitoring',
       content: encodeContent(JSON.stringify({ ...current.settings, [key]: body.enabled,
-        ...(kind !== 'archive' ? { ranking_changed_at: new Date().toISOString() } : {}) }, null, 2) + '\n'),
+        ...(rankingSetting ? { ranking_changed_at: new Date().toISOString() } : {}) }, null, 2) + '\n'),
       sha: current.version, branch: BRANCH,
     }, 'monitor_settings.json');
     return json({ ok: true });

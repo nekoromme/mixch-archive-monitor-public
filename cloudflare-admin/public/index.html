@@ -651,6 +651,10 @@
       <strong style="display:block;font-size:14px;margin-top:8px">アーカイブ監視（全体）</strong>
       <button id="globalMonitor" type="button" disabled onclick="toggleGlobalMonitor()"
         style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
+      <strong style="display:block;font-size:14px;margin-top:18px">アーカイブの公開範囲</strong>
+      <button id="archivePublicOnly" type="button" disabled onclick="toggleGlobalMonitor('publicOnly')"
+        style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
+      <div style="font-size:14px;margin-top:8px">オンなら、最新アーカイブが「全体公開」の場合だけ新着通知します。ガチファン・ファンクラブ限定や非公開は除外します。監視対象の登録は残ります。</div>
       <strong style="display:block;font-size:14px;margin-top:18px">ランキング通知</strong>
       <button id="rankingMonitor" type="button" disabled onclick="toggleGlobalMonitor('ranking')"
         style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
@@ -863,11 +867,16 @@
       if (!response.ok) throw new Error(result.error || '全体監視設定を読み込めませんでした。');
       monitoring = result;
       // 閉じていても、現在のオン・オフだけは確認できます。
-      document.getElementById('monitoringState').textContent = '（アーカイブ：' + (result.enabled ? 'オン' : 'オフ') + '／通知：' + (!result.rankingReady ? '準備中' : result.rankingEnabled ? 'オン' : 'オフ') + '／順位記録：' + (result.rankingRecordingEnabled ? 'オン' : 'オフ') + '）';
+      document.getElementById('monitoringState').textContent = '（アーカイブ：' + (result.enabled ? 'オン' : 'オフ') + '／公開範囲：' + (result.archivePublicOnly ? '全体公開だけ' : 'すべて') + '／通知：' + (!result.rankingReady ? '準備中' : result.rankingEnabled ? 'オン' : 'オフ') + '／順位記録：' + (result.rankingRecordingEnabled ? 'オン' : 'オフ') + '）';
       const button = document.getElementById('globalMonitor');
       button.textContent = result.enabled ? 'オン：全体を停止する' : 'オフ（停止中）：全体を再開する';
       button.style.background = result.enabled ? '#1769d2' : '#e3e6eb';
       button.style.color = result.enabled ? '#fff' : '#20242b';
+      const publicOnlyButton = document.getElementById('archivePublicOnly');
+      publicOnlyButton.textContent = result.archivePublicOnly ? '全体公開だけ（解除する）' : '絞り込みなし（全体公開だけにする）';
+      publicOnlyButton.style.background = result.archivePublicOnly ? '#1769d2' : '#e3e6eb';
+      publicOnlyButton.style.color = result.archivePublicOnly ? '#fff' : '#20242b';
+      publicOnlyButton.setAttribute('aria-pressed', String(result.archivePublicOnly));
       const rankingButton = document.getElementById('rankingMonitor');
       rankingButton.textContent = !result.rankingReady ? '移行準備中' : result.rankingEnabled ? 'オン：ランキング通知を停止する' : 'オフ：ランキング通知を再開する';
       rankingButton.style.background = result.rankingEnabled && result.rankingReady ? '#1769d2' : '#e3e6eb';
@@ -879,17 +888,17 @@
       renderRankingNotice();
     }
     async function toggleGlobalMonitor(kind = 'archive') {
-      if (loading || !monitoring || (kind !== 'archive' && !monitoring.rankingReady)) return;
+      if (loading || !monitoring || (['ranking','recording'].includes(kind) && !monitoring.rankingReady)) return;
       setLoading(true);
       try {
         const response = await fetch('/api/monitoring', {
           method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({kind, enabled:!(kind === 'ranking' ? monitoring.rankingEnabled : kind === 'recording' ? monitoring.rankingRecordingEnabled : monitoring.enabled), version:monitoring.version}), signal:AbortSignal.timeout(25000),
+          body:JSON.stringify({kind, enabled:!(kind === 'ranking' ? monitoring.rankingEnabled : kind === 'recording' ? monitoring.rankingRecordingEnabled : kind === 'publicOnly' ? monitoring.archivePublicOnly : monitoring.enabled), version:monitoring.version}), signal:AbortSignal.timeout(25000),
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || '保存結果を確認できません。再読み込みしてください。');
         await loadMonitoring();
-        setStatus((kind === 'ranking' ? 'ランキング通知' : kind === 'recording' ? '順位記録' : 'アーカイブ監視') + 'の設定を保存しました。次回の監視から反映します。', 'success');
+        setStatus((kind === 'ranking' ? 'ランキング通知' : kind === 'recording' ? '順位記録' : kind === 'publicOnly' ? '公開範囲' : 'アーカイブ監視') + 'の設定を保存しました。次回の監視から反映します。', 'success');
       } catch (error) { monitoring = null; handleError(error); }
       finally { setLoading(false); }
     }
@@ -1425,7 +1434,7 @@
       document
         .querySelectorAll('button')
         .forEach((button) => {
-          button.disabled = ['archiveTab','rankingTab'].includes(button.id) ? false : value || (button.id === 'globalMonitor' && !monitoring) || (['rankingMonitor','rankingRecording'].includes(button.id) && (!monitoring || !monitoring.rankingReady));
+          button.disabled = ['archiveTab','rankingTab'].includes(button.id) ? false : value || (['globalMonitor','archivePublicOnly'].includes(button.id) && !monitoring) || (['rankingMonitor','rankingRecording'].includes(button.id) && (!monitoring || !monitoring.rankingReady));
         });
     }
 
