@@ -1,9 +1,9 @@
 {
   "enabled": true,
   "archive_public_only": true,
-  "ranking_enabled": false,
+  "ranking_enabled": true,
   "ranking_ready": true,
   "ranking_scheduler_probe": false,
-  "ranking_changed_at": "2026-10-01T12:00:16.296Z",
+  "ranking_changed_at": "2026-10-13T23:35:55.474Z",
   "ranking_recording_enabled": true
 }
