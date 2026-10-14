@@ -461,6 +461,11 @@
       "last_notified_at": "2026-09-22T22:03:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18991260/live"
+    },
+    "19000767": {
+      "broadcaster_name": "ゆみコレAD参加中",
+      "last_notified_at": "2026-10-14T12:43:26Z",
+      "url": "https://mixch.tv/u/19000767/live"
     }
   },
   "version": 1
