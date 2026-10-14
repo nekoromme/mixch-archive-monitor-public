@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18947284": {
+      "broadcaster_name": "ミス西南No.1叶佳(きょうか)",
+      "first_seen_at": "2026-10-14T13:20:15Z",
+      "last_seen_at": "2026-10-14T13:20:15Z",
+      "max_momentum": 264,
+      "url": "https://mixch.tv/u/18947284/live"
+    }
+  },
   "notifications": {
     "16441100": {
       "broadcaster_name": "ヒロシcx@機材イベ",
