@@ -2,57 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {
-    "18091243": {
-      "broadcaster_name": "本日㉓時ｺﾞｼﾞｬﾎﾞ日和雨ﾎﾟｽ",
-      "first_seen_at": "2026-10-14T14:02:25Z",
-      "last_seen_at": "2026-10-14T14:12:56Z",
-      "max_momentum": 438,
-      "url": "https://mixch.tv/u/18091243/live"
-    },
-    "18108780": {
-      "broadcaster_name": "立花もえ‍♀️ﾊｲﾌﾞﾗ撮影AD",
-      "first_seen_at": "2026-10-14T15:36:51Z",
-      "last_seen_at": "2026-10-14T15:57:52Z",
-      "max_momentum": 296,
-      "url": "https://mixch.tv/u/18108780/live"
-    },
-    "18947284": {
-      "broadcaster_name": "ミス西南No.1叶佳(きょうか)",
-      "first_seen_at": "2026-10-14T13:20:15Z",
-      "last_seen_at": "2026-10-14T13:20:15Z",
-      "max_momentum": 264,
-      "url": "https://mixch.tv/u/18947284/live"
-    },
-    "18951227": {
-      "broadcaster_name": "ふうな",
-      "first_seen_at": "2026-10-14T13:25:31Z",
-      "last_seen_at": "2026-10-14T13:25:31Z",
-      "max_momentum": 204,
-      "url": "https://mixch.tv/u/18951227/live"
-    },
-    "18968605": {
-      "broadcaster_name": "桜りおんミスSPA!2026",
-      "first_seen_at": "2026-10-14T14:33:51Z",
-      "last_seen_at": "2026-10-14T14:33:51Z",
-      "max_momentum": 167,
-      "url": "https://mixch.tv/u/18968605/live"
-    },
-    "18990137": {
-      "broadcaster_name": "ひなぴ",
-      "first_seen_at": "2026-10-14T13:41:20Z",
-      "last_seen_at": "2026-10-14T13:41:20Z",
-      "max_momentum": 183,
-      "url": "https://mixch.tv/u/18990137/live"
-    },
-    "18992216": {
-      "broadcaster_name": "みいな",
-      "first_seen_at": "2026-10-14T13:36:03Z",
-      "last_seen_at": "2026-10-14T13:36:03Z",
-      "max_momentum": 310,
-      "url": "https://mixch.tv/u/18992216/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16441100": {
       "broadcaster_name": "ヒロシcx@機材イベ",
@@ -157,10 +107,22 @@
       "last_notified_at": "2026-09-15T09:57:25Z",
       "url": "https://mixch.tv/u/18024494/live"
     },
+    "18091243": {
+      "broadcaster_name": "本日㉓時ｺﾞｼﾞｬﾎﾞ日和雨ﾎﾟｽ",
+      "last_notified_at": "2026-10-14T22:04:39Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18091243/live"
+    },
     "18108682": {
       "broadcaster_name": "みあき#KIRARI専属ﾓﾃﾞﾙAD",
       "last_notified_at": "2026-09-18T12:08:26Z",
       "url": "https://mixch.tv/u/18108682/live"
+    },
+    "18108780": {
+      "broadcaster_name": "立花もえ‍♀️ﾊｲﾌﾞﾗ撮影AD",
+      "last_notified_at": "2026-10-14T22:04:39Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18108780/live"
     },
     "18118529": {
       "broadcaster_name": "本日ﾗｽ.5倍みっきー⭐ar",
@@ -401,6 +363,12 @@
       "last_notified_at": "2026-09-23T10:56:55Z",
       "url": "https://mixch.tv/u/18939637/live"
     },
+    "18947284": {
+      "broadcaster_name": "ミス西南No.1叶佳(きょうか)",
+      "last_notified_at": "2026-10-14T22:04:39Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18947284/live"
+    },
     "18947709": {
       "broadcaster_name": "美月#JKミスコン",
       "last_notified_at": "2026-09-15T12:03:03Z",
@@ -417,10 +385,22 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18949965/live"
     },
+    "18951227": {
+      "broadcaster_name": "ふうな",
+      "last_notified_at": "2026-10-14T22:04:39Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18951227/live"
+    },
     "18955412": {
       "broadcaster_name": "月",
       "last_notified_at": "2026-09-20T07:34:19Z",
       "url": "https://mixch.tv/u/18955412/live"
+    },
+    "18968605": {
+      "broadcaster_name": "桜りおんミスSPA!2026",
+      "last_notified_at": "2026-10-14T22:04:39Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18968605/live"
     },
     "18968768": {
       "broadcaster_name": "キララ✨#KOGYARU専属AD",
@@ -497,7 +477,8 @@
     },
     "18990137": {
       "broadcaster_name": "ひなぴ",
-      "last_notified_at": "2026-09-23T12:04:49Z",
+      "last_notified_at": "2026-10-14T22:04:39Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18990137/live"
     },
     "18990658": {
@@ -511,6 +492,12 @@
       "last_notified_at": "2026-09-22T22:03:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18991260/live"
+    },
+    "18992216": {
+      "broadcaster_name": "みいな",
+      "last_notified_at": "2026-10-14T22:04:39Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18992216/live"
     },
     "18996166": {
       "broadcaster_name": "せら#ガチ❤️少女図",
