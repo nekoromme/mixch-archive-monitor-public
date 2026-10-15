@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18364405": {
+      "broadcaster_name": "まりこ#ﾏﾏｶﾞｰﾙweb記事掲",
+      "first_seen_at": "2026-10-15T13:19:23Z",
+      "last_seen_at": "2026-10-15T13:19:23Z",
+      "max_momentum": 198,
+      "url": "https://mixch.tv/u/18364405/live"
+    }
+  },
   "notifications": {
     "16441100": {
       "broadcaster_name": "ヒロシcx@機材イベ",
