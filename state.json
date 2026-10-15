@@ -325,11 +325,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18909862/live"
     },
-    "18917136": {
-      "broadcaster_name": "ぜん #DCミスターコン 挑戦中",
-      "last_notified_at": "2026-09-15T11:41:53Z",
-      "url": "https://mixch.tv/u/18917136/live"
-    },
     "18925042": {
       "broadcaster_name": "けい#JCミスコン",
       "last_notified_at": "2026-10-14T10:06:11Z",
@@ -512,6 +507,11 @@
       "broadcaster_name": "ゆみコレAD参加中",
       "last_notified_at": "2026-10-14T12:43:26Z",
       "url": "https://mixch.tv/u/19000767/live"
+    },
+    "19003776": {
+      "broadcaster_name": "ハナ#美少女図鑑AWARD2027",
+      "last_notified_at": "2026-10-15T11:44:29Z",
+      "url": "https://mixch.tv/u/19003776/live"
     }
   },
   "version": 1
