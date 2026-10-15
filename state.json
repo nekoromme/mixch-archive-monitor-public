@@ -2,43 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {
-    "17793147": {
-      "broadcaster_name": "リリー#初日ブーケスタ",
-      "first_seen_at": "2026-10-15T14:53:51Z",
-      "last_seen_at": "2026-10-15T14:53:51Z",
-      "max_momentum": 151,
-      "url": "https://mixch.tv/u/17793147/live"
-    },
-    "18364405": {
-      "broadcaster_name": "まりこ#ﾏﾏｶﾞｰﾙweb記事掲",
-      "first_seen_at": "2026-10-15T13:19:23Z",
-      "last_seen_at": "2026-10-15T13:19:23Z",
-      "max_momentum": 198,
-      "url": "https://mixch.tv/u/18364405/live"
-    },
-    "18717033": {
-      "broadcaster_name": "こじかえ️",
-      "first_seen_at": "2026-10-15T14:32:50Z",
-      "last_seen_at": "2026-10-15T14:43:21Z",
-      "max_momentum": 159,
-      "url": "https://mixch.tv/u/18717033/live"
-    },
-    "18835133": {
-      "broadcaster_name": "泡沫うら濱和",
-      "first_seen_at": "2026-10-15T14:17:04Z",
-      "last_seen_at": "2026-10-15T14:17:04Z",
-      "max_momentum": 195,
-      "url": "https://mixch.tv/u/18835133/live"
-    },
-    "18950177": {
-      "broadcaster_name": "ミス東大2026 今飯田紀香",
-      "first_seen_at": "2026-10-15T15:25:27Z",
-      "last_seen_at": "2026-10-15T15:30:44Z",
-      "max_momentum": 253,
-      "url": "https://mixch.tv/u/18950177/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16441100": {
       "broadcaster_name": "ヒロシcx@機材イベ",
@@ -133,6 +97,12 @@
       "last_notified_at": "2026-09-23T08:04:09Z",
       "url": "https://mixch.tv/u/17700197/live"
     },
+    "17793147": {
+      "broadcaster_name": "リリー#初日ブーケスタ",
+      "last_notified_at": "2026-10-15T22:04:06Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17793147/live"
+    },
     "17937252": {
       "broadcaster_name": "ゆうぜん#dcミスターコン",
       "last_notified_at": "2026-09-16T11:29:55Z",
@@ -192,6 +162,12 @@
       "last_notified_at": "2026-09-23T12:46:41Z",
       "url": "https://mixch.tv/u/18362102/live"
     },
+    "18364405": {
+      "broadcaster_name": "まりこ#ﾏﾏｶﾞｰﾙweb記事掲",
+      "last_notified_at": "2026-10-15T22:04:06Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18364405/live"
+    },
     "18379900": {
       "broadcaster_name": "おでこのねね#jcﾌｧｲﾅﾘｽ",
       "last_notified_at": "2026-09-16T11:03:12Z",
@@ -232,6 +208,12 @@
       "broadcaster_name": "なな#SNSﾌｫﾛｰAWARD",
       "last_notified_at": "2026-10-15T11:02:45Z",
       "url": "https://mixch.tv/u/18677222/live"
+    },
+    "18717033": {
+      "broadcaster_name": "こじかえ️",
+      "last_notified_at": "2026-10-15T22:04:06Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18717033/live"
     },
     "18729711": {
       "broadcaster_name": "ここ #KIRARI専属モデルAD",
@@ -282,6 +264,12 @@
       "broadcaster_name": "りのJKミスコン",
       "last_notified_at": "2026-09-18T12:13:39Z",
       "url": "https://mixch.tv/u/18834298/live"
+    },
+    "18835133": {
+      "broadcaster_name": "泡沫うら濱和",
+      "last_notified_at": "2026-10-15T22:04:06Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18835133/live"
     },
     "18841790": {
       "broadcaster_name": "ももか",
@@ -415,6 +403,12 @@
       "last_notified_at": "2026-09-22T22:03:01Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18949965/live"
+    },
+    "18950177": {
+      "broadcaster_name": "ミス東大2026 今飯田紀香",
+      "last_notified_at": "2026-10-15T22:04:06Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18950177/live"
     },
     "18951227": {
       "broadcaster_name": "ふうな",
