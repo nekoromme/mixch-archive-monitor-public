@@ -2,7 +2,15 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "17866672": {
+      "broadcaster_name": "ゆう",
+      "first_seen_at": "2026-10-16T13:33:22Z",
+      "last_seen_at": "2026-10-16T13:33:22Z",
+      "max_momentum": 186,
+      "url": "https://mixch.tv/u/17866672/live"
+    }
+  },
   "notifications": {
     "16441100": {
       "broadcaster_name": "ヒロシcx@機材イベ",
