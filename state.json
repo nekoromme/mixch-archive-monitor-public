@@ -2,43 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {
-    "17866672": {
-      "broadcaster_name": "ゆう",
-      "first_seen_at": "2026-10-16T13:33:22Z",
-      "last_seen_at": "2026-10-16T13:38:34Z",
-      "max_momentum": 456,
-      "url": "https://mixch.tv/u/17866672/live"
-    },
-    "18351233": {
-      "broadcaster_name": "月城花",
-      "first_seen_at": "2026-10-16T16:52:05Z",
-      "last_seen_at": "2026-10-16T16:52:05Z",
-      "max_momentum": 160,
-      "url": "https://mixch.tv/u/18351233/live"
-    },
-    "18951227": {
-      "broadcaster_name": "ふうな",
-      "first_seen_at": "2026-10-16T13:43:51Z",
-      "last_seen_at": "2026-10-16T13:54:19Z",
-      "max_momentum": 225,
-      "url": "https://mixch.tv/u/18951227/live"
-    },
-    "18992367": {
-      "broadcaster_name": "佐藤愛なりん) バナー掲載イ",
-      "first_seen_at": "2026-10-16T14:46:45Z",
-      "last_seen_at": "2026-10-16T14:46:45Z",
-      "max_momentum": 273,
-      "url": "https://mixch.tv/u/18992367/live"
-    },
-    "19005502": {
-      "broadcaster_name": "かえ",
-      "first_seen_at": "2026-10-16T14:31:07Z",
-      "last_seen_at": "2026-10-16T15:23:21Z",
-      "max_momentum": 214,
-      "url": "https://mixch.tv/u/19005502/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16441100": {
       "broadcaster_name": "ヒロシcx@機材イベ",
@@ -132,6 +96,12 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17793147/live"
     },
+    "17866672": {
+      "broadcaster_name": "ゆう",
+      "last_notified_at": "2026-10-16T22:00:24Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17866672/live"
+    },
     "17954605": {
       "broadcaster_name": "りあ#札ｺﾚｶﾞﾁ",
       "last_notified_at": "2026-10-16T11:12:00Z",
@@ -175,6 +145,12 @@
       "last_notified_at": "2026-09-23T22:00:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18329247/live"
+    },
+    "18351233": {
+      "broadcaster_name": "月城花",
+      "last_notified_at": "2026-10-16T22:00:24Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18351233/live"
     },
     "18362102": {
       "broadcaster_name": "日あゆな#WEB投票‍♀",
@@ -420,7 +396,7 @@
     },
     "18951227": {
       "broadcaster_name": "ふうな",
-      "last_notified_at": "2026-10-14T22:04:39Z",
+      "last_notified_at": "2026-10-16T22:00:24Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18951227/live"
     },
@@ -521,6 +497,12 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18992216/live"
     },
+    "18992367": {
+      "broadcaster_name": "佐藤愛なりん) バナー掲載イ",
+      "last_notified_at": "2026-10-16T22:00:24Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18992367/live"
+    },
     "18996166": {
       "broadcaster_name": "せら#ガチ❤️少女図",
       "last_notified_at": "2026-10-14T12:59:11Z",
@@ -545,6 +527,12 @@
       "broadcaster_name": "yui(●´ω",
       "last_notified_at": "2026-10-16T08:29:54Z",
       "url": "https://mixch.tv/u/19003862/live"
+    },
+    "19005502": {
+      "broadcaster_name": "かえ",
+      "last_notified_at": "2026-10-16T22:00:24Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19005502/live"
     }
   },
   "version": 1
