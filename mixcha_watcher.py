@@ -1085,9 +1085,10 @@ def main():
         last_notified_date = activity_state[user_id]["last_notified_date"]
         latest_archive_date = activity_state[user_id].get("latest_archive_date")
 
-        # 全体公開だけの新着通知に絞っても、限定公開が続いている人を
-        # 誤って「活動なし」と判断して監視一覧から消さないようにします。
-        if public_only and activity_state[user_id].get("latest_observed_archive_date"):
+        # 自動解除は通知対象の設定に関係なく、確認できた全公開範囲の
+        # 最新活動日で判定します。設定を切り替えた後や最新動画が消えた後も、
+        # 以前確認した限定公開の活動日を忘れて誤解除しないようにします。
+        if activity_state[user_id].get("latest_observed_archive_date"):
             latest_archive_date = max(latest_archive_date or "",
                                       activity_state[user_id]["latest_observed_archive_date"])
 
