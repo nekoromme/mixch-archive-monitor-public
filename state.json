@@ -2,33 +2,12 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {
-    "18948548": {
-      "broadcaster_name": "ね終日1.5倍❤️COSGC",
-      "first_seen_at": "2026-10-17T13:02:52Z",
-      "last_seen_at": "2026-10-17T13:02:52Z",
-      "max_momentum": 189,
-      "url": "https://mixch.tv/u/18948548/live"
-    },
-    "18951227": {
-      "broadcaster_name": "ふうな",
-      "first_seen_at": "2026-10-17T15:49:28Z",
-      "last_seen_at": "2026-10-17T15:49:28Z",
-      "max_momentum": 197,
-      "url": "https://mixch.tv/u/18951227/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16441100": {
       "broadcaster_name": "ヒロシcx@機材イベ",
       "last_notified_at": "2026-09-18T11:05:51Z",
       "url": "https://mixch.tv/u/16441100/live"
-    },
-    "16534914": {
-      "broadcaster_name": "Reina‍♀年❣",
-      "last_notified_at": "2026-09-17T22:01:17Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/16534914/live"
     },
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
@@ -377,8 +356,9 @@
       "url": "https://mixch.tv/u/18947284/live"
     },
     "18948548": {
-      "broadcaster_name": "ね14-16ゲリラ#COSGC",
-      "last_notified_at": "2026-10-15T12:31:31Z",
+      "broadcaster_name": "ね終日1.5倍❤️COSGC",
+      "last_notified_at": "2026-10-17T22:04:11Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18948548/live"
     },
     "18949825": {
@@ -400,7 +380,7 @@
     },
     "18951227": {
       "broadcaster_name": "ふうな",
-      "last_notified_at": "2026-10-16T22:00:24Z",
+      "last_notified_at": "2026-10-17T22:04:11Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18951227/live"
     },
