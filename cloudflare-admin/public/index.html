@@ -44,6 +44,8 @@
     }
     [hidden] { display: none !important; }
     select { font: inherit; }
+    /* 例外一覧を開いても、スマホの固定ヘッダーが画面全体を覆わない。 */
+    header > details[open] { max-height: 60vh; overflow-y: auto; overscroll-behavior: contain; }
 
     /* ブラウザのタブのように、同じ画面の2つの作業を切り替えます。 */
     .view-tabs {
