@@ -827,13 +827,47 @@ def monitoring_enabled():
     return settings["enabled"]
 
 
+def current_time_utc():
+    """期限境界の検証でも差し替えられる、実行時刻の取得口。"""
+    return datetime.datetime.now(datetime.timezone.utc)
+
+
+def archive_exception_active(user, now=None):
+    """登録月の末日を日本時間で含める。翌月1日0時には必ず無効。"""
+    if "archive_all_until" not in user:
+        return False
+    value = user["archive_all_until"]
+    try:
+        until = datetime.date.fromisoformat(value)
+        if until.isoformat() != value or (until + datetime.timedelta(days=1)).day != 1:
+            raise ValueError()
+    except (ValueError, TypeError, OverflowError):
+        raise ValueError("watchlist.json: invalid archive_all_until") from None
+    return (now or current_time_utc()).astimezone(JST).date() <= until
+
+
+def expire_archive_exceptions():
+    """定期実行で期限切れの指定だけを掃除する。停止中も通知は行わない。"""
+    watchlist = load_watchlist(WATCHLIST_FILE)
+    now = current_time_utc()
+    # 不正な設定が1件でもあれば、書き込み前に止めて元の内容を残します。
+    expired = [user for user in watchlist
+               if "archive_all_until" in user and not archive_exception_active(user, now)]
+    for user in expired:
+        del user["archive_all_until"]
+    if expired:
+        save_watchlist(WATCHLIST_FILE, watchlist)
+        log_metric("archive_exceptions_expired", count=len(expired))
+
+
 def main():
     # ブラウザ起動・通知先検証・状態変更より前に全体の停止を確認します。
     settings = load_monitoring_settings()
     public_only = settings.get("archive_public_only", False)
+    expire_archive_exceptions()
     if not settings["enabled"]:
         log_metric("monitoring_paused", scope="all")
-        logging.info("全体のアーカイブ監視は停止中です。対象一覧と履歴は変更しません。")
+        logging.info("全体のアーカイブ監視は停止中です。期限切れ例外の整理以外、登録と履歴は変更しません。")
         return
 
     log_metric(
@@ -921,9 +955,13 @@ def main():
 
             try:
                 snapshot = client.fetch_latest(user_id)
+                # 巡回開始時ではなく、取得が終わった時の日本時間で判断します。
+                # 長い巡回が月をまたいでも、期限切れの限定公開を通知しません。
+                exception_active = archive_exception_active(user)
+                effective_public_only = public_only and not exception_active
                 decision = plan_archive_update(
                     prev_marker, activity_state.get(user_id, {}), snapshot,
-                    checked_at=checked_at, public_only=public_only,
+                    checked_at=checked_at, public_only=effective_public_only,
                 )
                 latest_marker = snapshot.marker
                 latest_archive_date = snapshot.archive_date
@@ -949,7 +987,8 @@ def main():
                     decision_reason=decision.reason,
                     archive_id=snapshot.archive_id,
                     archive_visibility=snapshot.visibility,
-                    public_only=public_only,
+                    public_only=effective_public_only,
+                    month_end_exception=exception_active,
                     extraction_method=snapshot.source,
                 )
 
@@ -959,6 +998,7 @@ def main():
                             "id": user_id,
                             "name": user_name,
                             "url": url,
+                            "restricted_exception": public_only and exception_active and snapshot.visibility != 1,
                         }
                     )
                     # 通知に失敗した人の比較基準を先へ進めない。
@@ -1043,8 +1083,23 @@ def main():
     # 通知不要の正常結果を先に確定する。新着の変更案はまだ含まれていない。
     persist_archive_history(state, activity_state)
     if report_summary:
+        # 取得後から実送信までに月が替わった場合も、限定公開の例外を延長しません。
+        users_by_id = {str(user["id"]): user for user in active_watchlist}
+        def still_eligible(report):
+            eligible = (not report.get("restricted_exception") or
+                        archive_exception_active(users_by_id[report["id"]]))
+            if not eligible:
+                # 送らなかった履歴は進めず、初回登録者の自動解除判定も保留。
+                successful_ids.discard(report["id"])
+                log_metric("archive_exception_expired_before_send")
+            return eligible
+
+        report_summary = [report for report in report_summary if still_eligible(report)]
         groups = group_update_reports(report_summary)
         for index, group in enumerate(groups, 1):
+            group = [report for report in group if still_eligible(report)]
+            if not group:
+                continue
             title = "🆕 Mixcha 更新通知"
             if len(groups) > 1:
                 title += f" {index}/{len(groups)}"
@@ -1079,6 +1134,10 @@ def main():
     for user in active_watchlist:
         user_id = str(user["id"])
         if user_id not in successful_ids or delivery_error is not None:
+            continue
+        # 月末まで見ると明示された人を、途中で20日ルールから外さない。
+        # 期限後は通常の自動解除判定へ戻します。
+        if archive_exception_active(user):
             continue
         user_name = user["name"]
         watchlist_line = user.get("watchlist_line", "不明")

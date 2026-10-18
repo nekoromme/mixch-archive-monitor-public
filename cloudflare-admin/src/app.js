@@ -7,7 +7,7 @@ import { emptyHistory, parseFilters, summarize } from './ranking.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-10-13-archive-public-only-1';
+const VERSION = '2026-10-18-month-end-exceptions-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 
@@ -50,6 +50,24 @@ function decodeContent(text) {
     Uint8Array.from(atob(text.replace(/\s/g, '')), c => c.charCodeAt(0)));
 }
 
+// 端末の時差や時計ではなく、サーバーの日本時間で登録月を決めます。
+export function monthEndJst(now = new Date()) {
+  const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return new Date(Date.UTC(jst.getUTCFullYear(), jst.getUTCMonth() + 1, 0))
+    .toISOString().slice(0, 10);
+}
+
+function todayJst(now = new Date()) {
+  return new Date(now.getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+function validExceptionDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(value + 'T00:00:00Z');
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value &&
+    monthEndJst(date) === value;
+}
+
 function normalize(raw) {
   if (!Array.isArray(raw)) throw new UserError(502, '保存先の一覧形式が不正です。');
   return raw.map((entry, index) => {
@@ -57,10 +75,14 @@ function normalize(raw) {
         typeof entry.name !== 'string') {
       throw new UserError(502, '保存先の一覧に不正な項目があります。');
     }
+    if (entry.archive_all_until !== undefined && !validExceptionDate(entry.archive_all_until)) {
+      throw new UserError(502, '月末までの全通知設定が不正です。既存の登録は変更していません。');
+    }
     return {
       index, id: String(entry.id), name: entry.name,
       archiveEnabled: entry.archive_enabled !== false,
       pendingName: entry.name.startsWith(AUTO_NAME),
+      archiveAllUntil: entry.archive_all_until >= todayJst() ? entry.archive_all_until : null,
     };
   });
 }
@@ -149,7 +171,7 @@ async function github(env, fetcher, method, body, filename = 'watchlist.json', {
   catch { throw new UserError(502, '保存先の応答を読み取れませんでした。再読み込みして確認してください。'); }
 }
 
-async function getFile(env, fetcher) {
+async function getFile(env, fetcher, attempt = 0) {
   const file = await github(env, fetcher, 'GET');
   if (typeof file.sha !== 'string' || typeof file.content !== 'string') {
     throw new UserError(502, '保存先の応答形式が不正です。');
@@ -157,7 +179,27 @@ async function getFile(env, fetcher) {
   let raw;
   try { raw = JSON.parse(decodeContent(file.content)); }
   catch { throw new UserError(502, '保存先の一覧を読み取れませんでした。'); }
-  return { raw, items: normalize(raw), sha: file.sha };
+  const items = normalize(raw);
+  // 期限を過ぎた例外だけを除去。配信者の登録や名前・履歴は消しません。
+  // 読み込み直後の同時編集は最新データから再判定し、上書きを避けます。
+  const expired = raw.filter(entry => entry.archive_all_until && entry.archive_all_until < todayJst());
+  if (!expired.length) return { raw, items, sha: file.sha };
+  expired.forEach(entry => { delete entry.archive_all_until; });
+  try {
+    const saved = await github(env, fetcher, 'PUT', {
+      message: 'Expire month-end archive notification exceptions',
+      content: encodeContent(JSON.stringify(raw, null, 2) + '\n'),
+      sha: file.sha, branch: BRANCH,
+    });
+    if (typeof saved.content?.sha !== 'string' || !saved.content.sha) {
+      throw new UserError(502, '期限切れ例外の整理結果を確認できません。再読み込みしてください。');
+    }
+    console.log(JSON.stringify({ event: 'archive_exceptions_expired', count: expired.length }));
+    return { raw, items: normalize(raw), sha: saved.content.sha };
+  } catch (error) {
+    if (error.status === 409 && attempt < 2) return getFile(env, fetcher, attempt + 1);
+    throw error;
+  }
 }
 
 // 全体設定は対象一覧と別ファイルに保存し、配信者の追加・削除と競合させません。
@@ -296,7 +338,7 @@ async function api(request, env, fetcher) {
         duplicateIds: [...counts].filter(([, count]) => count > 1).map(([id]) => id) },
     });
   }
-  if (!['/api/add', '/api/update', '/api/delete'].includes(path)) {
+  if (!['/api/add', '/api/update', '/api/delete', '/api/archive-exception'].includes(path)) {
     throw new UserError(404, '指定された機能はありません。');
   }
   if (request.method !== 'POST') throw new UserError(405, 'この操作には保存ボタンを使用してください。');
@@ -308,7 +350,22 @@ async function api(request, env, fetcher) {
   if (typeof body.version !== 'string' || !body.version) throw new UserError(409, CONFLICT);
   const file = await getFile(env, fetcher);
   if (body.version !== file.sha) throw new UserError(409, CONFLICT);
-  if (path === '/api/add') {
+  if (path === '/api/archive-exception') {
+    const id = validateId(body.streamer?.id);
+    if (typeof body.enabled !== 'boolean') throw new UserError(400, '例外設定が不正です。');
+    const entries = file.raw.filter(entry => String(entry.id) === id);
+    if (body.enabled) {
+      if (!entries.length) {
+        const entry = { id, name: AUTO_NAME + id };
+        file.raw.push(entry);
+        entries.push(entry);
+      }
+      // 既に登録済みの人も、重複させずに当月末までの例外へ追加できます。
+      entries.forEach(entry => { entry.archive_all_until = monthEndJst(); });
+    } else {
+      entries.forEach(entry => { delete entry.archive_all_until; });
+    }
+  } else if (path === '/api/add') {
     const id = validateId(body.streamer?.id);
     if (file.items.some(item => item.id === id)) throw new UserError(400, '同じIDは既に登録されています。');
     file.raw.push({ id, name: AUTO_NAME + id });
@@ -331,6 +388,8 @@ async function api(request, env, fetcher) {
         throw new UserError(400, '同じIDは既に登録されています。');
       }
       file.raw[target.index] = { ...file.raw[target.index], id, name: name.trim() };
+      // 例外は特定のIDに対する指定。IDを別人へ変更した際は引き継ぎません。
+      if (entry.id !== id) delete file.raw[target.index].archive_all_until;
       delete file.raw[target.index].archive_enabled;
     }
   }

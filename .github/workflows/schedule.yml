@@ -4,7 +4,7 @@ run-name: >-
   Archive Monitor / ${{ github.event_name == 'schedule' && format('cron {0}', github.event.schedule) || format('manual by {0}', github.actor) }}
 
 on:
-  # 監視コード修正時もテスト後に動作確認します。状態更新では起動しません。
+  # コード修正時は回帰テストだけ実行。実通知は定時・明示的な手動起動だけ。
   push:
     paths:
       - 'mixcha_watcher.py'
@@ -73,7 +73,7 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Ensure Chrome is available
-        if: inputs.replay_base == ''
+        if: github.event_name != 'push' && inputs.replay_base == ''
         run: |
           if ! command -v google-chrome >/dev/null 2>&1; then
             sudo apt-get update
@@ -98,6 +98,7 @@ jobs:
           : > run_metrics.jsonl
 
       - name: Validate Discord notification secret
+        if: github.event_name != 'push'
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         shell: bash
@@ -109,7 +110,7 @@ jobs:
 
       - name: Run watcher
         id: watcher
-        if: inputs.replay_base == ''
+        if: github.event_name != 'push' && inputs.replay_base == ''
         env:
           MIXCH_DATA_DIR: .
           PUBLIC_LOGS: 'true'

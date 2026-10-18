@@ -654,7 +654,14 @@
       <strong style="display:block;font-size:14px;margin-top:18px">アーカイブの公開範囲</strong>
       <button id="archivePublicOnly" type="button" disabled onclick="toggleGlobalMonitor('publicOnly')"
         style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
-      <div style="font-size:14px;margin-top:8px">オンなら、最新アーカイブが「全体公開」の場合だけ新着通知します。ガチファン・ファンクラブ限定や非公開は除外します。監視対象の登録は残ります。</div>
+      <div style="font-size:14px;margin-top:8px">オンなら、最新アーカイブが「全体公開」の場合だけ新着通知します。下の月末までの例外登録は、限定公開も通知します。</div>
+      <details id="archiveExceptions" style="margin-top:12px;font-size:14px" ontoggle="if(this.open) refreshArchiveExceptions()">
+        <summary style="cursor:pointer;padding:10px 0">月末まで全通知する配信者</summary>
+        <p style="line-height:1.6">登録した月の最終日23:59まで、日本時間でガチファン限定なども新着通知します。翌月は例外が自動で消え、通常の公開範囲設定へ戻ります。</p>
+        <p style="line-height:1.6">未登録の人は監視対象にも追加します。全体監視がオフなら通知は停止します。例外期間中は20日無更新による自動解除も保留します。</p>
+        <button type="button" onclick="openForm(undefined, true)" style="min-height:44px;padding:10px 14px;border-radius:8px">ID・URLから例外登録</button>
+        <div id="archiveExceptionList" style="margin-top:10px" aria-live="polite"></div>
+      </details>
       <strong style="display:block;font-size:14px;margin-top:18px">ランキング通知</strong>
       <button id="rankingMonitor" type="button" disabled onclick="toggleGlobalMonitor('ranking')"
         style="display:block;max-width:100%;min-height:44px;padding:10px 16px;margin-top:8px;border-radius:10px;font-size:14px;font-weight:bold">状態を確認中…</button>
@@ -833,6 +840,7 @@
 
 
           <div id="formStatus" class="form-status"></div>
+          <p id="exceptionFormNote" class="field-note" hidden>登録済みの配信者も指定できます。日本時間で今月末まで限定公開を含めて通知し、翌月は通常設定へ戻ります。</p>
 
           <div class="form-actions">
             <button
@@ -952,6 +960,7 @@
         withFailureHandler(fn) { onFailure = fn; return runner; },
         getWatchlist() { return call('watchlist'); },
         addStreamer(streamer) { return call('add', { streamer }); },
+        setArchiveException(streamer, enabled) { return call('archive-exception', { streamer, enabled }); },
         updateStreamer(target, streamer) { return call('update', { target, streamer }); },
         deleteStreamer(target) { return call('delete', { target }); },
       };
@@ -962,6 +971,43 @@
      * 現在表示している配信者一覧です。
      */
     let items = [];
+    let exceptionForm = false;
+
+    function activeArchiveExceptions() {
+      const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      return items.filter(item => item.archiveAllUntil && item.archiveAllUntil >= today);
+    }
+
+    function renderArchiveExceptions() {
+      const exceptions = activeArchiveExceptions();
+      document.getElementById('archiveExceptionList').innerHTML = exceptions.length
+        ? exceptions.map(item => `<div style="display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ddd">
+            <span style="min-width:0;overflow-wrap:anywhere">${item.pendingName ? '名前を取得中…' : escapeHtml(item.name)}<br>
+              ID: ${escapeHtml(item.id)}<br>${escapeHtml(item.archiveAllUntil)} 23:59まで</span>
+            <button type="button" style="flex-shrink:0;min-height:44px;padding:8px" onclick="removeArchiveException('${escapeHtml(item.id)}')">例外解除</button>
+          </div>`).join('')
+        : '<p style="color:#666">現在、月末までの例外登録はありません。</p>';
+    }
+
+    function refreshArchiveExceptions() {
+      if (loading || isFormOpen()) return;
+      setLoading(true);
+      adminApi().withSuccessHandler(result => {
+        items = result.items || [];
+        renderList(result.meta || {});
+        saveCache(result);
+        setLoading(false);
+      }).withFailureHandler(handleError).getWatchlist();
+    }
+
+    function removeArchiveException(id) {
+      if (loading || !confirm('月末までの全通知を解除しますか？通常の監視登録は残ります。')) return;
+      setLoading(true);
+      adminApi().withSuccessHandler(() => {
+        setLoading(false);
+        refreshArchiveExceptions();
+      }).withFailureHandler(handleError).setArchiveException({ id }, false);
+    }
 
     /*
      * 通信中の二重操作を防止するための状態です。
@@ -1530,6 +1576,7 @@
     }
 
     function renderList(meta) {
+      renderArchiveExceptions();
       if (activeView === 'archive') document.getElementById('count').textContent =
         items.length + '件';
 
@@ -1598,12 +1645,14 @@
         .join('');
     }
 
-    function openForm(index) {
+    function openForm(index, forException = false) {
       if (loading) {
         return;
       }
 
       const isEdit = Number.isInteger(index);
+      exceptionForm = forException && !isEdit;
+      document.getElementById('exceptionFormNote').hidden = !exceptionForm;
 
       const item = isEdit
         ? items.find((row) => row.index === index)
@@ -1624,7 +1673,7 @@
       document.getElementById('formTitle').textContent =
         isEdit
           ? '配信者を編集'
-          : '新規追加';
+          : exceptionForm ? '月末まで全通知' : '新規追加';
 
       document.getElementById('targetIndex').value =
         item ? item.index : '';
@@ -1834,7 +1883,9 @@
         })
         .withFailureHandler(handleError);
 
-      if (targetIndex === '') {
+      if (exceptionForm) {
+        runner.setArchiveException(payload, true);
+      } else if (targetIndex === '') {
         runner.addStreamer(payload);
       } else {
         runner.updateStreamer(
