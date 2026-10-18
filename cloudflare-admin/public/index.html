@@ -839,7 +839,14 @@
             >
           </div>
 
-
+          <div id="addExceptionGroup" class="field-group" hidden>
+            <label for="addMonthEndException" style="display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer;font-size:16px">
+              <input type="checkbox" id="addMonthEndException" aria-describedby="addExceptionHelp"
+                style="width:21px;height:21px;flex-shrink:0;accent-color:var(--primary);margin:0">
+              <span>今月末まで限定公開も通知する（例外追加）</span>
+            </label>
+            <div id="addExceptionHelp" class="field-note">チェックして追加すると、月末までの例外一覧にも登録されます。日本時間で翌月になると例外だけ自動解除され、通常の監視登録は残ります。</div>
+          </div>
 
           <div id="formStatus" class="form-status"></div>
           <p id="exceptionFormNote" class="field-note" hidden>登録済みの配信者も指定できます。日本時間で今月末まで限定公開を含めて通知し、翌月は通常設定へ戻ります。</p>
@@ -1655,6 +1662,9 @@
       const isEdit = Number.isInteger(index);
       exceptionForm = forException && !isEdit;
       document.getElementById('exceptionFormNote').hidden = !exceptionForm;
+      document.getElementById('addExceptionGroup').hidden = isEdit || exceptionForm;
+      // 次の人を追加するとき、前回のチェックを引き継いで誤登録しない。
+      document.getElementById('addMonthEndException').checked = false;
 
       const item = isEdit
         ? items.find((row) => row.index === index)
@@ -1847,12 +1857,13 @@
       }
 
       /*
-       * 新規追加はIDだけを送り、サーバー側で名前を取得します。
+       * 新規追加はIDと任意の例外指定を送り、サーバー側で名前を取得します。
        * 編集時だけ、手入力した名前も送ります。
        */
       const payload =
         targetIndex === ''
-          ? { id: id }
+          ? { id: id, ...(!exceptionForm && document.getElementById('addMonthEndException').checked
+              ? { monthEndException: true } : {}) }
           : { id: id, name: name };
 
       setLoading(true);

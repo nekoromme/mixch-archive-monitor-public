@@ -65,6 +65,39 @@ test('ID/URLで新規・既存に例外登録、重複せず再読込でき、�
   assert.equal(f.rows[1].archive_all_until, '2026-10-31');
 });
 
+test('通常追加のチェックで1回の保存から例外一覧にも入り、期限後は通常登録だけ残る', async t => {
+  const f = await fixture(t);
+  assert.equal((await f.send('/api/add', { streamer: {
+    id: 'https://mixch.tv/u/456/live_archives', monthEndException: true,
+  } })).status, 200);
+  assert.equal(f.writes, 1);
+  assert.deepEqual(f.rows[1], { id: '456', name: '__AUTO_NAME__:456', archive_all_until: '2026-10-31' });
+  const read = await (await f.send('/api/watchlist')).json();
+  assert.equal(read.items[1].archiveAllUntil, '2026-10-31');
+  assert.equal((await f.send('/api/add', { streamer: { id: '456', monthEndException: true } })).status, 400);
+  assert.equal(f.writes, 1);
+  for (const streamer of [{ id: '789', monthEndException: false }, { id: '888' }]) {
+    assert.equal((await f.send('/api/add', { streamer })).status, 200);
+    assert.deepEqual(f.rows.at(-1), { id: streamer.id, name: '__AUTO_NAME__:' + streamer.id });
+  }
+  t.mock.timers.setTime(new Date('2026-10-31T15:00:00Z').getTime());
+  const expired = await (await f.send('/api/watchlist')).json();
+  assert.equal(expired.items.length, 4);
+  assert.ok(expired.items.every(item => item.archiveAllUntil === null));
+  assert.deepEqual(f.rows[1], { id: '456', name: '__AUTO_NAME__:456' });
+  assert.equal(f.rows[0].extra, 'keep');
+});
+
+test('通常追加のチェックが不正・保存競合なら通常登録と例外の片方だけを残さない', async t => {
+  const f = await fixture(t);
+  assert.equal((await f.send('/api/add', { streamer: { id: '456', monthEndException: 'true' } })).status, 400);
+  assert.equal(f.writes, 0);
+  f.concurrentAdd();
+  assert.equal((await f.send('/api/add', { streamer: { id: '456', monthEndException: true } })).status, 409);
+  assert.equal(f.writes, 0);
+  assert.ok(f.rows.every(item => item.id !== '456' && item.archive_all_until === undefined));
+});
+
 test('翌月に読み込むと期限切れだけ保存先から除去し、同時追加を保持する', async t => {
   const f = await fixture(t, [
     { id: '123', name: '既存', archive_all_until: '2026-10-31', extra: 'keep' },
@@ -126,22 +159,40 @@ test('折りたたみから通常と同じ登録フォームでID/URL登録し�
   // 通信先の呼出しを記録し、画面側の経路・入力を確かめる。
   vm.runInContext(`adminApi = () => {
     const runner = { withSuccessHandler(){ return runner; }, withFailureHandler(){ return runner; },
-      setArchiveException(streamer, enabled){ capture({streamer, enabled}); },
-      addStreamer(){ throw new Error('wrong registration path'); } }; return runner;
+      setArchiveException(streamer, enabled){ capture({action:'exception', streamer, enabled}); },
+      addStreamer(streamer){ capture({action:'add', streamer}); } }; return runner;
   }; currentVersion = 'v1';`, context);
   for (const input of ['123', 'https://mixch.tv/u/123/live_archives']) {
     vm.runInContext('loading = false; openForm(undefined, true)', context);
     assert.equal(node('formTitle').textContent, '月末まで全通知');
     assert.equal(node('streamerNameGroup').hidden, true);
     assert.equal(node('exceptionFormNote').hidden, false);
+    assert.equal(node('addExceptionGroup').hidden, true);
     node('streamerId').value = input;
     vm.runInContext('saveForm({preventDefault(){}})', context);
     assert.equal(sent.streamer.id, '123');
     assert.equal(sent.enabled, true);
+    assert.equal(sent.action, 'exception');
   }
   vm.runInContext("loading = false; removeArchiveException('123')", context);
   assert.equal(sent.enabled, false);
   vm.runInContext('loading = false; openForm()', context);
   assert.equal(node('formTitle').textContent, '新規追加');
   assert.equal(node('exceptionFormNote').hidden, true);
+  assert.equal(node('addExceptionGroup').hidden, false);
+  assert.equal(node('addMonthEndException').checked, false);
+  for (const checked of [true, false]) {
+    for (const input of ['456', 'https://mixch.tv/u/456']) {
+      vm.runInContext('loading = false; openForm()', context);
+      assert.equal(node('addMonthEndException').checked, false);
+      node('addMonthEndException').checked = checked;
+      node('streamerId').value = input;
+      vm.runInContext('saveForm({preventDefault(){}})', context);
+      assert.equal(sent.action, 'add');
+      assert.equal(sent.streamer.id, '456');
+      assert.equal(sent.streamer.monthEndException, checked ? true : undefined);
+    }
+  }
+  vm.runInContext("loading = false; items = [{index:0,id:'123',name:'既存'}]; openForm(0)", context);
+  assert.equal(node('addExceptionGroup').hidden, true);
 });
