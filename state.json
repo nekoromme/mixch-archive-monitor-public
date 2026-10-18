@@ -2,22 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {
-    "17534235": {
-      "broadcaster_name": "ろ#ｻﾂｺ",
-      "first_seen_at": "2026-10-18T15:35:48Z",
-      "last_seen_at": "2026-10-18T15:46:16Z",
-      "max_momentum": 197,
-      "url": "https://mixch.tv/u/17534235/live"
-    },
-    "18950177": {
-      "broadcaster_name": "ミス東大2026 今飯田紀香",
-      "first_seen_at": "2026-10-18T14:33:25Z",
-      "last_seen_at": "2026-10-18T14:33:25Z",
-      "max_momentum": 150,
-      "url": "https://mixch.tv/u/18950177/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
@@ -82,6 +67,12 @@
       "broadcaster_name": "るなぴ誕生祭 日前日",
       "last_notified_at": "2026-10-17T09:39:46Z",
       "url": "https://mixch.tv/u/17517637/live"
+    },
+    "17534235": {
+      "broadcaster_name": "ろ#ｻﾂｺ",
+      "last_notified_at": "2026-10-18T22:01:21Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17534235/live"
     },
     "17553944": {
       "broadcaster_name": "パトン兎姫るう#sweet",
@@ -373,7 +364,7 @@
     },
     "18950177": {
       "broadcaster_name": "ミス東大2026 今飯田紀香",
-      "last_notified_at": "2026-10-15T22:04:06Z",
+      "last_notified_at": "2026-10-18T22:01:21Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18950177/live"
     },
