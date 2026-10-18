@@ -7,7 +7,7 @@ import { emptyHistory, parseFilters, summarize } from './ranking.js';
 const REPOSITORY = 'nekoromme/mixch-archive-monitor-public';
 const CONTENTS_URL = 'https://api.github.com/repos/' + REPOSITORY + '/contents/watchlist.json';
 const BRANCH = 'main';
-const VERSION = '2026-10-18-month-end-exceptions-1';
+const VERSION = '2026-10-18-month-end-add-checkbox-1';
 const AUTO_NAME = '__AUTO_NAME__:';
 const CONFLICT = '一覧が別の画面や監視処理で更新されました。戻って「再読み込み」してからやり直してください。';
 
@@ -368,7 +368,15 @@ async function api(request, env, fetcher) {
   } else if (path === '/api/add') {
     const id = validateId(body.streamer?.id);
     if (file.items.some(item => item.id === id)) throw new UserError(400, '同じIDは既に登録されています。');
-    file.raw.push({ id, name: AUTO_NAME + id });
+    const monthEndException = body.streamer?.monthEndException;
+    if (monthEndException !== undefined && typeof monthEndException !== 'boolean') {
+      throw new UserError(400, '月末までの例外追加のチェックが不正です。');
+    }
+    const entry = { id, name: AUTO_NAME + id };
+    // 通常登録と例外指定を1回の保存で確定し、片方だけ成功する状態を防ぐ。
+    // 期限の計算と一覧表示は、既存の例外登録と同じ仕組みを使います。
+    if (monthEndException === true) entry.archive_all_until = monthEndJst();
+    file.raw.push(entry);
   } else {
     const target = body.target;
     const entry = Number.isInteger(target?.index) && target.index >= 0
@@ -400,7 +408,9 @@ async function api(request, env, fetcher) {
     sha: file.sha, branch: BRANCH,
   });
   return json({ ok: true, message: path === '/api/add'
-    ? '登録しました。名前は通常1～2分で自動取得されます。' : '保存しました' });
+    ? (body.streamer?.monthEndException === true
+      ? '登録しました。今月末まで限定公開も通知します。名前は通常1～2分で自動取得されます。'
+      : '登録しました。名前は通常1～2分で自動取得されます。') : '保存しました' });
 }
 
 // fetcherだけ差し替え可能にし、テストから本物のGitHubへ書き込まない構造です。
