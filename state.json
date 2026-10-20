@@ -2,15 +2,7 @@
   "metadata": {
     "last_heartbeat_at": "2026-10-13T23:39:57Z"
   },
-  "night_candidates": {
-    "18951227": {
-      "broadcaster_name": "ふうな",
-      "first_seen_at": "2026-10-20T14:14:36Z",
-      "last_seen_at": "2026-10-20T14:14:36Z",
-      "max_momentum": 177,
-      "url": "https://mixch.tv/u/18951227/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
@@ -95,12 +87,6 @@
       "last_notified_at": "2026-10-18T22:01:21Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17534235/live"
-    },
-    "17553944": {
-      "broadcaster_name": "パトン兎姫るう#sweet",
-      "last_notified_at": "2026-09-20T22:02:03Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/17553944/live"
     },
     "17650854": {
       "broadcaster_name": "【最終日】愛➰❤️#jkミスコン",
@@ -224,12 +210,6 @@
       "broadcaster_name": "莉珠",
       "last_notified_at": "2026-09-23T09:27:53Z",
       "url": "https://mixch.tv/u/18625530/live"
-    },
-    "18664559": {
-      "broadcaster_name": "松井ひな#Ray掲",
-      "last_notified_at": "2026-09-20T22:02:03Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18664559/live"
     },
     "18677222": {
       "broadcaster_name": "なな#SNSﾌｫﾛｰAWARD",
@@ -408,7 +388,7 @@
     },
     "18951227": {
       "broadcaster_name": "ふうな",
-      "last_notified_at": "2026-10-17T22:04:11Z",
+      "last_notified_at": "2026-10-20T22:04:23Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18951227/live"
     },
