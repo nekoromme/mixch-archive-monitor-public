@@ -156,6 +156,7 @@ class SchedulerDelayTests(unittest.TestCase):
         client.list_workflow_runs.return_value = [WorkflowRun(
             99, datetime.now(timezone.utc) - timedelta(minutes=45), 'queued', '', ''
         )]
+        client.get_workflow_run.return_value = client.list_workflow_runs.return_value[0]
         ensure_relay(client, current_run_id='1')
         client.dispatch_workflow.assert_not_called()
 
