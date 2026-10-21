@@ -3,15 +3,7 @@
     "last_error_notified_at": "2026-10-21T22:00:31Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {
-    "18766676": {
-      "broadcaster_name": "もも本制服アワー",
-      "first_seen_at": "2026-10-21T13:22:23Z",
-      "last_seen_at": "2026-10-21T13:22:23Z",
-      "max_momentum": 179,
-      "url": "https://mixch.tv/u/18766676/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
@@ -266,6 +258,12 @@
       "last_notified_at": "2026-10-20T03:37:05Z",
       "url": "https://mixch.tv/u/18766198/live"
     },
+    "18766676": {
+      "broadcaster_name": "もも本制服アワー",
+      "last_notified_at": "2026-10-21T22:05:45Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18766676/live"
+    },
     "18778382": {
       "broadcaster_name": "日わか#JCミスコン",
       "last_notified_at": "2026-10-18T09:31:26Z",
@@ -412,12 +410,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18968605/live"
     },
-    "18971618": {
-      "broadcaster_name": "せな‍♀KIRARI専属モデルAD",
-      "last_notified_at": "2026-09-21T22:02:32Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18971618/live"
-    },
     "18974689": {
       "broadcaster_name": "R u a⭐︎",
       "last_notified_at": "2026-09-22T05:28:50Z",
@@ -464,12 +456,6 @@
       "broadcaster_name": "ひなぴ",
       "last_notified_at": "2026-10-18T03:48:04Z",
       "url": "https://mixch.tv/u/18990137/live"
-    },
-    "18990658": {
-      "broadcaster_name": "003823",
-      "last_notified_at": "2026-09-21T22:02:32Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18990658/live"
     },
     "18991260": {
       "broadcaster_name": "koko",
