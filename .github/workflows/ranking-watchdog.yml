@@ -24,7 +24,8 @@ jobs:
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       RANKING_SCHEDULER: github_relay
       RANKING_RELAY_WORKFLOW: ranking-relay.yml
-      WATCHDOG_STALE_MINUTES: '12'
+      WATCHDOG_STALE_MINUTES: '60'
+      WATCHDOG_RELAY_ACTIVE_MAX_MINUTES: '60'
       PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v4

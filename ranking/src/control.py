@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
+from .github_actions_recovery import DEFAULT_STALE_MINUTES
 
 SETTINGS_FILE = Path(__file__).resolve().parents[2] / 'monitor_settings.json'
 
@@ -34,7 +35,7 @@ def _enabled(settings, include_recording, for_recovery):
     # 再開直後は過去の停止時間を故障扱いせず、最初の定期実行を待ちます。
     if enabled and for_recovery and settings.get('ranking_changed_at'):
         changed = datetime.fromisoformat(settings['ranking_changed_at'].replace('Z', '+00:00'))
-        if 0 <= (datetime.now(timezone.utc) - changed).total_seconds() < 12 * 60:
+        if 0 <= (datetime.now(timezone.utc) - changed).total_seconds() < DEFAULT_STALE_MINUTES * 60:
             logging.info('RANKING_RESUME_GRACE: 再開後の最初の実行を待っています。')
             return False
     return enabled

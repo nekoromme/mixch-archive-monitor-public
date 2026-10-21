@@ -44,6 +44,9 @@ PUBLIC_ARCHIVE_VISIBILITY = 1
 ARCHIVE_PAGE_SIZE = 100
 ARCHIVE_CHECK_WORKERS = 4
 MAX_ARCHIVE_PAGES = 100
+# GitHubからの一時的な403で同じ人へアクセスを集中させない。
+ARCHIVE_RETRY_MINUTES = 15
+ARCHIVE_WARNING_MINUTES = 60
 JST = timezone(timedelta(hours=9))
 
 STATE_VERSION = 1
@@ -631,7 +634,11 @@ def load_state(path: Path) -> dict[str, Any]:
                 )
             _parse_timestamp(timestamp)
 
-    for key in ("last_heartbeat_at", "last_error_notified_at"):
+        for key in ("archive_check_failed_since", "archive_check_retry_at"):
+            if key in record:
+                _parse_timestamp(record[key])
+
+    for key in ("last_heartbeat_at", "last_error_notified_at", "last_archive_warning_at"):
         timestamp = metadata.get(key)
         if timestamp is not None:
             if not isinstance(timestamp, str):
@@ -757,13 +764,15 @@ def accumulate_night_candidates(
 
 
 def mark_night_candidates_processed(
-    state: dict[str, Any], processed_at: datetime
+    state: dict[str, Any], processed_at: datetime,
+    user_ids: Iterable[str] | None = None,
 ) -> None:
-    """朝の一括処理直後に通常通知が重ならないよう、全候補を抑制履歴へ残す。"""
+    """確認できた候補だけを抑制履歴へ残す。未確認を処理済みにしない。"""
 
     timestamp = _format_timestamp(processed_at)
     notifications = state["notifications"]
-    for user_id, record in state["night_candidates"].items():
+    for user_id in (state["night_candidates"] if user_ids is None else user_ids):
+        record = state["night_candidates"][user_id]
         notifications[user_id] = {
             "last_notified_at": timestamp,
             "broadcaster_name": record["broadcaster_name"],
@@ -926,15 +935,16 @@ def has_public_archive(user_id: str, timeout_seconds: float) -> bool:
 
 
 def find_public_archive_profiles(
-    candidates: dict[str, dict[str, Any]], timeout_seconds: float
+    candidates: dict[str, dict[str, Any]], timeout_seconds: float,
+    *, failed_checks: dict[str, str] | None = None,
 ) -> list[dict[str, str]]:
-    """公開アーカイブがある夜間候補だけを、最大勢い度順に返す。"""
+    """公開ありを勢い順に返す。failed_checks指定時は失敗を分離して返す。"""
 
     if not candidates:
         return []
 
     results: dict[str, bool] = {}
-    errors: list[str] = []
+    errors: dict[str, str] = {}
     worker_count = min(ARCHIVE_CHECK_WORKERS, len(candidates))
     with ThreadPoolExecutor(max_workers=worker_count) as executor:
         futures = {
@@ -951,9 +961,12 @@ def find_public_archive_profiles(
                     user_id,
                     exc,
                 )
-                errors.append(user_id)
+                errors[user_id] = str(exc)
 
-    if errors:
+    if failed_checks is not None:
+        # 取得失敗と「公開アーカイブなし」は区別し、呼び出し元で再試行する。
+        failed_checks.update(errors)
+    elif errors:
         raise MonitorError(
             "公開アーカイブを確認できない夜間候補があります: "
             + ", ".join(sorted(errors))
@@ -973,6 +986,37 @@ def find_public_archive_profiles(
         for user_id, record in ordered
         if results.get(user_id)
     ]
+
+
+def maybe_send_archive_warning(
+    config: Config, state: dict[str, Any], now: datetime
+) -> None:
+    """長時間の部分障害は専用通知へ。ランキング全体の停止とは区別する。"""
+    delayed = [
+        user_id for user_id, record in state["night_candidates"].items()
+        if record.get("archive_check_failed_since")
+        and _parse_timestamp(record["archive_check_failed_since"])
+        <= now - timedelta(minutes=ARCHIVE_WARNING_MINUTES)
+    ]
+    previous = state["metadata"].get("last_archive_warning_at")
+    if not delayed or (previous and _parse_timestamp(previous)
+                       > now - timedelta(hours=config.error_cooldown_hours)):
+        return
+    _post_discord(config.discord_webhook_url, {
+        "username": "MixChannel勢い監視",
+        "content": "⚠️ 夜間まとめのアーカイブ確認を一部保留しています。通常のランキング監視は継続中です。",
+        "allowed_mentions": {"parse": []},
+        "embeds": [{
+            "title": "1時間以上確認できない候補を再試行中",
+            "description": _truncate("\n".join(
+                f"https://mixch.tv/u/{user_id}" for user_id in delayed
+            ), 1_000),
+            "color": 0xF1C40F,
+            "footer": {"text": "対象は保存したまま15分以上あけて再確認します"},
+            "timestamp": _format_timestamp(now),
+        }],
+    }, config.request_timeout_seconds)
+    state["metadata"]["last_archive_warning_at"] = _format_timestamp(now)
 
 
 def build_night_digest_descriptions(
@@ -1158,12 +1202,19 @@ def run(config: Config, now: datetime | None = None) -> int:
 
         overnight_user_ids = set(state["night_candidates"])
         if overnight_user_ids:
+            due_candidates = {
+                user_id: record for user_id, record in state["night_candidates"].items()
+                if not record.get("archive_check_retry_at")
+                or _parse_timestamp(record["archive_check_retry_at"]) <= now
+            }
+            failed_checks: dict[str, str] = {}
             LOGGER.info(
                 "夜間候補%d件の公開アーカイブを朝の一括確認へ回します",
                 len(overnight_user_ids),
             )
             public_profiles = find_public_archive_profiles(
-                state["night_candidates"], config.request_timeout_seconds
+                due_candidates, config.request_timeout_seconds,
+                failed_checks=failed_checks,
             )
             LOGGER.info(
                 "夜間候補の公開アーカイブ確認結果: 対象=%d件, 公開あり=%d件",
@@ -1178,8 +1229,21 @@ def run(config: Config, now: datetime | None = None) -> int:
                     now,
                     config.request_timeout_seconds,
                 )
-                mark_night_candidates_processed(state, now)
-                state["night_candidates"].clear()
+                processed_ids = set(due_candidates) - set(failed_checks)
+                mark_night_candidates_processed(state, now, processed_ids)
+                for user_id in processed_ids:
+                    del state["night_candidates"][user_id]
+                for user_id, error in failed_checks.items():
+                    record = state["night_candidates"][user_id]
+                    record.setdefault("archive_check_failed_since", _format_timestamp(now))
+                    record["archive_check_retry_at"] = _format_timestamp(
+                        now + timedelta(minutes=ARCHIVE_RETRY_MINUTES)
+                    )
+                    record["archive_check_last_error"] = error[:500]
+                LOGGER.info(
+                    "ARCHIVE_CHECK_PARTIAL: 確認済み=%d, 保留=%d, 通常監視は継続",
+                    len(processed_ids), len(state["night_candidates"]),
+                )
                 # ランキング取得や昼間通知が後で失敗しても、朝の一括通知を重複させない。
                 save_state(config.state_file, state)
 
@@ -1239,6 +1303,12 @@ def run(config: Config, now: datetime | None = None) -> int:
             _require_webhook(config.discord_webhook_url)
 
         if not config.dry_run:
+            if config.notify_on_error:
+                try:
+                    maybe_send_archive_warning(config, state, now)
+                except NotificationError as exc:
+                    # 注意通知の配信失敗でも通常監視の成功を取り消さず、次回再試行。
+                    LOGGER.warning("アーカイブ部分障害の注意通知に失敗しました: %s", exc)
             maintain_state(
                 state, now, config.cooldown_hours, config.heartbeat_days
             )
