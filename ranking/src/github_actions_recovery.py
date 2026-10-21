@@ -42,9 +42,10 @@ ACTIVE_RUN_STATUSES = frozenset(
     {"queued", "in_progress", "waiting", "pending", "requested"}
 )
 
-DEFAULT_STALE_MINUTES = 12
+# GitHubの定刻起動・待ち行列は大きく遅れるため、短い空白を停止と決めない。
+DEFAULT_STALE_MINUTES = 60
 DEFAULT_REMINDER_MINUTES = 60
-DEFAULT_RELAY_ACTIVE_MAX_MINUTES = 20
+DEFAULT_RELAY_ACTIVE_MAX_MINUTES = 60
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 10.0
 
 # 1回目は即時実行するため、ここには「次の試行まで待つ秒数」だけを並べる。
