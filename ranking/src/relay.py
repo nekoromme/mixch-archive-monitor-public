@@ -11,7 +11,7 @@ import time
 from datetime import datetime, timezone
 
 from .github_actions_recovery import (
-    GitHubApiClient, dispatch_with_retry, recent_active_run,
+    GitHubApiClient, dispatch_with_retry, confirmed_active_run,
     DEFAULT_STALE_MINUTES, DEFAULT_RELAY_ACTIVE_MAX_MINUTES,
 )
 
@@ -46,7 +46,7 @@ def ensure_relay(client, *, current_run_id=None):
     """再開や自動復旧が重なっても待機処理を増やさないよう確認します。"""
     runs = client.list_workflow_runs(RELAY)
     others = [run for run in runs if str(run.run_id) != str(current_run_id)]
-    if recent_active_run(others, datetime.now(timezone.utc), DEFAULT_RELAY_ACTIVE_MAX_MINUTES):
+    if confirmed_active_run(client, others, datetime.now(timezone.utc), DEFAULT_RELAY_ACTIVE_MAX_MINUTES):
         LOGGER.info('RANKING_RELAY_EXISTS: 既存の待機処理へ引き継ぎます。')
         return
     dispatch_with_retry(client, RELAY, inputs={'probe':'false'})
@@ -65,8 +65,8 @@ def run_relay(client, *, probe=False, sleep=time.sleep, current_run_id=None):
             LOGGER.info('RANKING_RELAY_PAUSED: 待機中に設定が変わったため終了します。')
             return
     try:
-        active = recent_active_run(
-            client.list_workflow_runs(MONITOR), datetime.now(timezone.utc), DEFAULT_STALE_MINUTES
+        active = confirmed_active_run(
+            client, client.list_workflow_runs(MONITOR), datetime.now(timezone.utc), DEFAULT_STALE_MINUTES
         )
         if active:
             LOGGER.info('RANKING_MONITOR_ACTIVE: 既に実行中の監視を待ちます。')

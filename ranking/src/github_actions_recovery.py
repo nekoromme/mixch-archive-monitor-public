@@ -104,6 +104,8 @@ class WorkflowRun:
     status: str
     conclusion: str
     url: str
+    # コード更新時の確認だけの実行へ、本番の次回予約を引き継がせない。
+    event: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -217,7 +219,37 @@ class GitHubApiClient:
             body,
         )
 
+    def get_workflow_run(self, run_id: int) -> WorkflowRun:
+        """一覧の古い「実行中」を個別照会で確認する。キャッシュも再検証させる。"""
+        payload = self._request_json(
+            "GET", f"/repos/{self.repository}/actions/runs/{run_id}"
+            f"?monitor_check={time.time_ns()}",
+        )
+        runs = parse_workflow_runs({"workflow_runs": [payload]})
+        if len(runs) != 1:
+            raise GitHubApiError("GitHubの個別実行状態を確認できませんでした")
+        return runs[0]
+
     def _request_json(
+        self,
+        method: str,
+        path: str,
+        body: Mapping[str, Any] | None = None,
+    ) -> Any:
+        # 設定の読取りや稼働確認の一時障害でも、5分リレーを途切れさせない。
+        # 書込みの再試行はdispatch_with_retryが担当し、二重に繰り返さない。
+        delays = (2.0, 5.0) if method == "GET" else ()
+        for attempt in range(len(delays) + 1):
+            try:
+                return self._request_json_once(method, path, body)
+            except GitHubApiError as exc:
+                if attempt == len(delays) or not exc.retryable:
+                    raise
+                delay = min(max(exc.retry_after or delays[attempt], 1.0), 15.0)
+                LOGGER.warning("GitHubの読取りを再試行します: %s（%.0f秒後）", exc, delay)
+                time.sleep(delay)
+
+    def _request_json_once(
         self,
         method: str,
         path: str,
@@ -237,6 +269,7 @@ class GitHubApiClient:
                 "Content-Type": "application/json",
                 "User-Agent": "MixChannelMonitorRecovery/1.0",
                 "X-GitHub-Api-Version": "2022-11-28",
+                "Cache-Control": "no-cache",
             },
         )
 
@@ -280,6 +313,7 @@ def parse_workflow_runs(payload: Mapping[str, Any]) -> list[WorkflowRun]:
                     status=str(item.get("status") or ""),
                     conclusion=str(item.get("conclusion") or ""),
                     url=str(item.get("html_url") or ""),
+                    event=str(item.get("event") or ""),
                 )
             )
         except (KeyError, TypeError, ValueError, StateError):
@@ -290,7 +324,7 @@ def parse_workflow_runs(payload: Mapping[str, Any]) -> list[WorkflowRun]:
 def latest_successful_run(runs: Sequence[WorkflowRun]) -> WorkflowRun | None:
     """成功した監視のうち、開始時刻が最も新しいものを返す。"""
 
-    successful = [run for run in runs if run.conclusion == "success"]
+    successful = [run for run in runs if run.conclusion == "success" and run.event != "push"]
     return max(successful, key=lambda run: run.created_at, default=None)
 
 
@@ -310,6 +344,7 @@ def recent_active_run(
         run
         for run in runs
         if run.status in ACTIVE_RUN_STATUSES and run.created_at >= oldest
+        and run.event != "push"
     ]
     return max(active, key=lambda run: run.created_at, default=None)
 
@@ -323,6 +358,38 @@ def is_monitor_stale(
 
     return latest_success is None or (
         latest_success.created_at < now - timedelta(minutes=stale_minutes)
+    )
+
+
+def refresh_active_run_statuses(
+    client: GitHubApiClient,
+    runs: Sequence[WorkflowRun],
+    now: datetime,
+    max_age_minutes: int,
+) -> list[WorkflowRun]:
+    """一覧の実行中表示を個別照会し、完了済みの成功も判定へ反映する。"""
+    refreshed = []
+    for candidate in runs:
+        if recent_active_run([candidate], now, max_age_minutes) is None:
+            refreshed.append(candidate)
+            continue
+        confirmed = client.get_workflow_run(candidate.run_id)
+        refreshed.append(confirmed)
+        if confirmed.status not in ACTIVE_RUN_STATUSES:
+            LOGGER.info("GITHUB_RUN_ALREADY_FINISHED: 一覧では実行中ですが個別確認では完了: id=%s", candidate.run_id)
+    return refreshed
+
+
+def confirmed_active_run(
+    client: GitHubApiClient,
+    runs: Sequence[WorkflowRun],
+    now: datetime,
+    max_age_minutes: int,
+) -> WorkflowRun | None:
+    """一覧だけで引継ぎ先を決めず、実際に未完了であることを再確認する。"""
+    return recent_active_run(
+        refresh_active_run_statuses(client, runs, now, max_age_minutes),
+        now, max_age_minutes,
     )
 
 
@@ -443,6 +510,10 @@ def run_watchdog(
     try:
         monitor_runs = api.list_workflow_runs(MONITOR_WORKFLOW)
         relay_runs = [] if os.getenv("RANKING_SCHEDULER") == "cloudflare" else api.list_workflow_runs(RELAY_WORKFLOW)
+        monitor_runs = refresh_active_run_statuses(api, monitor_runs, now, config.stale_minutes)
+        relay_runs = refresh_active_run_statuses(api, relay_runs, now, config.relay_active_max_minutes)
+        active_monitor = recent_active_run(monitor_runs, now, config.stale_minutes)
+        active_relay = recent_active_run(relay_runs, now, config.relay_active_max_minutes)
     except GitHubApiError as exc:
         # 手動dry-runでは「何もしない」という約束を、GitHub障害時も守る。
         if config.dry_run:
@@ -453,16 +524,6 @@ def run_watchdog(
         )
 
     latest_success = latest_successful_run(monitor_runs)
-    active_monitor = recent_active_run(
-        monitor_runs,
-        now,
-        config.stale_minutes,
-    )
-    active_relay = recent_active_run(
-        relay_runs,
-        now,
-        config.relay_active_max_minutes,
-    )
     stale = is_monitor_stale(latest_success, now, config.stale_minutes)
 
     if config.dry_run:
@@ -762,6 +823,7 @@ def build_recovery_payload(
                     f"[GitHub Actionsを確認](https://github.com/{repository}/actions)"
                 ),
                 "color": DISCORD_RECOVERY_COLOR,
+                "footer": {"text": "復旧確認までの時間には、GitHubの確認ジョブの起動待ちも含みます"},
                 "timestamp": _format_timestamp(now),
             }
         ],

@@ -91,6 +91,9 @@ class FakeClient:
             raise errors.pop(0)
         self.dispatched.append((workflow_file, dict(inputs or {})))
 
+    def get_workflow_run(self, run_id: int) -> WorkflowRun:
+        return next(run for run in self.monitor_runs + self.relay_runs if run.run_id == run_id)
+
 
 class RunParsingTests(unittest.TestCase):
     def test_parses_and_selects_latest_success(self) -> None:
@@ -213,6 +216,17 @@ class WatchdogTests(unittest.TestCase):
         self.assertEqual([], client.dispatched)
         self.assertEqual([], self.notifications)
         self.assertFalse(load_watchdog_state(self.state_file)["incident_open"])
+
+    def test_individually_confirmed_success_is_used_when_list_is_outdated(self):
+        from unittest.mock import Mock
+        client = FakeClient(monitor_runs=[
+            workflow_run(1, 90), workflow_run(2, 5, status='in_progress', conclusion='')
+        ])
+        client.get_workflow_run = Mock(return_value=workflow_run(2, 5))
+        result = run_watchdog(watchdog_config(self.state_file), now=NOW, client=client, notify=self.notify)
+        self.assertEqual(0, result)
+        self.assertEqual([], client.dispatched)
+        self.assertEqual([], self.notifications)
 
     def test_stale_monitor_restarts_monitor_and_relay_and_alerts_once(self) -> None:
         client = FakeClient(monitor_runs=[workflow_run(1, 20)])
