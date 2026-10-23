@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-21T22:00:31Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18702536": {
+      "broadcaster_name": "白米さら♯キャンガル",
+      "first_seen_at": "2026-10-23T15:19:31Z",
+      "last_seen_at": "2026-10-23T15:19:31Z",
+      "max_momentum": 177,
+      "url": "https://mixch.tv/u/18702536/live"
+    }
+  },
   "notifications": {
     "16721611": {
       "broadcaster_name": "早坂萌香❄東園CM#27日渋谷FM",
