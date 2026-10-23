@@ -4,6 +4,13 @@
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
   "night_candidates": {
+    "18296626": {
+      "broadcaster_name": "女王まりあ#ｲﾝｽいね",
+      "first_seen_at": "2026-10-23T16:43:27Z",
+      "last_seen_at": "2026-10-23T16:43:27Z",
+      "max_momentum": 180,
+      "url": "https://mixch.tv/u/18296626/live"
+    },
     "18702536": {
       "broadcaster_name": "白米さら♯キャンガル",
       "first_seen_at": "2026-10-23T15:19:31Z",
@@ -14,8 +21,8 @@
     "19010197": {
       "broadcaster_name": "nyan",
       "first_seen_at": "2026-10-23T16:22:35Z",
-      "last_seen_at": "2026-10-23T16:38:11Z",
-      "max_momentum": 249,
+      "last_seen_at": "2026-10-23T16:43:27Z",
+      "max_momentum": 262,
       "url": "https://mixch.tv/u/19010197/live"
     }
   },
