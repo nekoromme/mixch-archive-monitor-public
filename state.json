@@ -99,11 +99,6 @@
       "last_notified_at": "2026-09-23T12:25:43Z",
       "url": "https://mixch.tv/u/17650854/live"
     },
-    "17700197": {
-      "broadcaster_name": "いちご",
-      "last_notified_at": "2026-09-23T08:04:09Z",
-      "url": "https://mixch.tv/u/17700197/live"
-    },
     "17793147": {
       "broadcaster_name": "リリー#初日ブーケスタ",
       "last_notified_at": "2026-10-15T22:04:06Z",
@@ -227,11 +222,6 @@
       "last_notified_at": "2026-10-22T09:38:00Z",
       "url": "https://mixch.tv/u/18574994/live"
     },
-    "18625530": {
-      "broadcaster_name": "莉珠",
-      "last_notified_at": "2026-09-23T09:27:53Z",
-      "url": "https://mixch.tv/u/18625530/live"
-    },
     "18645887": {
       "broadcaster_name": "なーな",
       "last_notified_at": "2026-10-21T12:45:51Z",
@@ -295,11 +285,6 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18835133/live"
     },
-    "18844132": {
-      "broadcaster_name": "ゆなち♡",
-      "last_notified_at": "2026-09-23T08:24:59Z",
-      "url": "https://mixch.tv/u/18844132/live"
-    },
     "18863033": {
       "broadcaster_name": "みぃ最終日#ガル",
       "last_notified_at": "2026-09-23T22:00:50Z",
@@ -311,11 +296,6 @@
       "last_notified_at": "2026-10-19T22:03:05Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18867524/live"
-    },
-    "18883027": {
-      "broadcaster_name": "あ",
-      "last_notified_at": "2026-09-23T08:30:17Z",
-      "url": "https://mixch.tv/u/18883027/live"
     },
     "18903516": {
       "broadcaster_name": "りり‎ﾂﾝﾃﾞﾚﾗ姫",
@@ -476,6 +456,11 @@
       "last_notified_at": "2026-10-16T22:00:24Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19005502/live"
+    },
+    "19005805": {
+      "broadcaster_name": "ゆずか",
+      "last_notified_at": "2026-10-23T09:34:01Z",
+      "url": "https://mixch.tv/u/19005805/live"
     },
     "6683976": {
       "broadcaster_name": "あかりんミスSPA！参❤️",
