@@ -3,29 +3,7 @@
     "last_error_notified_at": "2026-10-21T22:00:31Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {
-    "18856917": {
-      "broadcaster_name": "崎野萌",
-      "first_seen_at": "2026-10-24T16:11:21Z",
-      "last_seen_at": "2026-10-24T16:11:21Z",
-      "max_momentum": 153,
-      "url": "https://mixch.tv/u/18856917/live"
-    },
-    "18862791": {
-      "broadcaster_name": "神田梨未#図鑑Award絶対1位",
-      "first_seen_at": "2026-10-24T13:09:18Z",
-      "last_seen_at": "2026-10-24T13:09:18Z",
-      "max_momentum": 365,
-      "url": "https://mixch.tv/u/18862791/live"
-    },
-    "18938079": {
-      "broadcaster_name": "さらKirei＆co.",
-      "first_seen_at": "2026-10-24T16:06:11Z",
-      "last_seen_at": "2026-10-24T16:06:11Z",
-      "max_momentum": 184,
-      "url": "https://mixch.tv/u/18938079/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16840878": {
       "broadcaster_name": "NeZu K.O.‍♀",
@@ -274,6 +252,18 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18835133/live"
     },
+    "18856917": {
+      "broadcaster_name": "崎野萌",
+      "last_notified_at": "2026-10-24T22:01:51Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18856917/live"
+    },
+    "18862791": {
+      "broadcaster_name": "神田梨未#図鑑Award絶対1位",
+      "last_notified_at": "2026-10-24T22:01:51Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18862791/live"
+    },
     "18867524": {
       "broadcaster_name": "京生今日1.5倍＃カレッジ",
       "last_notified_at": "2026-10-19T22:03:05Z",
@@ -299,6 +289,12 @@
       "broadcaster_name": "さら#JCミスコン",
       "last_notified_at": "2026-10-14T11:35:20Z",
       "url": "https://mixch.tv/u/18929072/live"
+    },
+    "18938079": {
+      "broadcaster_name": "さらKirei＆co.",
+      "last_notified_at": "2026-10-24T22:01:51Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18938079/live"
     },
     "18942145": {
       "broadcaster_name": "ひなち#JCミスコン2026敗活",
