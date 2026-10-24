@@ -12,6 +12,14 @@ on:
       - 'tests/**'
       - 'replay_notifications.py'
       - '.github/workflows/schedule.yml'
+  # 定期監視に取り込む前にも、同じ回帰テストを必ず確認します。
+  pull_request:
+    paths:
+      - 'mixcha_watcher.py'
+      - 'archive_metadata.py'
+      - 'tests/**'
+      - 'replay_notifications.py'
+      - '.github/workflows/schedule.yml'
   workflow_dispatch:
     inputs:
       replay_base:
@@ -73,7 +81,7 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Ensure Chrome is available
-        if: github.event_name != 'push' && inputs.replay_base == ''
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && inputs.replay_base == ''
         run: |
           if ! command -v google-chrome >/dev/null 2>&1; then
             sudo apt-get update
@@ -98,7 +106,7 @@ jobs:
           : > run_metrics.jsonl
 
       - name: Validate Discord notification secret
-        if: github.event_name != 'push'
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         shell: bash
@@ -110,7 +118,7 @@ jobs:
 
       - name: Run watcher
         id: watcher
-        if: github.event_name != 'push' && inputs.replay_base == ''
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && inputs.replay_base == ''
         env:
           MIXCH_DATA_DIR: .
           PUBLIC_LOGS: 'true'

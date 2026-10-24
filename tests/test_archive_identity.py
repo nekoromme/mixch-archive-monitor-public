@@ -168,7 +168,12 @@ class MonitorPersistenceTests(unittest.TestCase):
             manager = patch.object(watcher, name, str(path))
             manager.start()
             self.addCleanup(manager.stop)
-        for manager in (patch.object(watcher, "log_metric"),
+        # 動画と履歴は上の NOW を基準にした固定データです。実際の今日と
+        # 比較すると、日が進むだけで「20日更新なし」の自動解除が動き、
+        # 通知回数・監視対象数の検証が壊れます。期限判定の時計もそろえます。
+        for manager in (patch.object(watcher, "get_today_jst", return_value=NOW.astimezone(metadata.JST).date().isoformat()),
+                        patch.object(watcher, "current_time_utc", return_value=NOW),
+                        patch.object(watcher, "log_metric"),
                         patch.object(watcher, "get_discord_webhook_url", return_value="unused"),
                         patch.object(watcher, "is_last_daily_inactive_notification_run", return_value=True)):
             manager.start()
