@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-21T22:00:31Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18862791": {
+      "broadcaster_name": "神田梨未#図鑑Award絶対1位",
+      "first_seen_at": "2026-10-24T13:09:18Z",
+      "last_seen_at": "2026-10-24T13:09:18Z",
+      "max_momentum": 365,
+      "url": "https://mixch.tv/u/18862791/live"
+    }
+  },
   "notifications": {
     "16840878": {
       "broadcaster_name": "NeZu K.O.‍♀",
