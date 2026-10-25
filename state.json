@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-21T22:00:31Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18408082": {
+      "broadcaster_name": "りの ♥️♯ｷﾝﾓｸｾｲ",
+      "first_seen_at": "2026-10-25T14:05:58Z",
+      "last_seen_at": "2026-10-25T14:05:58Z",
+      "max_momentum": 153,
+      "url": "https://mixch.tv/u/18408082/live"
+    }
+  },
   "notifications": {
     "16840878": {
       "broadcaster_name": "NeZu K.O.‍♀",
