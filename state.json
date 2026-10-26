@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "16994980": {
+      "broadcaster_name": "天晴れりんごひPRモデル",
+      "first_seen_at": "2026-10-26T13:42:44Z",
+      "last_seen_at": "2026-10-26T13:42:44Z",
+      "max_momentum": 168,
+      "url": "https://mixch.tv/u/16994980/live"
+    }
+  },
   "notifications": {
     "16840878": {
       "broadcaster_name": "NeZu K.O.‍♀",
