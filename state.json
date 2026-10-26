@@ -3,15 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {
-    "16994980": {
-      "broadcaster_name": "天晴れりんごひPRモデル",
-      "first_seen_at": "2026-10-26T13:42:44Z",
-      "last_seen_at": "2026-10-26T15:31:51Z",
-      "max_momentum": 225,
-      "url": "https://mixch.tv/u/16994980/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "16840878": {
       "broadcaster_name": "NeZu K.O.‍♀",
@@ -32,6 +24,12 @@
       "broadcaster_name": "しゅな✨服最終日",
       "last_notified_at": "2026-10-26T11:23:06Z",
       "url": "https://mixch.tv/u/16946114/live"
+    },
+    "16994980": {
+      "broadcaster_name": "天晴れりんごひPRモデル",
+      "last_notified_at": "2026-10-26T22:04:29Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/16994980/live"
     },
     "17029149": {
       "broadcaster_name": "こいsweet16委員",
