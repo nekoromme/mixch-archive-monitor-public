@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "19008190": {
+      "broadcaster_name": "なみだ色の消しごむ",
+      "first_seen_at": "2026-10-27T13:08:02Z",
+      "last_seen_at": "2026-10-27T13:08:02Z",
+      "max_momentum": 154,
+      "url": "https://mixch.tv/u/19008190/live"
+    }
+  },
   "notifications": {
     "15399572": {
       "broadcaster_name": "ももにゃんありがとにゃん",
