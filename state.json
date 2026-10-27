@@ -3,44 +3,14 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-20T23:43:23Z"
   },
-  "night_candidates": {
+  "night_candidates": {},
+  "notifications": {
     "15377995": {
       "broadcaster_name": "まひきゅん#出雲気分",
-      "first_seen_at": "2026-10-27T14:47:52Z",
-      "last_seen_at": "2026-10-27T14:47:52Z",
-      "max_momentum": 165,
+      "last_notified_at": "2026-10-27T22:00:10Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/15377995/live"
     },
-    "17584761": {
-      "broadcaster_name": "凜杏りん/Rinoa Rin",
-      "first_seen_at": "2026-10-27T15:50:51Z",
-      "last_seen_at": "2026-10-27T15:50:51Z",
-      "max_momentum": 162,
-      "url": "https://mixch.tv/u/17584761/live"
-    },
-    "18885090": {
-      "broadcaster_name": "1.5倍こひなSSL",
-      "first_seen_at": "2026-10-27T13:34:07Z",
-      "last_seen_at": "2026-10-27T13:34:07Z",
-      "max_momentum": 186,
-      "url": "https://mixch.tv/u/18885090/live"
-    },
-    "19002790": {
-      "broadcaster_name": "まな‍服アワー",
-      "first_seen_at": "2026-10-27T14:42:17Z",
-      "last_seen_at": "2026-10-27T14:58:24Z",
-      "max_momentum": 188,
-      "url": "https://mixch.tv/u/19002790/live"
-    },
-    "19008190": {
-      "broadcaster_name": "なみだ色の消しごむ",
-      "first_seen_at": "2026-10-27T13:08:02Z",
-      "last_seen_at": "2026-10-27T13:08:02Z",
-      "max_momentum": 154,
-      "url": "https://mixch.tv/u/19008190/live"
-    }
-  },
-  "notifications": {
     "15399572": {
       "broadcaster_name": "ももにゃんありがとにゃん",
       "last_notified_at": "2026-10-27T11:28:28Z",
@@ -127,6 +97,12 @@
       "last_notified_at": "2026-10-18T22:01:21Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17534235/live"
+    },
+    "17584761": {
+      "broadcaster_name": "凜杏りん/Rinoa Rin",
+      "last_notified_at": "2026-10-27T22:00:10Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17584761/live"
     },
     "17601726": {
       "broadcaster_name": "あいり⭐️福島美少女図",
@@ -378,6 +354,12 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18867524/live"
     },
+    "18885090": {
+      "broadcaster_name": "1.5倍こひなSSL",
+      "last_notified_at": "2026-10-27T22:00:10Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18885090/live"
+    },
     "18903516": {
       "broadcaster_name": "りり‎ﾂﾝﾃﾞﾚﾗ姫",
       "last_notified_at": "2026-10-18T09:10:36Z",
@@ -506,6 +488,12 @@
       "last_notified_at": "2026-10-14T12:43:26Z",
       "url": "https://mixch.tv/u/19000767/live"
     },
+    "19002790": {
+      "broadcaster_name": "まな‍服アワー",
+      "last_notified_at": "2026-10-27T22:00:10Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19002790/live"
+    },
     "19002877": {
       "broadcaster_name": "みゆみゆ✨",
       "last_notified_at": "2026-10-24T11:35:31Z",
@@ -546,6 +534,12 @@
       "broadcaster_name": "ゆずか",
       "last_notified_at": "2026-10-23T09:34:01Z",
       "url": "https://mixch.tv/u/19005805/live"
+    },
+    "19008190": {
+      "broadcaster_name": "なみだ色の消しごむ",
+      "last_notified_at": "2026-10-27T22:00:10Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19008190/live"
     },
     "19010197": {
       "broadcaster_name": "nyan",
