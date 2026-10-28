@@ -3,22 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-27T23:44:52Z"
   },
-  "night_candidates": {
-    "18068858": {
-      "broadcaster_name": "舞香❤️",
-      "first_seen_at": "2026-10-28T13:15:15Z",
-      "last_seen_at": "2026-10-28T13:15:15Z",
-      "max_momentum": 199,
-      "url": "https://mixch.tv/u/18068858/live"
-    },
-    "18766676": {
-      "broadcaster_name": "もも本制服アワー",
-      "first_seen_at": "2026-10-28T13:56:58Z",
-      "last_seen_at": "2026-10-28T13:56:58Z",
-      "max_momentum": 221,
-      "url": "https://mixch.tv/u/18766676/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ129本選",
@@ -175,6 +160,12 @@
       "broadcaster_name": "玉響storage",
       "last_notified_at": "2026-10-26T12:24:24Z",
       "url": "https://mixch.tv/u/17996352/live"
+    },
+    "18068858": {
+      "broadcaster_name": "舞香❤️",
+      "last_notified_at": "2026-10-28T22:04:17Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18068858/live"
     },
     "18091243": {
       "broadcaster_name": "本日㉓時ｺﾞｼﾞｬﾎﾞ日和雨ﾎﾟｽ",
@@ -346,7 +337,7 @@
     },
     "18766676": {
       "broadcaster_name": "もも本制服アワー",
-      "last_notified_at": "2026-10-21T22:05:45Z",
+      "last_notified_at": "2026-10-28T22:04:17Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18766676/live"
     },
