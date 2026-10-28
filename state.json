@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-27T23:44:52Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18068858": {
+      "broadcaster_name": "舞香❤️",
+      "first_seen_at": "2026-10-28T13:15:15Z",
+      "last_seen_at": "2026-10-28T13:15:15Z",
+      "max_momentum": 199,
+      "url": "https://mixch.tv/u/18068858/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ129本選",
