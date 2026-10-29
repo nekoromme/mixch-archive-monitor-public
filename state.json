@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-27T23:44:52Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "15377995": {
+      "broadcaster_name": "まひきゅん#出雲日",
+      "first_seen_at": "2026-10-29T14:10:28Z",
+      "last_seen_at": "2026-10-29T14:10:28Z",
+      "max_momentum": 175,
+      "url": "https://mixch.tv/u/15377995/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ129本選",
