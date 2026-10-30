@@ -5,6 +5,9 @@
   },
   "night_candidates": {
     "17131878": {
+      "archive_check_failed_since": "2026-10-30T23:42:34Z",
+      "archive_check_last_error": "MixChannelアーカイブ一覧 (user_id=17131878, page=1)がHTTP 403を返しました",
+      "archive_check_retry_at": "2026-10-30T23:57:34Z",
       "broadcaster_name": "綾日前日❤️少女図",
       "first_seen_at": "2026-10-30T13:25:53Z",
       "last_seen_at": "2026-10-30T13:25:53Z",
@@ -12,6 +15,9 @@
       "url": "https://mixch.tv/u/17131878/live"
     },
     "18803331": {
+      "archive_check_failed_since": "2026-10-30T23:42:34Z",
+      "archive_check_last_error": "MixChannelアーカイブ一覧 (user_id=18803331, page=1)がHTTP 403を返しました",
+      "archive_check_retry_at": "2026-10-30T23:57:34Z",
       "broadcaster_name": "れあ",
       "first_seen_at": "2026-10-30T15:31:29Z",
       "last_seen_at": "2026-10-30T15:31:29Z",
@@ -19,6 +25,9 @@
       "url": "https://mixch.tv/u/18803331/live"
     },
     "18927394": {
+      "archive_check_failed_since": "2026-10-30T23:42:34Z",
+      "archive_check_last_error": "MixChannelアーカイブ一覧 (user_id=18927394, page=1)がHTTP 403を返しました",
+      "archive_check_retry_at": "2026-10-30T23:57:34Z",
       "broadcaster_name": "りい#U-NEXT",
       "first_seen_at": "2026-10-30T13:41:35Z",
       "last_seen_at": "2026-10-30T13:46:51Z",
@@ -26,6 +35,9 @@
       "url": "https://mixch.tv/u/18927394/live"
     },
     "18971618": {
+      "archive_check_failed_since": "2026-10-30T23:42:34Z",
+      "archive_check_last_error": "MixChannelアーカイブ一覧 (user_id=18971618, page=1)がHTTP 403を返しました",
+      "archive_check_retry_at": "2026-10-30T23:57:34Z",
       "broadcaster_name": "せな‍♀服アワー",
       "first_seen_at": "2026-10-30T13:15:24Z",
       "last_seen_at": "2026-10-30T13:15:24Z",
@@ -33,6 +45,9 @@
       "url": "https://mixch.tv/u/18971618/live"
     },
     "18999860": {
+      "archive_check_failed_since": "2026-10-30T23:42:34Z",
+      "archive_check_last_error": "MixChannelアーカイブ一覧 (user_id=18999860, page=1)がHTTP 403を返しました",
+      "archive_check_retry_at": "2026-10-30T23:57:34Z",
       "broadcaster_name": "RΛYLI（れいり服アワー",
       "first_seen_at": "2026-10-30T14:18:12Z",
       "last_seen_at": "2026-10-30T14:18:12Z",
@@ -40,6 +55,9 @@
       "url": "https://mixch.tv/u/18999860/live"
     },
     "19004996": {
+      "archive_check_failed_since": "2026-10-30T23:42:34Z",
+      "archive_check_last_error": "MixChannelアーカイブ一覧 (user_id=19004996, page=1)がHTTP 403を返しました",
+      "archive_check_retry_at": "2026-10-30T23:57:34Z",
       "broadcaster_name": "コス投票いずみ#制服アワー",
       "first_seen_at": "2026-10-30T13:31:11Z",
       "last_seen_at": "2026-10-30T13:31:11Z",
@@ -47,6 +65,9 @@
       "url": "https://mixch.tv/u/19004996/live"
     },
     "19008190": {
+      "archive_check_failed_since": "2026-10-30T23:42:34Z",
+      "archive_check_last_error": "MixChannelアーカイブ一覧 (user_id=19008190, page=1)がHTTP 403を返しました",
+      "archive_check_retry_at": "2026-10-30T23:57:34Z",
       "broadcaster_name": "【イベント挑戦中】なみの消しごむ",
       "first_seen_at": "2026-10-30T14:02:34Z",
       "last_seen_at": "2026-10-30T14:02:34Z",
