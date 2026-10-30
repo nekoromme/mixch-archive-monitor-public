@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-27T23:44:52Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18971618": {
+      "broadcaster_name": "せな‍♀服アワー",
+      "first_seen_at": "2026-10-30T13:15:24Z",
+      "last_seen_at": "2026-10-30T13:15:24Z",
+      "max_momentum": 201,
+      "url": "https://mixch.tv/u/18971618/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ129本選",
