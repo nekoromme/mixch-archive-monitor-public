@@ -3,26 +3,12 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-27T23:44:52Z"
   },
-  "night_candidates": {
-    "10914555": {
-      "broadcaster_name": "さちこガチ5",
-      "first_seen_at": "2026-10-31T15:53:52Z",
-      "last_seen_at": "2026-10-31T15:53:52Z",
-      "max_momentum": 152,
-      "url": "https://mixch.tv/u/10914555/live"
-    },
-    "19008415": {
-      "broadcaster_name": "えりャンガル",
-      "first_seen_at": "2026-10-31T15:43:24Z",
-      "last_seen_at": "2026-10-31T15:43:24Z",
-      "max_momentum": 152,
-      "url": "https://mixch.tv/u/19008415/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
-      "broadcaster_name": "さちこガチ129本選",
-      "last_notified_at": "2026-10-28T11:25:13Z",
+      "broadcaster_name": "さちこガチ5",
+      "last_notified_at": "2026-10-31T22:04:46Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/10914555/live"
     },
     "13808025": {
@@ -653,6 +639,12 @@
       "last_notified_at": "2026-10-30T23:58:13Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19008190/live"
+    },
+    "19008415": {
+      "broadcaster_name": "えりャンガル",
+      "last_notified_at": "2026-10-31T22:04:46Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19008415/live"
     },
     "19008974": {
       "broadcaster_name": "キララ✨KOGYARU 専属AD",
