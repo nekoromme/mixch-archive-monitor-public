@@ -3,36 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-10-27T23:44:52Z"
   },
-  "night_candidates": {
-    "18971618": {
-      "broadcaster_name": "せな‍♀服アワー",
-      "first_seen_at": "2026-11-02T13:44:31Z",
-      "last_seen_at": "2026-11-02T13:44:31Z",
-      "max_momentum": 194,
-      "url": "https://mixch.tv/u/18971618/live"
-    },
-    "18994359": {
-      "broadcaster_name": "りんりん",
-      "first_seen_at": "2026-11-02T15:04:55Z",
-      "last_seen_at": "2026-11-02T15:04:55Z",
-      "max_momentum": 197,
-      "url": "https://mixch.tv/u/18994359/live"
-    },
-    "18999860": {
-      "broadcaster_name": "RΛYLI（れいり服アワー",
-      "first_seen_at": "2026-11-02T13:02:25Z",
-      "last_seen_at": "2026-11-02T13:18:25Z",
-      "max_momentum": 306,
-      "url": "https://mixch.tv/u/18999860/live"
-    },
-    "19008415": {
-      "broadcaster_name": "えりャンガル",
-      "first_seen_at": "2026-11-02T13:49:46Z",
-      "last_seen_at": "2026-11-02T14:05:53Z",
-      "max_momentum": 286,
-      "url": "https://mixch.tv/u/19008415/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
@@ -581,7 +552,8 @@
     },
     "18971618": {
       "broadcaster_name": "せな‍♀服アワー",
-      "last_notified_at": "2026-11-01T03:59:03Z",
+      "last_notified_at": "2026-11-02T22:04:54Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18971618/live"
     },
     "18977885": {
@@ -616,6 +588,12 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18992367/live"
     },
+    "18994359": {
+      "broadcaster_name": "りんりん",
+      "last_notified_at": "2026-11-02T22:04:54Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18994359/live"
+    },
     "18996166": {
       "broadcaster_name": "せら#ガチ❤️少女図",
       "last_notified_at": "2026-10-14T12:59:11Z",
@@ -628,7 +606,7 @@
     },
     "18999860": {
       "broadcaster_name": "RΛYLI（れいり服アワー",
-      "last_notified_at": "2026-10-30T23:58:13Z",
+      "last_notified_at": "2026-11-02T22:04:54Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18999860/live"
     },
@@ -703,7 +681,7 @@
     },
     "19008415": {
       "broadcaster_name": "えりャンガル",
-      "last_notified_at": "2026-10-31T22:04:46Z",
+      "last_notified_at": "2026-11-02T22:04:54Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19008415/live"
     },
