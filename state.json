@@ -3,36 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {
-    "17294927": {
-      "broadcaster_name": "みみ11/4は4周年㊗",
-      "first_seen_at": "2026-11-04T14:17:31Z",
-      "last_seen_at": "2026-11-04T14:28:04Z",
-      "max_momentum": 211,
-      "url": "https://mixch.tv/u/17294927/live"
-    },
-    "19002790": {
-      "broadcaster_name": "まな‍服アワー",
-      "first_seen_at": "2026-11-04T13:25:16Z",
-      "last_seen_at": "2026-11-04T13:25:16Z",
-      "max_momentum": 180,
-      "url": "https://mixch.tv/u/19002790/live"
-    },
-    "19004983": {
-      "broadcaster_name": "あおち服アワー",
-      "first_seen_at": "2026-11-04T13:09:24Z",
-      "last_seen_at": "2026-11-04T13:14:40Z",
-      "max_momentum": 169,
-      "url": "https://mixch.tv/u/19004983/live"
-    },
-    "19008190": {
-      "broadcaster_name": "【イベント挑戦中】なみの消しごむ",
-      "first_seen_at": "2026-11-04T15:20:53Z",
-      "last_seen_at": "2026-11-04T15:26:09Z",
-      "max_momentum": 359,
-      "url": "https://mixch.tv/u/19008190/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
@@ -117,6 +88,12 @@
       "broadcaster_name": "南波那ﾝﾊﾞｻｰ＆PV AD",
       "last_notified_at": "2026-10-20T09:16:10Z",
       "url": "https://mixch.tv/u/17272800/live"
+    },
+    "17294927": {
+      "broadcaster_name": "みみ11/4は4周年㊗",
+      "last_notified_at": "2026-11-04T22:34:38Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17294927/live"
     },
     "17297029": {
       "broadcaster_name": "ゆめ☕",
@@ -671,7 +648,7 @@
     },
     "19002790": {
       "broadcaster_name": "まな‍服アワー",
-      "last_notified_at": "2026-10-27T22:00:10Z",
+      "last_notified_at": "2026-11-04T22:34:38Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19002790/live"
     },
@@ -694,6 +671,12 @@
       "broadcaster_name": "Momoka",
       "last_notified_at": "2026-10-25T06:32:10Z",
       "url": "https://mixch.tv/u/19004905/live"
+    },
+    "19004983": {
+      "broadcaster_name": "あおち服アワー",
+      "last_notified_at": "2026-11-04T22:34:38Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19004983/live"
     },
     "19004996": {
       "broadcaster_name": "いずみ#制服アワー",
@@ -733,7 +716,7 @@
     },
     "19008190": {
       "broadcaster_name": "【イベント挑戦中】なみの消しごむ",
-      "last_notified_at": "2026-10-30T23:58:13Z",
+      "last_notified_at": "2026-11-04T22:34:38Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19008190/live"
     },
