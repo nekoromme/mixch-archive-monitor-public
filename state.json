@@ -2,8 +2,8 @@
   "incident_kind": "monitor_stale",
   "incident_open": true,
   "incident_started_at": "2026-11-04T17:04:03Z",
-  "last_alerted_at": "2026-11-04T17:04:03Z",
+  "last_alerted_at": "2026-11-04T22:34:26Z",
   "last_recovered_at": "2026-10-31T02:44:24Z",
-  "last_restart_attempt_at": "2026-11-04T17:04:03Z",
+  "last_restart_attempt_at": "2026-11-04T22:34:26Z",
   "version": 1
 }
