@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18766676": {
+      "broadcaster_name": "もも本制服アワー",
+      "first_seen_at": "2026-11-05T13:03:14Z",
+      "last_seen_at": "2026-11-05T13:03:14Z",
+      "max_momentum": 150,
+      "url": "https://mixch.tv/u/18766676/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
