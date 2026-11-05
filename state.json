@@ -3,43 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {
-    "16586849": {
-      "broadcaster_name": "小春な100万回AD",
-      "first_seen_at": "2026-11-05T17:04:39Z",
-      "last_seen_at": "2026-11-05T17:04:39Z",
-      "max_momentum": 171,
-      "url": "https://mixch.tv/u/16586849/live"
-    },
-    "18364405": {
-      "broadcaster_name": "まりこ#ｻｸｻｸお菓子大",
-      "first_seen_at": "2026-11-05T15:40:20Z",
-      "last_seen_at": "2026-11-05T15:40:20Z",
-      "max_momentum": 264,
-      "url": "https://mixch.tv/u/18364405/live"
-    },
-    "18766676": {
-      "broadcaster_name": "もも本制服アワー",
-      "first_seen_at": "2026-11-05T13:03:14Z",
-      "last_seen_at": "2026-11-05T13:03:14Z",
-      "max_momentum": 150,
-      "url": "https://mixch.tv/u/18766676/live"
-    },
-    "18951227": {
-      "broadcaster_name": "ふうな#ふりか",
-      "first_seen_at": "2026-11-05T15:24:37Z",
-      "last_seen_at": "2026-11-05T15:24:37Z",
-      "max_momentum": 195,
-      "url": "https://mixch.tv/u/18951227/live"
-    },
-    "19008190": {
-      "broadcaster_name": "【イベント挑戦中】なみの消しごむ",
-      "first_seen_at": "2026-11-05T13:19:00Z",
-      "last_seen_at": "2026-11-05T13:50:20Z",
-      "max_momentum": 455,
-      "url": "https://mixch.tv/u/19008190/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
@@ -67,6 +31,12 @@
       "broadcaster_name": "いろは# Natuul専属モデルAD",
       "last_notified_at": "2026-11-02T11:00:00Z",
       "url": "https://mixch.tv/u/15738996/live"
+    },
+    "16586849": {
+      "broadcaster_name": "小春な100万回AD",
+      "last_notified_at": "2026-11-05T22:03:13Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/16586849/live"
     },
     "16840878": {
       "broadcaster_name": "NeZu K.O.‍♀",
@@ -296,8 +266,8 @@
       "url": "https://mixch.tv/u/18352800/live"
     },
     "18364405": {
-      "broadcaster_name": "まりこ#ﾏﾏｶﾞｰﾙweb記事掲",
-      "last_notified_at": "2026-10-15T22:04:06Z",
+      "broadcaster_name": "まりこ#ｻｸｻｸお菓子大",
+      "last_notified_at": "2026-11-05T22:03:13Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18364405/live"
     },
@@ -436,7 +406,7 @@
     },
     "18766676": {
       "broadcaster_name": "もも本制服アワー",
-      "last_notified_at": "2026-11-03T22:00:07Z",
+      "last_notified_at": "2026-11-05T22:03:13Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18766676/live"
     },
@@ -587,8 +557,8 @@
       "url": "https://mixch.tv/u/18950177/live"
     },
     "18951227": {
-      "broadcaster_name": "ふうな",
-      "last_notified_at": "2026-10-20T22:04:23Z",
+      "broadcaster_name": "ふうな#ふりか",
+      "last_notified_at": "2026-11-05T22:03:13Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18951227/live"
     },
@@ -756,7 +726,7 @@
     },
     "19008190": {
       "broadcaster_name": "【イベント挑戦中】なみの消しごむ",
-      "last_notified_at": "2026-11-04T22:34:38Z",
+      "last_notified_at": "2026-11-05T22:03:13Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19008190/live"
     },
