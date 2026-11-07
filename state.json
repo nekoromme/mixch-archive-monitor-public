@@ -3,22 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {
-    "15774187": {
-      "broadcaster_name": "(あや)❤️最終日1.5",
-      "first_seen_at": "2026-11-07T14:36:01Z",
-      "last_seen_at": "2026-11-07T14:36:01Z",
-      "max_momentum": 219,
-      "url": "https://mixch.tv/u/15774187/live"
-    },
-    "18971618": {
-      "broadcaster_name": "せな‍♀服アワー",
-      "first_seen_at": "2026-11-07T13:49:07Z",
-      "last_seen_at": "2026-11-07T15:38:32Z",
-      "max_momentum": 262,
-      "url": "https://mixch.tv/u/18971618/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
@@ -51,6 +36,12 @@
       "broadcaster_name": "いろは# Natuul専属モデルAD",
       "last_notified_at": "2026-11-02T11:00:00Z",
       "url": "https://mixch.tv/u/15738996/live"
+    },
+    "15774187": {
+      "broadcaster_name": "(あや)❤️最終日1.5",
+      "last_notified_at": "2026-11-07T22:04:08Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/15774187/live"
     },
     "16586849": {
       "broadcaster_name": "小春な100万回AD",
@@ -644,7 +635,8 @@
     },
     "18971618": {
       "broadcaster_name": "せな‍♀服アワー",
-      "last_notified_at": "2026-11-06T11:47:37Z",
+      "last_notified_at": "2026-11-07T22:04:08Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18971618/live"
     },
     "18972583": {
