@@ -3,15 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {
-    "19017226": {
-      "broadcaster_name": "ゆりイク女",
-      "first_seen_at": "2026-11-08T15:09:51Z",
-      "last_seen_at": "2026-11-08T15:09:51Z",
-      "max_momentum": 154,
-      "url": "https://mixch.tv/u/19017226/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
@@ -842,6 +834,12 @@
       "broadcaster_name": "あい",
       "last_notified_at": "2026-11-03T05:31:55Z",
       "url": "https://mixch.tv/u/19011722/live"
+    },
+    "19017226": {
+      "broadcaster_name": "ゆりイク女",
+      "last_notified_at": "2026-11-08T22:01:27Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19017226/live"
     },
     "6683976": {
       "broadcaster_name": "あかりんミスSPA！参❤️",
