@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "15377995": {
+      "broadcaster_name": "まひきゅん#日",
+      "first_seen_at": "2026-11-09T13:29:29Z",
+      "last_seen_at": "2026-11-09T13:29:29Z",
+      "max_momentum": 188,
+      "url": "https://mixch.tv/u/15377995/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
