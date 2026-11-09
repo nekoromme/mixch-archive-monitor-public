@@ -3,36 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {
-    "15377995": {
-      "broadcaster_name": "まひきゅん#日",
-      "first_seen_at": "2026-11-09T13:29:29Z",
-      "last_seen_at": "2026-11-09T13:39:56Z",
-      "max_momentum": 234,
-      "url": "https://mixch.tv/u/15377995/live"
-    },
-    "17114808": {
-      "broadcaster_name": "スカイピョン(・・)",
-      "first_seen_at": "2026-11-09T14:37:24Z",
-      "last_seen_at": "2026-11-09T14:37:24Z",
-      "max_momentum": 151,
-      "url": "https://mixch.tv/u/17114808/live"
-    },
-    "18702536": {
-      "broadcaster_name": "❤️.5倍❤️米さら♯キャンガル",
-      "first_seen_at": "2026-11-09T14:58:19Z",
-      "last_seen_at": "2026-11-09T14:58:19Z",
-      "max_momentum": 150,
-      "url": "https://mixch.tv/u/18702536/live"
-    },
-    "18873012": {
-      "broadcaster_name": "乃愛#ウエアワ5",
-      "first_seen_at": "2026-11-09T16:06:20Z",
-      "last_seen_at": "2026-11-09T16:06:20Z",
-      "max_momentum": 188,
-      "url": "https://mixch.tv/u/18873012/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
@@ -51,8 +22,8 @@
       "url": "https://mixch.tv/u/13808025/live"
     },
     "15377995": {
-      "broadcaster_name": "まひきゅん#出雲日",
-      "last_notified_at": "2026-10-29T22:01:32Z",
+      "broadcaster_name": "まひきゅん#日",
+      "last_notified_at": "2026-11-09T22:02:45Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/15377995/live"
     },
@@ -118,6 +89,12 @@
       "broadcaster_name": "X固定もあなPopteen",
       "last_notified_at": "2026-10-19T12:16:58Z",
       "url": "https://mixch.tv/u/17029205/live"
+    },
+    "17114808": {
+      "broadcaster_name": "スカイピョン(・・)",
+      "last_notified_at": "2026-11-09T22:02:45Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17114808/live"
     },
     "17131878": {
       "broadcaster_name": "綾日前日❤️少女図",
@@ -422,8 +399,8 @@
       "url": "https://mixch.tv/u/18678314/live"
     },
     "18702536": {
-      "broadcaster_name": "白米さら♯キャンガル",
-      "last_notified_at": "2026-10-23T22:03:19Z",
+      "broadcaster_name": "❤️.5倍❤️米さら♯キャンガル",
+      "last_notified_at": "2026-11-09T22:02:45Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18702536/live"
     },
@@ -550,7 +527,7 @@
     },
     "18873012": {
       "broadcaster_name": "乃愛#ウエアワ5",
-      "last_notified_at": "2026-10-29T22:01:32Z",
+      "last_notified_at": "2026-11-09T22:02:45Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18873012/live"
     },
