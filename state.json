@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18856596": {
+      "broadcaster_name": "ほしのゆき❄鮭",
+      "first_seen_at": "2026-11-10T16:01:23Z",
+      "last_seen_at": "2026-11-10T16:01:23Z",
+      "max_momentum": 159,
+      "url": "https://mixch.tv/u/18856596/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
