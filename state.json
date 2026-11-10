@@ -3,15 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-03T23:45:03Z"
   },
-  "night_candidates": {
-    "18856596": {
-      "broadcaster_name": "ほしのゆき❄鮭",
-      "first_seen_at": "2026-11-10T16:01:23Z",
-      "last_seen_at": "2026-11-10T16:32:46Z",
-      "max_momentum": 187,
-      "url": "https://mixch.tv/u/18856596/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さちこガチ5",
@@ -514,6 +506,12 @@
       "broadcaster_name": "たまツコレ",
       "last_notified_at": "2026-10-27T12:46:41Z",
       "url": "https://mixch.tv/u/18836298/live"
+    },
+    "18856596": {
+      "broadcaster_name": "ほしのゆき❄鮭",
+      "last_notified_at": "2026-11-10T22:04:20Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18856596/live"
     },
     "18856917": {
       "broadcaster_name": "崎野萌",
