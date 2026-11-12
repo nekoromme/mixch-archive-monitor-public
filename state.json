@@ -3,47 +3,11 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-10T23:48:50Z"
   },
-  "night_candidates": {
-    "10914555": {
-      "broadcaster_name": "さち",
-      "first_seen_at": "2026-11-11T14:09:21Z",
-      "last_seen_at": "2026-11-11T14:09:21Z",
-      "max_momentum": 150,
-      "url": "https://mixch.tv/u/10914555/live"
-    },
-    "17349038": {
-      "broadcaster_name": "はる❤第16回ミスブーケ",
-      "first_seen_at": "2026-11-11T13:01:27Z",
-      "last_seen_at": "2026-11-11T13:11:57Z",
-      "max_momentum": 210,
-      "url": "https://mixch.tv/u/17349038/live"
-    },
-    "18478464": {
-      "broadcaster_name": "ことね‪#ネクジェネ仙台2026",
-      "first_seen_at": "2026-11-11T13:27:38Z",
-      "last_seen_at": "2026-11-11T13:27:38Z",
-      "max_momentum": 216,
-      "url": "https://mixch.tv/u/18478464/live"
-    },
-    "18702536": {
-      "broadcaster_name": "白米さらXいいね♯キャンガル",
-      "first_seen_at": "2026-11-11T13:48:30Z",
-      "last_seen_at": "2026-11-11T13:48:30Z",
-      "max_momentum": 204,
-      "url": "https://mixch.tv/u/18702536/live"
-    },
-    "18951227": {
-      "broadcaster_name": "ふうな",
-      "first_seen_at": "2026-11-11T15:38:13Z",
-      "last_seen_at": "2026-11-11T15:38:13Z",
-      "max_momentum": 191,
-      "url": "https://mixch.tv/u/18951227/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
-      "broadcaster_name": "さちこガチ5",
-      "last_notified_at": "2026-10-31T22:04:46Z",
+      "broadcaster_name": "さち",
+      "last_notified_at": "2026-11-12T01:56:55Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/10914555/live"
     },
@@ -163,6 +127,12 @@
       "broadcaster_name": "ゆめ☕",
       "last_notified_at": "2026-10-14T12:22:26Z",
       "url": "https://mixch.tv/u/17297029/live"
+    },
+    "17349038": {
+      "broadcaster_name": "はる❤第16回ミスブーケ",
+      "last_notified_at": "2026-11-12T01:56:55Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17349038/live"
     },
     "17356049": {
       "broadcaster_name": "ゆあぽん#Sweet16新メンバーAD",
@@ -385,7 +355,8 @@
     },
     "18478464": {
       "broadcaster_name": "ことね‪#ネクジェネ仙台2026",
-      "last_notified_at": "2026-10-14T08:53:03Z",
+      "last_notified_at": "2026-11-12T01:56:55Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18478464/live"
     },
     "18479504": {
@@ -439,8 +410,8 @@
       "url": "https://mixch.tv/u/18678314/live"
     },
     "18702536": {
-      "broadcaster_name": "❤️.5倍❤️米さら♯キャンガル",
-      "last_notified_at": "2026-11-09T22:02:45Z",
+      "broadcaster_name": "白米さらXいいね♯キャンガル",
+      "last_notified_at": "2026-11-12T01:56:55Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18702536/live"
     },
@@ -688,8 +659,8 @@
       "url": "https://mixch.tv/u/18950177/live"
     },
     "18951227": {
-      "broadcaster_name": "ふうな#ふりか",
-      "last_notified_at": "2026-11-06T22:04:52Z",
+      "broadcaster_name": "ふうな",
+      "last_notified_at": "2026-11-12T01:56:55Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18951227/live"
     },
