@@ -3,29 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-10T23:48:50Z"
   },
-  "night_candidates": {
-    "15377995": {
-      "broadcaster_name": "まひきゅん#濃厚すぎて",
-      "first_seen_at": "2026-11-12T14:23:27Z",
-      "last_seen_at": "2026-11-12T14:23:27Z",
-      "max_momentum": 158,
-      "url": "https://mixch.tv/u/15377995/live"
-    },
-    "17349038": {
-      "broadcaster_name": "はる❤第16回ミスブーケ",
-      "first_seen_at": "2026-11-12T14:07:41Z",
-      "last_seen_at": "2026-11-12T14:07:41Z",
-      "max_momentum": 174,
-      "url": "https://mixch.tv/u/17349038/live"
-    },
-    "18865300": {
-      "broadcaster_name": "くるみ#RunwayJK部",
-      "first_seen_at": "2026-11-12T13:04:50Z",
-      "last_seen_at": "2026-11-12T13:04:50Z",
-      "max_momentum": 182,
-      "url": "https://mixch.tv/u/18865300/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -44,8 +22,8 @@
       "url": "https://mixch.tv/u/13808025/live"
     },
     "15377995": {
-      "broadcaster_name": "まひきゅん#日",
-      "last_notified_at": "2026-11-09T22:02:45Z",
+      "broadcaster_name": "まひきゅん#濃厚すぎて",
+      "last_notified_at": "2026-11-12T22:04:06Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/15377995/live"
     },
@@ -152,7 +130,7 @@
     },
     "17349038": {
       "broadcaster_name": "はる❤第16回ミスブーケ",
-      "last_notified_at": "2026-11-12T01:56:55Z",
+      "last_notified_at": "2026-11-12T22:04:06Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17349038/live"
     },
@@ -562,6 +540,12 @@
       "broadcaster_name": "ことは#美少女歌祭2026",
       "last_notified_at": "2026-10-31T11:53:39Z",
       "url": "https://mixch.tv/u/18865016/live"
+    },
+    "18865300": {
+      "broadcaster_name": "くるみ#RunwayJK部",
+      "last_notified_at": "2026-11-12T22:04:06Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18865300/live"
     },
     "18867524": {
       "broadcaster_name": "京生今日1.5倍＃カレッジ",
