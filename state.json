@@ -3,36 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-10T23:48:50Z"
   },
-  "night_candidates": {
-    "18372154": {
-      "broadcaster_name": "ゆん",
-      "first_seen_at": "2026-11-13T13:37:33Z",
-      "last_seen_at": "2026-11-13T13:37:33Z",
-      "max_momentum": 213,
-      "url": "https://mixch.tv/u/18372154/live"
-    },
-    "18596503": {
-      "broadcaster_name": "あん#sweetAD",
-      "first_seen_at": "2026-11-13T15:38:05Z",
-      "last_seen_at": "2026-11-13T15:38:05Z",
-      "max_momentum": 162,
-      "url": "https://mixch.tv/u/18596503/live"
-    },
-    "18994359": {
-      "broadcaster_name": "りんりん#中華ま",
-      "first_seen_at": "2026-11-13T16:19:59Z",
-      "last_seen_at": "2026-11-13T16:19:59Z",
-      "max_momentum": 173,
-      "url": "https://mixch.tv/u/18994359/live"
-    },
-    "19001776": {
-      "broadcaster_name": "みsweet16委員会AD",
-      "first_seen_at": "2026-11-13T14:14:11Z",
-      "last_seen_at": "2026-11-13T14:14:11Z",
-      "max_momentum": 155,
-      "url": "https://mixch.tv/u/19001776/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -341,6 +312,12 @@
       "last_notified_at": "2026-10-28T11:46:08Z",
       "url": "https://mixch.tv/u/18364850/live"
     },
+    "18372154": {
+      "broadcaster_name": "ゆん",
+      "last_notified_at": "2026-11-13T22:00:09Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18372154/live"
+    },
     "18379867": {
       "broadcaster_name": "かつき#本日14:30ミニ",
       "last_notified_at": "2026-10-25T05:14:06Z",
@@ -412,6 +389,12 @@
       "broadcaster_name": "るうsweet16委員",
       "last_notified_at": "2026-11-09T10:47:46Z",
       "url": "https://mixch.tv/u/18574994/live"
+    },
+    "18596503": {
+      "broadcaster_name": "あん#sweetAD",
+      "last_notified_at": "2026-11-13T22:00:09Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18596503/live"
     },
     "18634878": {
       "broadcaster_name": "星井さき️⚡️⭐",
@@ -777,8 +760,8 @@
       "url": "https://mixch.tv/u/18992367/live"
     },
     "18994359": {
-      "broadcaster_name": "りんりん",
-      "last_notified_at": "2026-11-02T22:04:54Z",
+      "broadcaster_name": "りんりん#中華ま",
+      "last_notified_at": "2026-11-13T22:00:09Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18994359/live"
     },
@@ -799,7 +782,8 @@
     },
     "19001776": {
       "broadcaster_name": "みsweet16委員会AD",
-      "last_notified_at": "2026-11-12T10:33:12Z",
+      "last_notified_at": "2026-11-13T22:00:09Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19001776/live"
     },
     "19002790": {
