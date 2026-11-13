@@ -768,11 +768,6 @@
       "last_notified_at": "2026-11-06T12:34:44Z",
       "url": "https://mixch.tv/u/18999860/live"
     },
-    "19000767": {
-      "broadcaster_name": "ゆみコレAD参加中",
-      "last_notified_at": "2026-10-14T12:43:26Z",
-      "url": "https://mixch.tv/u/19000767/live"
-    },
     "19000998": {
       "broadcaster_name": "あ～ちゃん",
       "last_notified_at": "2026-11-02T10:54:45Z",
@@ -849,6 +844,11 @@
       "last_notified_at": "2026-10-16T22:00:24Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/19005502/live"
+    },
+    "19005558": {
+      "broadcaster_name": "琉花(13)‍⬛♯Sweet16AD",
+      "last_notified_at": "2026-11-13T12:45:22Z",
+      "url": "https://mixch.tv/u/19005558/live"
     },
     "19005805": {
       "broadcaster_name": "ゆずか",
