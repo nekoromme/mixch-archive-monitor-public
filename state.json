@@ -3,15 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-10T23:48:50Z"
   },
-  "night_candidates": {
-    "16586849": {
-      "broadcaster_name": "小春な100万回AD決",
-      "first_seen_at": "2026-11-14T13:27:46Z",
-      "last_seen_at": "2026-11-14T14:40:45Z",
-      "max_momentum": 332,
-      "url": "https://mixch.tv/u/16586849/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -57,8 +49,8 @@
       "url": "https://mixch.tv/u/15774187/live"
     },
     "16586849": {
-      "broadcaster_name": "小春な100万回AD",
-      "last_notified_at": "2026-11-05T22:03:13Z",
+      "broadcaster_name": "小春な100万回AD決",
+      "last_notified_at": "2026-11-14T22:04:02Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/16586849/live"
     },
