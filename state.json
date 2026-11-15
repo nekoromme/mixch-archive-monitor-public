@@ -3,22 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-10T23:48:50Z"
   },
-  "night_candidates": {
-    "18296626": {
-      "broadcaster_name": "女王まりあ#ﾌﾞﾙｰﾑｰ",
-      "first_seen_at": "2026-11-15T16:07:39Z",
-      "last_seen_at": "2026-11-15T16:07:39Z",
-      "max_momentum": 189,
-      "url": "https://mixch.tv/u/18296626/live"
-    },
-    "18951227": {
-      "broadcaster_name": "ふうな",
-      "first_seen_at": "2026-11-15T15:36:24Z",
-      "last_seen_at": "2026-11-15T15:36:24Z",
-      "max_momentum": 199,
-      "url": "https://mixch.tv/u/18951227/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -211,12 +196,6 @@
       "last_notified_at": "2026-10-28T12:01:51Z",
       "url": "https://mixch.tv/u/17837380/live"
     },
-    "17866672": {
-      "broadcaster_name": "ゆう",
-      "last_notified_at": "2026-10-16T22:00:24Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/17866672/live"
-    },
     "17900867": {
       "broadcaster_name": "福田 蒔已花 #サツコレガチイベ⛄️",
       "last_notified_at": "2026-10-20T11:05:54Z",
@@ -284,20 +263,15 @@
       "url": "https://mixch.tv/u/18263130/live"
     },
     "18296626": {
-      "broadcaster_name": "女王まりあ",
-      "last_notified_at": "2026-11-11T10:09:01Z",
+      "broadcaster_name": "女王まりあ#ﾌﾞﾙｰﾑｰ",
+      "last_notified_at": "2026-11-15T22:01:50Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18296626/live"
     },
     "18346688": {
       "broadcaster_name": "りりな#ツショートドラマAD",
       "last_notified_at": "2026-10-27T11:33:40Z",
       "url": "https://mixch.tv/u/18346688/live"
-    },
-    "18351233": {
-      "broadcaster_name": "月城花",
-      "last_notified_at": "2026-10-16T22:00:24Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18351233/live"
     },
     "18352800": {
       "broadcaster_name": "あいsweet16委員会AD",
@@ -661,7 +635,7 @@
     },
     "18951227": {
       "broadcaster_name": "ふうな",
-      "last_notified_at": "2026-11-12T01:56:55Z",
+      "last_notified_at": "2026-11-15T22:01:50Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18951227/live"
     },
@@ -724,12 +698,6 @@
       "broadcaster_name": "ひなぴ",
       "last_notified_at": "2026-10-25T05:08:52Z",
       "url": "https://mixch.tv/u/18990137/live"
-    },
-    "18992367": {
-      "broadcaster_name": "佐藤愛なりん) バナー掲載イ",
-      "last_notified_at": "2026-10-16T22:00:24Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18992367/live"
     },
     "18994359": {
       "broadcaster_name": "りんりん#中華ま",
@@ -812,12 +780,6 @@
       "broadcaster_name": "たむたむ #sweet16委員会AD",
       "last_notified_at": "2026-10-31T22:20:21Z",
       "url": "https://mixch.tv/u/19005347/live"
-    },
-    "19005502": {
-      "broadcaster_name": "かえ",
-      "last_notified_at": "2026-10-16T22:00:24Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/19005502/live"
     },
     "19005558": {
       "broadcaster_name": "琉花(13)‍⬛♯Sweet16AD",
