@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "17584761": {
+      "broadcaster_name": "凜杏りん#ふろビジョン",
+      "first_seen_at": "2026-11-18T13:31:06Z",
+      "last_seen_at": "2026-11-18T13:31:06Z",
+      "max_momentum": 171,
+      "url": "https://mixch.tv/u/17584761/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
