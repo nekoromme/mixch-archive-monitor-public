@@ -3,43 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {
-    "15377995": {
-      "broadcaster_name": "まひきゅん#日",
-      "first_seen_at": "2026-11-18T14:23:29Z",
-      "last_seen_at": "2026-11-18T14:23:29Z",
-      "max_momentum": 168,
-      "url": "https://mixch.tv/u/15377995/live"
-    },
-    "17186919": {
-      "broadcaster_name": "のん❤️曲制",
-      "first_seen_at": "2026-11-18T13:57:27Z",
-      "last_seen_at": "2026-11-18T13:57:27Z",
-      "max_momentum": 164,
-      "url": "https://mixch.tv/u/17186919/live"
-    },
-    "17584761": {
-      "broadcaster_name": "凜杏りん#ふろビジョン",
-      "first_seen_at": "2026-11-18T13:31:06Z",
-      "last_seen_at": "2026-11-18T13:31:06Z",
-      "max_momentum": 171,
-      "url": "https://mixch.tv/u/17584761/live"
-    },
-    "19012763": {
-      "broadcaster_name": "中込優衣#京美人Award",
-      "first_seen_at": "2026-11-18T14:39:14Z",
-      "last_seen_at": "2026-11-18T14:39:14Z",
-      "max_momentum": 243,
-      "url": "https://mixch.tv/u/19012763/live"
-    },
-    "19024682": {
-      "broadcaster_name": "ことみ#美少女図鑑AWARD",
-      "first_seen_at": "2026-11-18T13:36:22Z",
-      "last_seen_at": "2026-11-18T13:41:39Z",
-      "max_momentum": 192,
-      "url": "https://mixch.tv/u/19024682/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -63,8 +27,8 @@
       "url": "https://mixch.tv/u/15062786/live"
     },
     "15377995": {
-      "broadcaster_name": "まひきゅん#濃厚すぎて",
-      "last_notified_at": "2026-11-12T22:04:06Z",
+      "broadcaster_name": "まひきゅん#日",
+      "last_notified_at": "2026-11-18T22:04:23Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/15377995/live"
     },
@@ -135,8 +99,9 @@
       "url": "https://mixch.tv/u/17131878/live"
     },
     "17186919": {
-      "broadcaster_name": "誕生日のん❤️21:30ｺﾞｼﾞｬﾎ",
-      "last_notified_at": "2026-10-27T12:36:13Z",
+      "broadcaster_name": "のん❤️曲制",
+      "last_notified_at": "2026-11-18T22:04:23Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17186919/live"
     },
     "17272800": {
@@ -192,8 +157,8 @@
       "url": "https://mixch.tv/u/17517637/live"
     },
     "17584761": {
-      "broadcaster_name": "凜杏りん8日誕生日",
-      "last_notified_at": "2026-11-03T22:00:07Z",
+      "broadcaster_name": "凜杏りん#ふろビジョン",
+      "last_notified_at": "2026-11-18T22:04:23Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17584761/live"
     },
@@ -601,12 +566,6 @@
       "last_notified_at": "2026-11-13T11:11:32Z",
       "url": "https://mixch.tv/u/18865300/live"
     },
-    "18867524": {
-      "broadcaster_name": "京生今日1.5倍＃カレッジ",
-      "last_notified_at": "2026-10-19T22:03:05Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18867524/live"
-    },
     "18873012": {
       "broadcaster_name": "乃愛#ウエアワ5",
       "last_notified_at": "2026-11-09T22:02:45Z",
@@ -938,6 +897,12 @@
       "last_notified_at": "2026-11-03T05:31:55Z",
       "url": "https://mixch.tv/u/19011722/live"
     },
+    "19012763": {
+      "broadcaster_name": "中込優衣#京美人Award",
+      "last_notified_at": "2026-11-18T22:04:23Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19012763/live"
+    },
     "19016812": {
       "broadcaster_name": "riiiyan",
       "last_notified_at": "2026-11-11T12:30:05Z",
@@ -963,6 +928,12 @@
       "broadcaster_name": "ぺちゃ",
       "last_notified_at": "2026-11-14T01:55:15Z",
       "url": "https://mixch.tv/u/19022996/live"
+    },
+    "19024682": {
+      "broadcaster_name": "ことみ#美少女図鑑AWARD",
+      "last_notified_at": "2026-11-18T22:04:23Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19024682/live"
     },
     "5061738": {
       "broadcaster_name": "さや",
