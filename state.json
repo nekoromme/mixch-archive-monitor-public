@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18995551": {
+      "broadcaster_name": "ワッサンゲリラ#スポーツ女",
+      "first_seen_at": "2026-11-19T13:07:56Z",
+      "last_seen_at": "2026-11-19T13:07:56Z",
+      "max_momentum": 180,
+      "url": "https://mixch.tv/u/18995551/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
