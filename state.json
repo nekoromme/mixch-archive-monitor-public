@@ -3,43 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {
-    "17321681": {
-      "broadcaster_name": "あいりん#ブルーンガチイ",
-      "first_seen_at": "2026-11-19T15:19:05Z",
-      "last_seen_at": "2026-11-19T15:19:05Z",
-      "max_momentum": 242,
-      "url": "https://mixch.tv/u/17321681/live"
-    },
-    "17499383": {
-      "broadcaster_name": "木兆",
-      "first_seen_at": "2026-11-19T13:44:37Z",
-      "last_seen_at": "2026-11-19T13:44:37Z",
-      "max_momentum": 183,
-      "url": "https://mixch.tv/u/17499383/live"
-    },
-    "17534235": {
-      "broadcaster_name": "ろ#ﾓﾃﾞﾙu0026ﾍﾟｱｲﾍ",
-      "first_seen_at": "2026-11-19T15:55:32Z",
-      "last_seen_at": "2026-11-19T15:55:32Z",
-      "max_momentum": 152,
-      "url": "https://mixch.tv/u/17534235/live"
-    },
-    "18950593": {
-      "broadcaster_name": "なずな︎",
-      "first_seen_at": "2026-11-19T13:23:37Z",
-      "last_seen_at": "2026-11-19T13:23:37Z",
-      "max_momentum": 165,
-      "url": "https://mixch.tv/u/18950593/live"
-    },
-    "18995551": {
-      "broadcaster_name": "ワッサンゲリラ#スポーツ女",
-      "first_seen_at": "2026-11-19T13:07:56Z",
-      "last_seen_at": "2026-11-19T13:07:56Z",
-      "max_momentum": 180,
-      "url": "https://mixch.tv/u/18995551/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -151,6 +115,12 @@
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17294927/live"
     },
+    "17321681": {
+      "broadcaster_name": "あいりん#ブルーンガチイ",
+      "last_notified_at": "2026-11-19T22:01:56Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17321681/live"
+    },
     "17349038": {
       "broadcaster_name": "はる❤第16回ミスブーケ",
       "last_notified_at": "2026-11-12T22:04:06Z",
@@ -187,10 +157,22 @@
       "last_notified_at": "2026-11-08T12:49:11Z",
       "url": "https://mixch.tv/u/17485497/live"
     },
+    "17499383": {
+      "broadcaster_name": "木兆",
+      "last_notified_at": "2026-11-19T22:01:56Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17499383/live"
+    },
     "17517637": {
       "broadcaster_name": "るなぴ #お弁当♬*",
       "last_notified_at": "2026-10-24T12:27:33Z",
       "url": "https://mixch.tv/u/17517637/live"
+    },
+    "17534235": {
+      "broadcaster_name": "ろ#ﾓﾃﾞﾙu0026ﾍﾟｱｲﾍ",
+      "last_notified_at": "2026-11-19T22:01:56Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17534235/live"
     },
     "17584761": {
       "broadcaster_name": "凜杏りん#ふろビジョン",
@@ -705,6 +687,12 @@
       "last_notified_at": "2026-11-06T09:21:27Z",
       "url": "https://mixch.tv/u/18949916/live"
     },
+    "18950593": {
+      "broadcaster_name": "なずな︎",
+      "last_notified_at": "2026-11-19T22:01:56Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18950593/live"
+    },
     "18951227": {
       "broadcaster_name": "ふうな",
       "last_notified_at": "2026-11-15T22:01:50Z",
@@ -782,6 +770,12 @@
       "last_notified_at": "2026-11-13T22:00:09Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18994359/live"
+    },
+    "18995551": {
+      "broadcaster_name": "ワッサンゲリラ#スポーツ女",
+      "last_notified_at": "2026-11-19T22:01:56Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18995551/live"
     },
     "18996928": {
       "broadcaster_name": "いろはsweet16委員",
