@@ -3,15 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {
-    "18296626": {
-      "broadcaster_name": "女王まりあ#初日",
-      "first_seen_at": "2026-11-20T15:05:18Z",
-      "last_seen_at": "2026-11-20T15:10:32Z",
-      "max_momentum": 654,
-      "url": "https://mixch.tv/u/18296626/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -285,8 +277,8 @@
       "url": "https://mixch.tv/u/18263130/live"
     },
     "18296626": {
-      "broadcaster_name": "女王まりあ#ﾌﾞﾙｰﾑｰ",
-      "last_notified_at": "2026-11-15T22:01:50Z",
+      "broadcaster_name": "女王まりあ#初日",
+      "last_notified_at": "2026-11-20T22:03:39Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18296626/live"
     },
