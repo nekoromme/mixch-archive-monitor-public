@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18948548": {
+      "broadcaster_name": "ねﾞﾘﾗﾊﾟﾄCOSGC",
+      "first_seen_at": "2026-11-21T13:48:00Z",
+      "last_seen_at": "2026-11-21T13:48:00Z",
+      "max_momentum": 201,
+      "url": "https://mixch.tv/u/18948548/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
