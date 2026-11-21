@@ -3,29 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {
-    "16982482": {
-      "broadcaster_name": "つり✨日❤️.5",
-      "first_seen_at": "2026-11-21T14:29:51Z",
-      "last_seen_at": "2026-11-21T14:45:25Z",
-      "max_momentum": 158,
-      "url": "https://mixch.tv/u/16982482/live"
-    },
-    "18296626": {
-      "broadcaster_name": "女王まりあ#AWARD",
-      "first_seen_at": "2026-11-21T16:19:18Z",
-      "last_seen_at": "2026-11-21T16:19:18Z",
-      "max_momentum": 389,
-      "url": "https://mixch.tv/u/18296626/live"
-    },
-    "18948548": {
-      "broadcaster_name": "ねﾞﾘﾗﾊﾟﾄCOSGC",
-      "first_seen_at": "2026-11-21T13:48:00Z",
-      "last_seen_at": "2026-11-21T13:48:00Z",
-      "max_momentum": 201,
-      "url": "https://mixch.tv/u/18948548/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -95,6 +73,12 @@
       "broadcaster_name": "しゅな✨服最終日",
       "last_notified_at": "2026-10-26T11:23:06Z",
       "url": "https://mixch.tv/u/16946114/live"
+    },
+    "16982482": {
+      "broadcaster_name": "つり✨日❤️.5",
+      "last_notified_at": "2026-11-21T22:04:02Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/16982482/live"
     },
     "16994980": {
       "broadcaster_name": "天晴れりんごひPRモデル",
@@ -289,8 +273,8 @@
       "url": "https://mixch.tv/u/18263130/live"
     },
     "18296626": {
-      "broadcaster_name": "女王まりあ#初日",
-      "last_notified_at": "2026-11-20T22:03:39Z",
+      "broadcaster_name": "女王まりあ#AWARD",
+      "last_notified_at": "2026-11-21T22:04:02Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18296626/live"
     },
@@ -690,8 +674,9 @@
       "url": "https://mixch.tv/u/18947709/live"
     },
     "18948548": {
-      "broadcaster_name": "ねﾟﾄCOSGC",
-      "last_notified_at": "2026-11-02T11:26:49Z",
+      "broadcaster_name": "ねﾞﾘﾗﾊﾟﾄCOSGC",
+      "last_notified_at": "2026-11-21T22:04:02Z",
+      "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18948548/live"
     },
     "18949916": {
