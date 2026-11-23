@@ -3,54 +3,11 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {
-    "10914555": {
-      "broadcaster_name": "さち",
-      "first_seen_at": "2026-11-22T15:36:36Z",
-      "last_seen_at": "2026-11-22T15:36:36Z",
-      "max_momentum": 167,
-      "url": "https://mixch.tv/u/10914555/live"
-    },
-    "17920180": {
-      "broadcaster_name": "ねろり️放課後チュロス❤️ﾞ",
-      "first_seen_at": "2026-11-22T13:31:42Z",
-      "last_seen_at": "2026-11-22T13:36:57Z",
-      "max_momentum": 200,
-      "url": "https://mixch.tv/u/17920180/live"
-    },
-    "17922462": {
-      "broadcaster_name": "︎ﾅﾅﾁｬﾝ",
-      "first_seen_at": "2026-11-22T15:41:52Z",
-      "last_seen_at": "2026-11-22T15:57:32Z",
-      "max_momentum": 204,
-      "url": "https://mixch.tv/u/17922462/live"
-    },
-    "18328200": {
-      "broadcaster_name": "蜜蜂さっつ本酒イ",
-      "first_seen_at": "2026-11-22T15:41:52Z",
-      "last_seen_at": "2026-11-22T15:41:52Z",
-      "max_momentum": 152,
-      "url": "https://mixch.tv/u/18328200/live"
-    },
-    "18956318": {
-      "broadcaster_name": "七星 nanaho#LARME超ｶﾞ",
-      "first_seen_at": "2026-11-22T15:31:28Z",
-      "last_seen_at": "2026-11-22T16:07:53Z",
-      "max_momentum": 201,
-      "url": "https://mixch.tv/u/18956318/live"
-    },
-    "19012467": {
-      "broadcaster_name": "ひな#ｷｮﾛﾁｬ",
-      "first_seen_at": "2026-11-22T16:34:03Z",
-      "last_seen_at": "2026-11-22T16:34:03Z",
-      "max_momentum": 200,
-      "url": "https://mixch.tv/u/19012467/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
-      "last_notified_at": "2026-11-12T01:56:55Z",
+      "last_notified_at": "2026-11-23T00:58:04Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/10914555/live"
     },
@@ -259,10 +216,22 @@
       "last_notified_at": "2026-11-22T03:11:18Z",
       "url": "https://mixch.tv/u/17902902/live"
     },
+    "17920180": {
+      "broadcaster_name": "ねろり️放課後チュロス❤️ﾞ",
+      "last_notified_at": "2026-11-23T00:58:04Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17920180/live"
+    },
     "17921915": {
       "broadcaster_name": "かえで",
       "last_notified_at": "2026-10-29T03:27:43Z",
       "url": "https://mixch.tv/u/17921915/live"
+    },
+    "17922462": {
+      "broadcaster_name": "︎ﾅﾅﾁｬﾝ",
+      "last_notified_at": "2026-11-23T00:58:04Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/17922462/live"
     },
     "17954605": {
       "broadcaster_name": "日りあ#札ｺﾚｶﾞﾁ",
@@ -340,6 +309,12 @@
       "broadcaster_name": "隼人‎#ビジョン",
       "last_notified_at": "2026-11-18T12:54:39Z",
       "url": "https://mixch.tv/u/18319790/live"
+    },
+    "18328200": {
+      "broadcaster_name": "蜜蜂さっつ本酒イ",
+      "last_notified_at": "2026-11-23T00:58:04Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18328200/live"
     },
     "18346688": {
       "broadcaster_name": "りりな#ツショートドラマAD",
@@ -769,6 +744,12 @@
       "last_notified_at": "2026-11-14T03:39:11Z",
       "url": "https://mixch.tv/u/18954574/live"
     },
+    "18956318": {
+      "broadcaster_name": "七星 nanaho#LARME超ｶﾞ",
+      "last_notified_at": "2026-11-23T00:58:04Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18956318/live"
+    },
     "18964287": {
       "broadcaster_name": "pj.",
       "last_notified_at": "2026-11-16T05:30:06Z",
@@ -961,12 +942,6 @@
       "last_notified_at": "2026-10-29T12:20:37Z",
       "url": "https://mixch.tv/u/19009369/live"
     },
-    "19010197": {
-      "broadcaster_name": "nyan",
-      "last_notified_at": "2026-10-23T22:03:19Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/19010197/live"
-    },
     "19011479": {
       "broadcaster_name": "ちゃんここ",
       "last_notified_at": "2026-10-30T01:45:41Z",
@@ -976,6 +951,12 @@
       "broadcaster_name": "あい",
       "last_notified_at": "2026-11-03T05:31:55Z",
       "url": "https://mixch.tv/u/19011722/live"
+    },
+    "19012467": {
+      "broadcaster_name": "ひな#ｷｮﾛﾁｬ",
+      "last_notified_at": "2026-11-23T00:58:04Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19012467/live"
     },
     "19012763": {
       "broadcaster_name": "中込優衣#京美人Award",
