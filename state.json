@@ -3,36 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {
-    "17186919": {
-      "broadcaster_name": "のん❤️曲制",
-      "first_seen_at": "2026-11-23T14:26:42Z",
-      "last_seen_at": "2026-11-23T14:26:42Z",
-      "max_momentum": 160,
-      "url": "https://mixch.tv/u/17186919/live"
-    },
-    "17584761": {
-      "broadcaster_name": "凜杏りん#ふろビジョン",
-      "first_seen_at": "2026-11-23T15:18:51Z",
-      "last_seen_at": "2026-11-23T15:24:10Z",
-      "max_momentum": 197,
-      "url": "https://mixch.tv/u/17584761/live"
-    },
-    "18363329": {
-      "broadcaster_name": "朝のたくみ)",
-      "first_seen_at": "2026-11-23T15:50:33Z",
-      "last_seen_at": "2026-11-23T15:50:33Z",
-      "max_momentum": 173,
-      "url": "https://mixch.tv/u/18363329/live"
-    },
-    "19010197": {
-      "broadcaster_name": "nyan",
-      "first_seen_at": "2026-11-23T17:35:17Z",
-      "last_seen_at": "2026-11-23T17:45:52Z",
-      "max_momentum": 268,
-      "url": "https://mixch.tv/u/19010197/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -145,7 +116,7 @@
     },
     "17186919": {
       "broadcaster_name": "のん❤️曲制",
-      "last_notified_at": "2026-11-18T22:04:23Z",
+      "last_notified_at": "2026-11-23T22:02:47Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17186919/live"
     },
@@ -211,7 +182,7 @@
     },
     "17584761": {
       "broadcaster_name": "凜杏りん#ふろビジョン",
-      "last_notified_at": "2026-11-18T22:04:23Z",
+      "last_notified_at": "2026-11-23T22:02:47Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/17584761/live"
     },
@@ -365,6 +336,12 @@
       "last_notified_at": "2026-11-17T22:01:49Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18362102/live"
+    },
+    "18363329": {
+      "broadcaster_name": "朝のたくみ)",
+      "last_notified_at": "2026-11-23T22:02:47Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18363329/live"
     },
     "18364405": {
       "broadcaster_name": "まりこ#ｻｸｻｸお菓子大",
@@ -625,12 +602,6 @@
       "broadcaster_name": "ゆめ#JCミスコン",
       "last_notified_at": "2026-11-09T10:16:31Z",
       "url": "https://mixch.tv/u/18858926/live"
-    },
-    "18862791": {
-      "broadcaster_name": "神田梨未#図鑑Award絶対1位",
-      "last_notified_at": "2026-10-24T22:01:51Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18862791/live"
     },
     "18865016": {
       "broadcaster_name": "ことは#美少女歌祭2026",
@@ -975,6 +946,12 @@
       "broadcaster_name": "Tohkei",
       "last_notified_at": "2026-10-29T12:20:37Z",
       "url": "https://mixch.tv/u/19009369/live"
+    },
+    "19010197": {
+      "broadcaster_name": "nyan",
+      "last_notified_at": "2026-11-23T22:02:47Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19010197/live"
     },
     "19011479": {
       "broadcaster_name": "ちゃんここ",
