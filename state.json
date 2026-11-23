@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "17186919": {
+      "broadcaster_name": "のん❤️曲制",
+      "first_seen_at": "2026-11-23T14:26:42Z",
+      "last_seen_at": "2026-11-23T14:26:42Z",
+      "max_momentum": 160,
+      "url": "https://mixch.tv/u/17186919/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
