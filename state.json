@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18989697": {
+      "broadcaster_name": "かえで#キャンガル",
+      "first_seen_at": "2026-11-24T14:10:26Z",
+      "last_seen_at": "2026-11-24T14:10:26Z",
+      "max_momentum": 215,
+      "url": "https://mixch.tv/u/18989697/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
