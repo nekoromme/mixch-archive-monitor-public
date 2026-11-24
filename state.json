@@ -3,36 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-17T23:51:27Z"
   },
-  "night_candidates": {
-    "16384770": {
-      "broadcaster_name": "おむ♥き時",
-      "first_seen_at": "2026-11-24T14:47:16Z",
-      "last_seen_at": "2026-11-24T14:47:16Z",
-      "max_momentum": 150,
-      "url": "https://mixch.tv/u/16384770/live"
-    },
-    "18720891": {
-      "broadcaster_name": "よしか✈チイ",
-      "first_seen_at": "2026-11-24T14:41:55Z",
-      "last_seen_at": "2026-11-24T14:41:55Z",
-      "max_momentum": 189,
-      "url": "https://mixch.tv/u/18720891/live"
-    },
-    "18951227": {
-      "broadcaster_name": "ぷうな",
-      "first_seen_at": "2026-11-24T14:20:55Z",
-      "last_seen_at": "2026-11-24T15:13:28Z",
-      "max_momentum": 178,
-      "url": "https://mixch.tv/u/18951227/live"
-    },
-    "18989697": {
-      "broadcaster_name": "かえで#キャンガル",
-      "first_seen_at": "2026-11-24T14:10:26Z",
-      "last_seen_at": "2026-11-24T14:10:26Z",
-      "max_momentum": 215,
-      "url": "https://mixch.tv/u/18989697/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -91,6 +62,12 @@
       "broadcaster_name": "SAPPORO COLLECTION",
       "last_notified_at": "2026-11-22T04:08:33Z",
       "url": "https://mixch.tv/u/16202147/live"
+    },
+    "16384770": {
+      "broadcaster_name": "おむ♥き時",
+      "last_notified_at": "2026-11-24T22:01:42Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/16384770/live"
     },
     "16586849": {
       "broadcaster_name": "小春な100万回AD決",
@@ -399,12 +376,6 @@
       "last_notified_at": "2026-11-05T11:02:36Z",
       "url": "https://mixch.tv/u/18395689/live"
     },
-    "18408082": {
-      "broadcaster_name": "りの ♥️♯ｷﾝﾓｸｾｲ",
-      "last_notified_at": "2026-10-25T22:00:00Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18408082/live"
-    },
     "18451400": {
       "broadcaster_name": "ゆあんグッズ販売中",
       "last_notified_at": "2026-11-07T09:54:37Z",
@@ -519,6 +490,12 @@
       "last_notified_at": "2026-11-16T11:59:33Z",
       "url": "https://mixch.tv/u/18713401/live"
     },
+    "18720891": {
+      "broadcaster_name": "よしか✈チイ",
+      "last_notified_at": "2026-11-24T22:01:42Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18720891/live"
+    },
     "18750324": {
       "broadcaster_name": "Lea1/1札コレAD",
       "last_notified_at": "2026-10-26T11:07:26Z",
@@ -605,12 +582,6 @@
       "last_notified_at": "2026-11-17T22:01:49Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18856596/live"
-    },
-    "18856917": {
-      "broadcaster_name": "崎野萌",
-      "last_notified_at": "2026-10-25T22:00:00Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18856917/live"
     },
     "18858926": {
       "broadcaster_name": "ゆめ#JCミスコン",
@@ -758,8 +729,8 @@
       "url": "https://mixch.tv/u/18950593/live"
     },
     "18951227": {
-      "broadcaster_name": "ふうな",
-      "last_notified_at": "2026-11-15T22:01:50Z",
+      "broadcaster_name": "ぷうな",
+      "last_notified_at": "2026-11-24T22:01:42Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18951227/live"
     },
@@ -829,6 +800,12 @@
       "broadcaster_name": "かとみ#Pop Girl",
       "last_notified_at": "2026-11-24T10:46:29Z",
       "url": "https://mixch.tv/u/18989454/live"
+    },
+    "18989697": {
+      "broadcaster_name": "かえで#キャンガル",
+      "last_notified_at": "2026-11-24T22:01:42Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/18989697/live"
     },
     "18994359": {
       "broadcaster_name": "りんりん#中華ま",
