@@ -3,7 +3,15 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-24T23:51:44Z"
   },
-  "night_candidates": {},
+  "night_candidates": {
+    "18296626": {
+      "broadcaster_name": "女王まりあ#Award",
+      "first_seen_at": "2026-11-26T15:26:42Z",
+      "last_seen_at": "2026-11-26T15:26:42Z",
+      "max_momentum": 271,
+      "url": "https://mixch.tv/u/18296626/live"
+    }
+  },
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
