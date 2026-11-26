@@ -2,7 +2,7 @@
   "16903149": {
     "last_notified_date": "2026-09-23",
     "latest_archive_date": "2026-09-24",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-25",
     "archive_filter_reason": "not_public",
@@ -17,7 +17,7 @@
   "17803786": {
     "last_notified_date": "2026-11-21",
     "latest_archive_date": "2026-11-21",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-21",
     "archive_identity_version": 1,
@@ -84,8 +84,8 @@
   "18533166": {
     "last_notified_date": "2026-11-26",
     "latest_archive_date": "2026-11-25",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
-    "archive_read_status": "ok",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
+    "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-25",
     "archive_identity_version": 1,
     "latest_archive_id": "23065369",
@@ -96,7 +96,9 @@
       "23052892",
       "23042445"
     ],
-    "last_notified_archive_id": "23065369"
+    "last_notified_archive_id": "23065369",
+    "archive_filter_reason": "not_public",
+    "archive_observed_visibility": 3
   },
   "18568509": {
     "last_notified_date": "2026-05-11"
@@ -152,9 +154,9 @@
   "18788697": {
     "last_notified_date": "2026-09-23",
     "latest_archive_date": "2026-09-24",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
-    "latest_observed_archive_date": "2026-11-25",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_filter_reason": "not_public",
     "archive_observed_visibility": 3
   },
@@ -189,16 +191,17 @@
     ]
   },
   "18842451": {
-    "last_notified_date": "2026-11-26",
-    "latest_archive_date": "2026-11-25",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "last_notified_date": "2026-11-27",
+    "latest_archive_date": "2026-11-26",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
-    "latest_observed_archive_date": "2026-11-25",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
-    "latest_archive_id": "23066063",
-    "latest_archive_created": 1795611037,
+    "latest_archive_id": "23068806",
+    "latest_archive_created": 1795694375,
     "latest_archive_visibility": 1,
     "seen_archive_ids": [
+      "23068806",
       "23066063",
       "23059105",
       "23045576",
@@ -232,7 +235,7 @@
       "22926334",
       "22923026"
     ],
-    "last_notified_archive_id": "23066063"
+    "last_notified_archive_id": "23068806"
   },
   "18844927": {
     "last_notified_date": "2026-07-21"
@@ -252,16 +255,16 @@
   "18861691": {
     "last_notified_date": "2026-09-23",
     "latest_archive_date": "2026-09-24",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
-    "latest_observed_archive_date": "2026-11-23",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_filter_reason": "not_public",
     "archive_observed_visibility": 3
   },
   "18864316": {
     "last_notified_date": "2026-11-16",
     "latest_archive_date": "2026-11-15",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-25",
     "archive_identity_version": 1,
@@ -308,16 +311,17 @@
     "latest_archive_date": "2026-08-05"
   },
   "18885231": {
-    "last_notified_date": "2026-11-24",
-    "latest_archive_date": "2026-11-23",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "last_notified_date": "2026-11-27",
+    "latest_archive_date": "2026-11-26",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
-    "latest_observed_archive_date": "2026-11-23",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
-    "latest_archive_id": "23059111",
-    "latest_archive_created": 1795426251,
+    "latest_archive_id": "23068416",
+    "latest_archive_created": 1795685458,
     "latest_archive_visibility": 1,
     "seen_archive_ids": [
+      "23068416",
       "23059111",
       "23045148",
       "23035580",
@@ -331,7 +335,7 @@
       "22936186",
       "22929223"
     ],
-    "last_notified_archive_id": "23059111"
+    "last_notified_archive_id": "23068416"
   },
   "18886422": {
     "last_notified_date": "2026-08-16",
@@ -354,7 +358,7 @@
   "18891130": {
     "last_notified_date": "2026-11-12",
     "latest_archive_date": "2026-11-11",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-11",
     "archive_identity_version": 1,
@@ -406,7 +410,7 @@
   "18903661": {
     "last_notified_date": "2026-11-24",
     "latest_archive_date": "2026-11-23",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-23",
     "archive_identity_version": 1,
@@ -496,7 +500,7 @@
   "18921236": {
     "last_notified_date": "2026-09-23",
     "latest_archive_date": "2026-09-24",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-25",
     "archive_filter_reason": "not_public",
@@ -505,7 +509,7 @@
   "18925042": {
     "last_notified_date": "2026-10-18",
     "latest_archive_date": "2026-10-18",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-25",
     "archive_identity_version": 1,
@@ -551,7 +555,7 @@
   "18930544": {
     "last_notified_date": "2026-09-23",
     "latest_archive_date": "2026-09-24",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-25",
     "archive_filter_reason": "not_public",
@@ -576,7 +580,7 @@
   "18941388": {
     "last_notified_date": "2026-11-18",
     "latest_archive_date": "2026-11-17",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-17",
     "archive_identity_version": 1,
@@ -617,16 +621,17 @@
     "last_notified_archive_id": "23038462"
   },
   "18942049": {
-    "last_notified_date": "2026-11-26",
-    "latest_archive_date": "2026-11-25",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "last_notified_date": "2026-11-27",
+    "latest_archive_date": "2026-11-26",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
-    "latest_observed_archive_date": "2026-11-25",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
-    "latest_archive_id": "23065231",
-    "latest_archive_created": 1795606080,
+    "latest_archive_id": "23068411",
+    "latest_archive_created": 1795694522,
     "latest_archive_visibility": 1,
     "seen_archive_ids": [
+      "23068411",
       "23065231",
       "23062100",
       "23061291",
@@ -660,12 +665,12 @@
       "22929354",
       "22922643"
     ],
-    "last_notified_archive_id": "23065231"
+    "last_notified_archive_id": "23068411"
   },
   "18942145": {
     "last_notified_date": "2026-09-23",
     "latest_archive_date": "2026-10-18",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-22",
     "archive_identity_version": 1,
@@ -747,7 +752,7 @@
   },
   "18996928": {
     "last_notified_date": "2026-10-18",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
     "latest_observed_archive_date": "2026-11-25",
     "archive_filter_reason": "not_public",
@@ -756,7 +761,7 @@
   },
   "19001776": {
     "last_notified_date": "2026-11-15",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "empty",
     "latest_observed_archive_date": "2026-11-15",
     "archive_identity_version": 1,
@@ -778,7 +783,7 @@
   },
   "18779102": {
     "last_notified_date": "2026-11-15",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-15",
     "archive_identity_version": 1,
@@ -816,9 +821,9 @@
   },
   "18999860": {
     "last_notified_date": "2026-10-25",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
-    "latest_observed_archive_date": "2026-11-25",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
     "latest_archive_id": "22964621",
     "latest_archive_created": 1792933284,
@@ -835,7 +840,7 @@
   },
   "18993859": {
     "last_notified_date": "2026-11-26",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-25",
     "archive_identity_version": 1,
@@ -893,9 +898,9 @@
   },
   "19005558": {
     "last_notified_date": "2026-11-15",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
-    "archive_read_status": "ok",
-    "latest_observed_archive_date": "2026-11-15",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
+    "archive_read_status": "filtered",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
     "latest_archive_id": "23032674",
     "latest_archive_created": 1794740597,
@@ -911,7 +916,9 @@
       "22951442",
       "22939476"
     ],
-    "last_notified_archive_id": "23032674"
+    "last_notified_archive_id": "23032674",
+    "archive_filter_reason": "not_public",
+    "archive_observed_visibility": 3
   },
   "19003776": {
     "last_notified_date": "2026-11-01",
@@ -931,7 +938,7 @@
   },
   "18582618": {
     "last_notified_date": "2026-11-26",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-25",
     "archive_identity_version": 1,
@@ -946,16 +953,17 @@
     "last_notified_archive_id": "23066671"
   },
   "18720303": {
-    "last_notified_date": "2026-11-26",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "last_notified_date": "2026-11-27",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
     "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
-    "latest_archive_id": "23067410",
-    "latest_archive_created": 1795643238,
+    "latest_archive_id": "23068772",
+    "latest_archive_created": 1795690830,
     "latest_archive_date": "2026-11-26",
     "latest_archive_visibility": 1,
     "seen_archive_ids": [
+      "23068772",
       "23067410",
       "23067393",
       "23065535",
@@ -964,13 +972,13 @@
       "23061026",
       "23059298"
     ],
-    "last_notified_archive_id": "23067410"
+    "last_notified_archive_id": "23068772"
   },
   "19024692": {
     "last_notified_date": "2026-11-25",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "filtered",
-    "latest_observed_archive_date": "2026-11-25",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
     "latest_archive_id": "23062028",
     "latest_archive_created": 1795518092,
@@ -985,19 +993,20 @@
     "archive_observed_visibility": 3
   },
   "18968489": {
-    "last_notified_date": "2026-11-25",
-    "archive_last_checked_at": "2026-11-26T03:28:34.751132+00:00",
+    "last_notified_date": "2026-11-27",
+    "archive_last_checked_at": "2026-11-26T18:20:32.353519+00:00",
     "archive_read_status": "ok",
-    "latest_observed_archive_date": "2026-11-24",
+    "latest_observed_archive_date": "2026-11-26",
     "archive_identity_version": 1,
-    "latest_archive_id": "23063123",
-    "latest_archive_created": 1795523716,
-    "latest_archive_date": "2026-11-24",
+    "latest_archive_id": "23068905",
+    "latest_archive_created": 1795690968,
+    "latest_archive_date": "2026-11-26",
     "latest_archive_visibility": 1,
     "seen_archive_ids": [
+      "23068905",
       "23063123",
       "23058759"
     ],
-    "last_notified_archive_id": "23063123"
+    "last_notified_archive_id": "23068905"
   }
 }
