@@ -3,29 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-24T23:51:44Z"
   },
-  "night_candidates": {
-    "15492927": {
-      "broadcaster_name": "さあAWARD",
-      "first_seen_at": "2026-11-27T15:30:40Z",
-      "last_seen_at": "2026-11-27T15:30:40Z",
-      "max_momentum": 178,
-      "url": "https://mixch.tv/u/15492927/live"
-    },
-    "19035095": {
-      "broadcaster_name": "さっちゃん",
-      "first_seen_at": "2026-11-27T13:25:10Z",
-      "last_seen_at": "2026-11-27T13:46:02Z",
-      "max_momentum": 229,
-      "url": "https://mixch.tv/u/19035095/live"
-    },
-    "19035883": {
-      "broadcaster_name": "めい",
-      "first_seen_at": "2026-11-27T15:09:45Z",
-      "last_seen_at": "2026-11-27T15:51:34Z",
-      "max_momentum": 424,
-      "url": "https://mixch.tv/u/19035883/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -58,6 +36,12 @@
       "broadcaster_name": "ももにゃんMIXPO AWARD",
       "last_notified_at": "2026-11-27T12:43:19Z",
       "url": "https://mixch.tv/u/15399572/live"
+    },
+    "15492927": {
+      "broadcaster_name": "さあAWARD",
+      "last_notified_at": "2026-11-27T22:00:52Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/15492927/live"
     },
     "15712348": {
       "broadcaster_name": "プルメリア☆常稼",
@@ -1012,10 +996,22 @@
       "last_notified_at": "2026-11-27T09:29:58Z",
       "url": "https://mixch.tv/u/19034917/live"
     },
+    "19035095": {
+      "broadcaster_name": "さっちゃん",
+      "last_notified_at": "2026-11-27T22:00:52Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19035095/live"
+    },
     "19035576": {
       "broadcaster_name": "かえで",
       "last_notified_at": "2026-11-27T12:38:09Z",
       "url": "https://mixch.tv/u/19035576/live"
+    },
+    "19035883": {
+      "broadcaster_name": "めい",
+      "last_notified_at": "2026-11-27T22:00:52Z",
+      "reason": "night_digest_processed",
+      "url": "https://mixch.tv/u/19035883/live"
     },
     "5061738": {
       "broadcaster_name": "さや",
