@@ -3,15 +3,7 @@
     "last_error_notified_at": "2026-10-26T02:25:54Z",
     "last_heartbeat_at": "2026-11-24T23:51:44Z"
   },
-  "night_candidates": {
-    "18296626": {
-      "broadcaster_name": "女王まりあ#Award",
-      "first_seen_at": "2026-11-26T15:26:42Z",
-      "last_seen_at": "2026-11-26T15:31:50Z",
-      "max_momentum": 413,
-      "url": "https://mixch.tv/u/18296626/live"
-    }
-  },
+  "night_candidates": {},
   "notifications": {
     "10914555": {
       "broadcaster_name": "さち",
@@ -292,8 +284,8 @@
       "url": "https://mixch.tv/u/18263130/live"
     },
     "18296626": {
-      "broadcaster_name": "女王まりあ#AWARD",
-      "last_notified_at": "2026-11-21T22:04:02Z",
+      "broadcaster_name": "女王まりあ#Award",
+      "last_notified_at": "2026-11-27T02:27:59Z",
       "reason": "night_digest_processed",
       "url": "https://mixch.tv/u/18296626/live"
     },
@@ -589,12 +581,6 @@
       "broadcaster_name": "にこな#Cuugal文化祭",
       "last_notified_at": "2026-11-23T09:08:07Z",
       "url": "https://mixch.tv/u/18874425/live"
-    },
-    "18885090": {
-      "broadcaster_name": "1.5倍こひなSSL",
-      "last_notified_at": "2026-10-27T22:00:10Z",
-      "reason": "night_digest_processed",
-      "url": "https://mixch.tv/u/18885090/live"
     },
     "18893581": {
       "broadcaster_name": "れあ‪",
